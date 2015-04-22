@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--<link rel="stylesheet" href="style.css">-->
+	
+<style>
+
+svg {
+    font-size: 10px;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.brush .extent {
+    stroke: #fff;
+    fill-opacity: .125;
+    shape-rendering: crispEdges;
+}
+
+/*#####################*/
+
+/* The Right Slider */
+.e {
+  fill: #35baf6;
+}
+
+/* The Left Slider */
+.w {
+  fill: #35baf6;
+}
+</style>
+
+    <script src="script.js"></script>
+	<!--
+    <script src="Noise_data.js"></script>
+	-->
+    <script src="http://d3js.org/d3.v3.js"></script>
+  </head>
+
+  <body>
+    <div id="theWidget"></div>
+
+    <script>
+        var parseDate = d3.time.format("%b %Y").parse;
+
+        function type(d) {
+            d[0] = parseDate(d[0]);
+            d[1] = +d[1];
+            return d;
+        }
+        
+        var values = [
+			["Jan 2000", 1394.46],
+			["Feb 2000", 1366.42],
+			["Mar 2000", 1498.58],
+			["Apr 2000", 1452.43],
+			["May 2000", 1420.6],
+			["Jun 2000", 1454.6],
+			["Jul 2000", 1430.83],
+			["Aug 2000", 1517.68],
+			["Sep 2000", 1436.51],
+			["Oct 2000", 1429.4],
+			["Nov 2000", 1314.95],
+			["Dec 2000", 1320.28],
+			["Jan 2001", 1366.01],
+			["Feb 2001", 1239.94],
+			["Mar 2001", 1160.33],
+			["Apr 2001", 1249.46],
+			["May 2001", 1255.82],
+			["Jun 2001", 1224.38],
+			["Jul 2001", 1211.23],
+			["Aug 2001", 1133.58],
+			["Sep 2001", 1040.94],
+			["Oct 2001", 1059.78],
+			["Nov 2001", 1139.45],
+			["Dec 2001", 1148.08],
+			["Jan 2002", 1130.2],
+			["Feb 2002", 1106.73],
+			["Mar 2002", 1147.39],
+			["Apr 2002", 1076.92],
+			["May 2002", 1067.14]
+        ];
+
+            values.forEach(type);
+            
+			var widget = myWidget();
+           //console.log(values);
+		   
+		   /*
+		   d3.select('#theWidget')
+                    .datum(values)
+                    .call(widget);
+			*/
+			
+			
+			
+			//console.log("here we go");
+			
+			d3.json("Noise_data.json", function (data) {
+				//console.log(data.values);
+			
+				d3.select('#theWidget')
+                    .datum(data.values)
+                    .call(widget);
+				   
+					//console.log(data.values);
+			});
+			
+								
+					
+					
+					
+    </script>
+  </body>
+
+</html>
