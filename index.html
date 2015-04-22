@@ -53,6 +53,23 @@ svg {
     <div id="theWidget"></div>
 
     <script>
+	
+	//==< for browser logs >===
+	function log(msg, color) {
+		
+		if($.browser.msie){
+			console.log(msg);
+		}
+		else {
+			console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
+		}
+	}
+	function log(msg) {
+		console.log(msg);
+	}
+	//==< for browser logs >===
+	
+	
         var parseDate = d3.time.format("%b %Y").parse;
 
         function type(d) {
@@ -96,7 +113,7 @@ svg {
             values.forEach(type);
             
 			var widget = myWidget();
-           //console.log(values);
+           //log(values);
 		   
 		   /*
 		   d3.select('#theWidget')
@@ -104,23 +121,43 @@ svg {
                     .call(widget);
 			*/
 			
+			var theData = [];
 			
-			
-			//console.log("here we go");
+			//log("here we go");
 			
 			d3.json("Noise_data.json", function (data) {
-				//console.log(data.values);
-			
-				d3.select('#theWidget')
-                    .datum(data.values)
-                    .call(widget);
-				   
-					//console.log(data.values);
+				//log(data.values);
+				//log("here", "red");
+				theData.push(data);	
+				loadData2()
 			});
+			function loadData2() {
+				d3.json("Noise_data2.json", function (data) {				
+					theData.push(data);	
+					loadChart();
+				});	
+			}
 			
-								
-					
-					
+			
+			function loadChart() {
+				//log(theData);
+				
+				d3.select('#theWidget')
+						.data(theData)
+						.call(widget);
+				//equivalent to : widget(d3.select('#theWidget').datum(theData))
+				
+				loadMoreData();
+				
+			}
+
+			
+			function loadMoreData() {
+				//widget.addData();
+			}
+			
+			
+			
 					
     </script>
   </body>
