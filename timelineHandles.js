@@ -30,23 +30,10 @@ TheTimelineHandles = function () {
 	var endTimeRange = 0;
 	
 	//
-	
+		
+	var  context;	
 	var theRange = d3.svg.brush();
-	
-	
-	//==< for browser logs >===
-	function log(msg, color) {
-
-		if ($.browser.msie) {
-			console.log(msg);
-		} else {
-			console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
-		}
-	}
-	function log(msg) {
-		console.log(msg);
-	}
-	//==< for browser logs >===
+	var theBrush = d3.svg.brush();
 
 		
 	//##############################################
@@ -167,7 +154,7 @@ TheTimelineHandles = function () {
 					.attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')');
 			}
 			*/
-			var context = wrap.append('g')
+			context = wrap.append('g')
 				.attr('class', 'context')
 				.attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')');
 			
@@ -188,7 +175,7 @@ TheTimelineHandles = function () {
 			var yMax = d3.max(yValues);
 			//var yMax = d3.max(data.map(function(d) { return d[1]; } )); //for array of data
 			
-			log("yMax = " + yMax);
+			//log("yMax = " + yMax);
 
 			xContext.domain(d3.extent(xDomain));
 			yContext.domain([0, yMax]);
@@ -213,10 +200,10 @@ TheTimelineHandles = function () {
 
 			var startDate = new Date(xDomain[0] - 0);
 			var lastDate = new Date(xDomain[xDomain.length - 1] - 0);
-			log("start date :" + startDate);
-			log("Stop date :" + lastDate);
+			//log("start date :" + startDate);
+			//log("Stop date :" + lastDate);
 
-			var theBrush = d3.svg.brush()
+			theBrush = d3.svg.brush()
 									.x(xContext)
 									.extent([startDate, lastDate])
 									.on('brush', brushed);
@@ -257,7 +244,7 @@ TheTimelineHandles = function () {
 
 			function nobrush(a, b, c) {
 				//to stop the brushing from the chart background
-				log('Brushing from background diabled')
+				//log('Brushing from background diabled')
 				d3.event.stopPropagation()
 			}
 			
@@ -360,7 +347,20 @@ TheTimelineHandles = function () {
 	};
 
 
-	
+	timelineHandles.update = function (range) {
+		
+		//log("theBrush : " + theBrush.extent());
+		//log("before " + theBrush.extent());
+		theRange = range;
+		theBrush.extent(range);
+		
+		//log("after  " + theBrush.extent());
+		if(theBrush.extent() != null) {
+			//timeline.changeHandles();
+			context.select('.brush').call(theBrush.extent(theRange));
+		}
+		
+	}
 	
 	return timelineHandles;
 };

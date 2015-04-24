@@ -36,19 +36,6 @@ TheTimeline = function () {
 	var xDomain = [];
 	var xContext = 1;
 	
-	//==< for browser logs >===
-	function log(msg, color) {
-
-		if ($.browser.msie) {
-			console.log(msg);
-		} else {
-			console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
-		}
-	}
-	function log(msg) {
-		console.log(msg);
-	}
-	//==< for browser logs >===
 
 		
 	//##############################################
@@ -89,7 +76,7 @@ TheTimeline = function () {
 			var availableHeight = height - padding.top - padding.bottom;
 			
 			xContext = d3.time.scale().range([0, availableWidth]); //for context
-			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]);
+			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]); 
 			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom');
 			
 			svg.append('defs').append('clipPath')
@@ -106,16 +93,21 @@ TheTimeline = function () {
 				.attr('class', 'context')
 				.attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')');
 				
-			var lineGen = d3.svg.line()
+				function lineG(d){			
+					log("here")
+					log("val " +  JSON.stringify(d)  )
+					var lineGen = d3.svg.line()
 							.x(function(d) {
 								return xContext(new Date(d.timestamp * 1000));
 							})
 							.y(function(d) {
-								return yContext(d.value - 0);
-							})
-							.interpolate("monotone");
+								//var val = contextHeight/no * i;
+								log("val " +  JSON.stringify(d)  )
+								return yContext(0);
+							});
 			
-			
+					return lineGen;
+				}
 						
 			data.forEach(function (d) {
 				d = d.data();
@@ -145,20 +137,54 @@ TheTimeline = function () {
 			var yMax = d3.max(yValues);
 			//var yMax = d3.max(data.map(function(d) { return d[1]; } )); //for array of data
 			
-			log("yMax = " + yMax);
-
-			xContext.domain(d3.extent(xDomain));
-			yContext.domain([0, yMax]);
+			//log("yMax = " + yMax);
 
 		
+			xContext.domain(d3.extent(xDomain));
+			yContext.domain([0, contextHeight]);
+		
 			for(var i = 0; i < noOfData; i++) {
-				context.append('path')						
-						.attr('d', lineGen(data[i].data()))
+				var start, end
+				var no = noOfData;
+				no = 5;
+				var hy = contextHeight - contextHeightPadding;
+					hy = hy/no;
+				var h = hy;	
+				//log("hy = " + hy);
+				
+				if(hy > 20) {						
+					h = 20;						
+					hy = i * 20 + h/2 + 1;
+				}
+				else {
+					hy = i * hy + h/2 + 1;
+				}
+					
+				//log("h = " + h);
+				//log("hy = " + hy);
+				start = data[i].data();
+				start = start[i].timestamp * 1000 + 0;
+				start = xContext(start);
+				//log("line start: " + start);
+				
+				end = data[i].data();
+				end = end[end.length - 1].timestamp * 1000 + 0;
+				end = xContext(end);
+					//log("line end: " + end);
+					//log("xContext = " + xContext.domain());
+					//log("yContext" + yContext());
+				
+				context.append('line')
+						.attr("x1", start)
+						.attr("y1", yContext(hy))
+						.attr("y2", yContext(hy))
+						.attr("x2", end)
 						.attr('stroke', data[i].style.dataColor())
-						.attr('stroke-width', data[i].style.lineSize())
+						.attr('stroke-width', h)
 						.attr('fill', 'none');
 			}
 			
+
 			context.append('g')
 					.attr('class', 'x axis')
 					.attr('transform', 'translate(0,' + contextHeight + ')')
@@ -166,8 +192,8 @@ TheTimeline = function () {
 
 			var startDate = new Date(xDomain[0] - 0);
 			var lastDate = new Date(xDomain[xDomain.length - 1] - 0);
-			log("start date :" + startDate);
-			log("Stop date :" + lastDate);
+			//log("start date :" + startDate);
+			//log("Stop date :" + lastDate);
 
 			theBrush = d3.svg.brush()
 									.x(xContext)
@@ -268,12 +294,12 @@ TheTimeline = function () {
 			timeline.brushed = function() {
 				//log("extent: " + theBrush.extent());
 				//xContext.domain(theBrush.empty() ? xContext.domain() : theBrush.extent());	
-				//theRange = theBrush.extent();
+				theRange = theBrush.extent();
 				for(var i = 0; i < noOfData; i++) {
 					//context.select('.line').attr('d', lineGen(data[0].data())); //lineContext //show the context line
 				}
 				
-				timeline.changeHandles();
+				//timeline.changeHandles();
 				
 				
 				subject.notify(theRange);//notifying all the observers about the change in range
@@ -291,7 +317,7 @@ TheTimeline = function () {
 			
 			timeline.nobrush = function(a, b, c) {
 				//to stop the brushing from the chart background
-				log('Brushing from background diabled')
+				//log('Brushing from background diabled')
 				d3.event.stopPropagation()
 			};
 			
@@ -340,7 +366,7 @@ TheTimeline = function () {
 		
 		//log("after  " + theBrush.extent());
 		if(theBrush.extent() != null) {
-			timeline.brushed();
+			timeline.changeHandles();
 		}
 	}
 	

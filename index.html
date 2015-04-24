@@ -110,6 +110,42 @@ var Subject = (function (window, undefined) {
 
 })(window);
 
+
+
+var Subject2 = (function (window, undefined) {
+
+	function Subject2() {
+		this._list = [];
+	}
+
+	// this method will handle adding observers to the internal list
+	Subject2.prototype.observe = function observeObject(obj) {
+		console.log('added new observer');
+		this._list.push(obj);
+	};
+
+	Subject2.prototype.unobserve = function unobserveObject(obj) {
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			if (this._list[i] === obj) {
+				this._list.splice(i, 1);
+				console.log('removed existing observer');
+				return true;
+			}
+		}
+		return false;
+	};
+
+	Subject2.prototype.notify = function notifyObservers() {
+		var args = Array.prototype.slice.call(arguments, 0);
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			this._list[i].update.apply(null, args);
+		}
+	};
+
+	return Subject2;
+
+})(window);
+
 //#######################################################
 	
 	
@@ -292,6 +328,7 @@ VRL.TheData = function(data) {
 				d3.json("Noise_data2.json", function (data) {				
 					//theData.push(data);	
 					TheApp.addData(data);
+					TheApp.getDataAt(1).style.dataColor("#ff0000");
 					loadChart();
 				});	
 			}			
@@ -322,6 +359,7 @@ VRL.TheData = function(data) {
 			};
 			
 			timelineHandles.addObserver(timeline);
+			timeline.addObserver(timelineHandles);
 			
 			function loadMoreData() {
 				//widget.addData();

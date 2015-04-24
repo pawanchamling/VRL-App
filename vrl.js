@@ -14,6 +14,15 @@ var VRL = function(){
 		return allData;
 	};
 	
+	theApp.getDataAt = function(index) {
+		//log("VRL: getData");
+		
+		if(index < allData.length) { 
+			return allData[index];
+		}
+		//return null;
+	};
+	
 	//theApp.updateData = function() {}
 	//###############################################
 	//### For the Observer Pattern
