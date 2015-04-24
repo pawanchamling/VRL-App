@@ -42,7 +42,10 @@ svg {
 }
 </style>
 
+    <script src="vrl.js"></script>
     <script src="script.js"></script>
+    <script src="timeline.js"></script>
+    <script src="timelineHandles.js"></script>
 	<!--
     <script src="Noise_data.js"></script>
 	-->
@@ -50,10 +53,11 @@ svg {
   </head>
 
   <body>
-    <div id="theWidget"></div>
+    <div id="TimeLineHandlerDIV"></div>
+    <div id="TimeLineDIV"></div>
 
     <script>
-	
+//#######################################################	
 	//==< for browser logs >===
 	function log(msg, color) {
 		
@@ -68,6 +72,45 @@ svg {
 		console.log(msg);
 	}
 	//==< for browser logs >===
+	
+//#######################################################
+//For the Observer Pattern
+
+var Subject = (function (window, undefined) {
+
+	function Subject() {
+		this._list = [];
+	}
+
+	// this method will handle adding observers to the internal list
+	Subject.prototype.observe = function observeObject(obj) {
+		console.log('added new observer');
+		this._list.push(obj);
+	};
+
+	Subject.prototype.unobserve = function unobserveObject(obj) {
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			if (this._list[i] === obj) {
+				this._list.splice(i, 1);
+				console.log('removed existing observer');
+				return true;
+			}
+		}
+		return false;
+	};
+
+	Subject.prototype.notify = function notifyObservers() {
+		var args = Array.prototype.slice.call(arguments, 0);
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			this._list[i].update.apply(null, args);
+		}
+	};
+
+	return Subject;
+
+})(window);
+
+//#######################################################
 	
 	
         var parseDate = d3.time.format("%b %Y").parse;
@@ -111,12 +154,124 @@ svg {
         ];
 
             values.forEach(type);
-            
+			
+//#######################################################
+
+//global namespace
+//var VRL = VRL || {};
+
+	/*
+			
+ //#######################################################    
+//The styles for TheData 
+VRL.DataStyle = function() {
+	var dataColor = "0000ff"; // hex
+	var lineSize = 5; //in pixels
+	var timelineSize = 20; //in pixels
+	
+	this.dataColor = function(_) {
+			if (!arguments.length)
+				return dataColor;
+			dataColor = _;
+	};
+	this.lineSize = function(_) {
+			if (!arguments.length)
+				return lineSize;
+			lineSize = _;
+	};
+	this.timelineSize = function(_) {
+			if (!arguments.length)
+				return timelineSize;
+			timelineSize = _;
+	};
+}
+ 
+//The Data
+VRL.TheData = function(data) {
+		data = JSON.parse(data);
+		var dataName = data.name;
+		var dataSource = data.source;
+		var dataType = data.type;
+		var dataInfo = data.valueInfo;
+		var data = data.values;					
+		
+		this.style = new VRL.DataStyle();
+		
+		this.dataName = function(_) {
+				if (!arguments.length)
+					return dataName;
+				dataName = _;
+		};
+		this.dataSource = function(_) {
+				if (!arguments.length)
+					return dataSource;
+				dataSource = _;
+		};
+		this.dataType = function(_) {
+				if (!arguments.length)
+					return dataType;
+				dataType = _;
+		};
+		this.dataInfo = function(_) {
+				if (!arguments.length)
+					return dataInfo;
+				dataInfo = _;
+		};
+		this.data = function(_) {
+				if (!arguments.length)
+					return data;
+				data = _;
+		};
+				
+}
+
+			
+	*/
+	
+			/*
+			TheData.prototype.getDataName = function(_) {
+					if (!arguments.length)
+						return dataName;
+					dataName = _;
+					//return timelineHandles;
+			};
+			*/
+ 
+ var jsonData = "{	\"name\" : \"Noise Data\",\"Source\" : \"Android Mobile\"," + 
+		"\"type\" : \"2\",	\"valueInfo\" : {\"max\" : \"10.682592592592593\",\"min\" : \"0.34703703703703703\"," +
+		"\"threshold\" : \"8\"	},	\"values\" : [{	\"timestamp\" : \"1429650061696\",\"value\" : \"0.6388888888888888\"" +
+		"}, {\"timestamp\" : \"1429650064693\",	\"value\" : \"2.442962962962963\"}]}";
+			//var theD = new VRL.TheData(jsonData);
+			
+			var TheApp = VRL();
+			//TheApp.addData(jsonData);
+			//log(TheApp.allData);
+			//log(TheApp.getData());
+			
+			//log(theD.style.dataColor());
+			//log(theD.dataName());
+	
+			
+			
+			
+			
+			
+			
+			//
 			var widget = myWidget();
-           //log(values);
+			var timelineHandles = TheTimelineHandles();
+			var timeline = TheTimeline();
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   //log(values);
 		   
 		   /*
-		   d3.select('#theWidget')
+		   d3.select('#TimeLineHandlerDIV')
                     .datum(values)
                     .call(widget);
 			*/
@@ -128,29 +283,45 @@ svg {
 			d3.json("Noise_data.json", function (data) {
 				//log(data.values);
 				//log("here", "red");
-				theData.push(data);	
+				//theData.push(data);	
+				TheApp.addData(data);
+				
 				loadData2()
 			});
 			function loadData2() {
 				d3.json("Noise_data2.json", function (data) {				
-					theData.push(data);	
+					//theData.push(data);	
+					TheApp.addData(data);
 					loadChart();
 				});	
-			}
-			
+			}			
 			
 			function loadChart() {
 				//log(theData);
+				//var dat = TheApp.getData();
+				//log("array size = " + dat.length);
 				
-				d3.select('#theWidget')
-						.data(theData)
-						.call(widget);
-				//equivalent to : widget(d3.select('#theWidget').datum(theData))
+				d3.select('#TimeLineHandlerDIV')
+						.datum(TheApp.getData())
+						.call(timelineHandles);
+				//equivalent to : timelineHandles(d3.select('#TimeLineHandlerDIV').datum(theData))
+				
+				d3.select('#TimeLineDIV')
+						.datum(TheApp.getData())
+						.call(timeline);
+				
 				
 				loadMoreData();
 				
 			}
 
+			var someObserver = {
+				update : function () {
+					console.log('"update" called: ', arguments);
+				}
+			};
+			
+			timelineHandles.addObserver(timeline);
 			
 			function loadMoreData() {
 				//widget.addData();

@@ -85,7 +85,7 @@ myWidget = function() {
             var lineFocus = d3.svg.line()
                 .interpolate('monotone')
                 .x(function(d) { return xFocus(new Date(d.timestamp * 1000)); })
-                .y(function(d) { return yFocus(d.value - 0);});
+                .y(function(d) { log("y: " + d.value);return yFocus(d.value - 0);});
 
 			//for context
             var lineContext = d3.svg.line()
@@ -127,7 +127,7 @@ myWidget = function() {
 				yValues.push(d.value - 0); 
 			});
 			
-			//log(yValues);
+			log("yValues : " + yValues);
 			var yMax = d3.max(yValues);
 			//var yMax = 100;
 			log("yMax = " + yMax);
@@ -201,6 +201,7 @@ myWidget = function() {
 			
             //show the charts
             brushed();
+			//brushed();
 			
 			// Don't allow the brushing from background and single click context switch
 			context.select(".background")
