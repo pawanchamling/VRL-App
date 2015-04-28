@@ -82,7 +82,7 @@ TheTimelineHandles = function () {
 			
 			var xContext = d3.time.scale().range([0, availableWidth]); //for context
 			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]);
-			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom');
+			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom').tickFormat(d3.time.format("%X"));
 
 			//var xDomain = data.map(function(d) { return d[0]; });//if array
 			
@@ -96,7 +96,7 @@ TheTimelineHandles = function () {
 				//log("d = " + d);
 				d.map(function(dd) {
 					//log("dd = " + dd.timestamp);
-					xDomain.push(new Date(dd.timestamp * 1000));
+					xDomain.push(new Date(dd.timestamp - 0));
 				});
 				
 			});
@@ -111,7 +111,7 @@ TheTimelineHandles = function () {
 				lines[i] = d3.svg.line()
 					.interpolate('monotone')
 					.x(function (d) {
-						return xContext(new Date(d.timestamp * 1000));
+						return xContext(new Date(d.timestamp - 0));
 					})
 					.y(function (d) {
 						return yContext(d.value - 0);
@@ -120,7 +120,7 @@ TheTimelineHandles = function () {
 			*/
 			var lineGen = d3.svg.line()
 									.x(function(d) {
-										return xContext(new Date(d.timestamp * 1000));
+										return xContext(new Date(d.timestamp - 0));
 									})
 									.y(function(d) {
 										return yContext(d.value - 0);
@@ -130,7 +130,7 @@ TheTimelineHandles = function () {
 			var lineContext = d3.svg.line()
 				.interpolate('monotone')
 				.x(function (d) {
-					return xContext(new Date(d.timestamp * 1000));
+					return xContext(new Date(d.timestamp - 0));
 				})
 				.y(function (d) {
 					return yContext(d.value - 0);
@@ -165,7 +165,7 @@ TheTimelineHandles = function () {
 				//log("d = " + d);
 				d.map(function(dd) {
 					//log("dd = " + dd.timestamp);
-					//xDomain.push(new Date(dd.timestamp * 1000));
+					//xDomain.push(new Date(dd.timestamp - 0));
 					yValues.push(dd.value - 0);
 				});
 				

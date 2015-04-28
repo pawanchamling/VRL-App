@@ -16,6 +16,12 @@ svg {
     clip-path: url(#clip);
 }
 
+
+.theLine {
+    clip-path: url(#clip);
+}
+
+
 .axis path,
 .axis line {
     fill: none;
@@ -27,6 +33,12 @@ svg {
     stroke: #fff;
     fill-opacity: .125;
     shape-rendering: crispEdges;
+}
+
+rect.pane {
+  	cursor: move;
+  	fill: none;
+  	pointer-events: all;
 }
 
 /*#####################*/
@@ -44,6 +56,7 @@ svg {
 
     <script src="vrl.js"></script>
     <script src="script.js"></script>
+    <script src="focus.js"></script>
     <script src="timeline.js"></script>
     <script src="timelineHandles.js"></script>
 	<!--
@@ -53,6 +66,7 @@ svg {
   </head>
 
   <body>
+    <div id="FocusDIV"></div>
     <div id="TimeLineHandlerDIV"></div>
     <div id="TimeLineDIV"></div>
 
@@ -294,10 +308,12 @@ VRL.TheData = function(data) {
 			
 			
 			//
-			var widget = myWidget();
+			//var widget = myWidget();
+			
+			
 			var timelineHandles = TheTimelineHandles();
 			var timeline = TheTimeline();
-		   
+			var focus = TheFocus();
 		   
 		   
 		   
@@ -325,7 +341,7 @@ VRL.TheData = function(data) {
 				loadData2()
 			});
 			function loadData2() {
-				d3.json("Noise_data2.json", function (data) {				
+				d3.json("Noise_data3.json", function (data) {				
 					//theData.push(data);	
 					TheApp.addData(data);
 					TheApp.getDataAt(1).style.dataColor("#ff0000");
@@ -347,6 +363,9 @@ VRL.TheData = function(data) {
 						.datum(TheApp.getData())
 						.call(timeline);
 				
+				d3.select('#FocusDIV')
+						.datum(TheApp.getData())
+						.call(focus);
 				
 				loadMoreData();
 				
@@ -358,8 +377,12 @@ VRL.TheData = function(data) {
 				}
 			};
 			
+			//adding the Observers
 			timelineHandles.addObserver(timeline);
+			timelineHandles.addObserver(focus);
+			
 			timeline.addObserver(timelineHandles);
+			timeline.addObserver(focus);
 			
 			function loadMoreData() {
 				//widget.addData();

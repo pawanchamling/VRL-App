@@ -77,7 +77,7 @@ TheTimeline = function () {
 			
 			xContext = d3.time.scale().range([0, availableWidth]); //for context
 			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]); 
-			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom');
+			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom').tickFormat(d3.time.format("%X"));
 			
 			svg.append('defs').append('clipPath')
 								.attr('id', 'clip')
@@ -98,7 +98,7 @@ TheTimeline = function () {
 					log("val " +  JSON.stringify(d)  )
 					var lineGen = d3.svg.line()
 							.x(function(d) {
-								return xContext(new Date(d.timestamp * 1000));
+								return xContext(new Date(d.timestamp - 0));
 							})
 							.y(function(d) {
 								//var val = contextHeight/no * i;
@@ -114,7 +114,7 @@ TheTimeline = function () {
 				//log("d = " + d);
 				d.map(function(dd) {
 					//log("dd = " + dd.timestamp);
-					xDomain.push(new Date(dd.timestamp * 1000));
+					xDomain.push(new Date(dd.timestamp - 0));
 				});
 				
 			});
@@ -127,7 +127,7 @@ TheTimeline = function () {
 				//log("d = " + d);
 				d.map(function(dd) {
 					//log("dd = " + dd.timestamp);
-					//xDomain.push(new Date(dd.timestamp * 1000));
+					//xDomain.push(new Date(dd.timestamp - 0));
 					yValues.push(dd.value - 0);
 				});
 				
@@ -146,7 +146,7 @@ TheTimeline = function () {
 			for(var i = 0; i < noOfData; i++) {
 				var start, end
 				var no = noOfData;
-				no = 5;
+				//no = 5;
 				var hy = contextHeight - contextHeightPadding;
 					hy = hy/no;
 				var h = hy;	
@@ -163,12 +163,12 @@ TheTimeline = function () {
 				//log("h = " + h);
 				//log("hy = " + hy);
 				start = data[i].data();
-				start = start[i].timestamp * 1000 + 0;
+				start = start[i].timestamp - 0 + 0;
 				start = xContext(start);
 				//log("line start: " + start);
 				
 				end = data[i].data();
-				end = end[end.length - 1].timestamp * 1000 + 0;
+				end = end[end.length - 1].timestamp - 0 + 0;
 				end = xContext(end);
 					//log("line end: " + end);
 					//log("xContext = " + xContext.domain());
