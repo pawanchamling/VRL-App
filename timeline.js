@@ -36,7 +36,7 @@ TheTimeline = function () {
 	var xDomain = [];
 	var xContext = 1;
 	
-
+	var availableWidth;
 		
 	//##############################################
 	//For Observer Pattern
@@ -72,8 +72,11 @@ TheTimeline = function () {
 				.attr('width', width + margin.left + margin.right)
 				.attr('height', height + margin.top + margin.bottom);
 			
-			var availableWidth = width - padding.left - padding.right;
+			availableWidth = width - padding.left - padding.right;
 			var availableHeight = height - padding.top - padding.bottom;
+			
+			
+			
 			
 			xContext = d3.time.scale().range([0, availableWidth]); //for context
 			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]); 
@@ -92,23 +95,25 @@ TheTimeline = function () {
 			context = wrap.append('g')
 				.attr('class', 'context')
 				.attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')');
-				
-				function lineG(d){			
-					log("here")
-					log("val " +  JSON.stringify(d)  )
-					var lineGen = d3.svg.line()
-							.x(function(d) {
-								return xContext(new Date(d.timestamp - 0));
-							})
-							.y(function(d) {
-								//var val = contextHeight/no * i;
-								log("val " +  JSON.stringify(d)  )
-								return yContext(0);
-							});
 			
-					return lineGen;
-				}
-						
+			//Generate lines for the linecharts
+			function lineG(d){			
+				//log("here")
+				//log("val " +  JSON.stringify(d)  )
+				var lineGen = d3.svg.line()
+						.x(function(d) {
+							return xContext(new Date(d.timestamp - 0));
+						})
+						.y(function(d) {
+							//var val = contextHeight/no * i;
+							log("val " +  JSON.stringify(d)  )
+							return yContext(0);
+						});
+		
+				return lineGen;
+			}
+			
+			//domain
 			data.forEach(function (d) {
 				d = d.data();
 				//log("d = " + d);
@@ -119,8 +124,36 @@ TheTimeline = function () {
 				
 			});
 			
-		
+			//### Calculating the start and the end timeline among the data ###
+			var startValue = xDomain[0] - 0;
+			var startIndex = 0;
+			var endValue   = xDomain[xDomain.length - 1] - 0;
+			var endIndex = xDomain.length - 1;
+			for(var i = 0; i < xDomain.length; i++) {
+				if(xDomain[i] < startValue) {
+					startValue = xDomain[i];
+					startIndex = i;
+				}
+				if(xDomain[i] > endValue) {
+					endValue = xDomain[i];
+					endIndex = i;
+				}
+			}
+			var temp = xDomain[0];
+			xDomain[0] = startValue;
+			xDomain[startIndex] = temp;
 			
+			temp = xDomain[xDomain.length - 1];
+			xDomain[xDomain.length - 1] = endValue;
+			xDomain[endIndex] = temp;
+					
+			
+			//log("t start date :" + startDate);
+			//log("t Stop date :" + lastDate);
+			//###
+			
+		
+			//yValues
 			var yValues = [];
 			data.forEach(function (d) {
 				d = d.data();
@@ -143,45 +176,84 @@ TheTimeline = function () {
 			xContext.domain(d3.extent(xDomain));
 			yContext.domain([0, contextHeight]);
 		
+			
+		
+			//### for drawing the lines based on the data
+			var no = noOfData;
+			var h = contextHeight - contextHeightPadding;
+				h = h/no;
+			var hy = h;	//h  for height of the lines
+						//hy for 'y' coordinate for each line
+			//draw the data as straight lines 
+			
+			if(h > 20) {
+				h = 20;
+			}
+			
 			for(var i = 0; i < noOfData; i++) {
 				var start, end
-				var no = noOfData;
-				//no = 5;
-				var hy = contextHeight - contextHeightPadding;
-					hy = hy/no;
-				var h = hy;	
-				//log("hy = " + hy);
 				
-				if(hy > 20) {						
-					h = 20;						
-					hy = i * 20 + h/2 + 1;
-				}
-				else {
-					hy = i * hy + h/2 + 1;
-				}
-					
-				//log("h = " + h);
-				//log("hy = " + hy);
+				//find the next 'y' for a new line and fix the gap between them
+				hy = i * h +  h/2 + i * 2;
+				
 				start = data[i].data();
-				start = start[i].timestamp - 0 + 0;
+				start = start[0].timestamp - 0 ;
 				start = xContext(start);
-				//log("line start: " + start);
+				//log("data: " + data[i].dataType());
 				
 				end = data[i].data();
-				end = end[end.length - 1].timestamp - 0 + 0;
+				end = end[end.length - 1].timestamp - 0 ;
 				end = xContext(end);
 					//log("line end: " + end);
 					//log("xContext = " + xContext.domain());
 					//log("yContext" + yContext());
-				
-				context.append('line')
-						.attr("x1", start)
-						.attr("y1", yContext(hy))
-						.attr("y2", yContext(hy))
-						.attr("x2", end)
-						.attr('stroke', data[i].style.dataColor())
-						.attr('stroke-width', h)
-						.attr('fill', 'none');
+				if(data[i].dataType() == 0) {
+					//if Nominal data
+					
+					var d = data[i].data();		
+					d.map(function(dd) {
+						var startPos = xContext(dd.timestamp);
+						//log("some nominal data here")
+						context.append('line')
+								.attr("x1", startPos)
+								.attr("y1", yContext(hy))
+								.attr("x2", startPos + 3)
+								.attr("y2", yContext(hy))
+								.attr('stroke', data[i].style.dataColor()) //based on the index
+								.attr('stroke-width', h)
+								.attr('fill', 'none');
+					});
+					
+				}
+				else if(data[i].dataType() == 1){
+					//if Ordinal data
+					
+					var d = data[i].data();		
+					d.map(function(dd) {
+						var startPos = xContext(dd.timestamp);
+						
+						context.append('line')
+								.attr("x1", startPos)
+								.attr("y1", yContext(hy))
+								.attr("y2", yContext(hy))
+								.attr("x2", startPos + 3)
+								.attr('stroke', data[i].styles[dd.value]) //based on the index
+								.attr('stroke-width', h)
+								.attr('fill', 'none');
+					});
+					
+				}
+				else if(data[i].dataType() == 2) {
+					//if sensor data
+					context.append('line')
+							.attr("x1", start)
+							.attr("y1", yContext(hy))
+							.attr("x2", end)
+							.attr("y2", yContext(hy))
+							.attr('stroke', data[i].style.dataColor())
+							.attr('stroke-width', h)
+							.attr('fill', 'none');
+				}
 			}
 			
 
@@ -190,10 +262,12 @@ TheTimeline = function () {
 					.attr('transform', 'translate(0,' + contextHeight + ')')
 					.call(xAxisContext);
 
+					
+					
+		//-----------------------------------------------------------------
+			
 			var startDate = new Date(xDomain[0] - 0);
 			var lastDate = new Date(xDomain[xDomain.length - 1] - 0);
-			//log("start date :" + startDate);
-			//log("Stop date :" + lastDate);
 
 			theBrush = d3.svg.brush()
 									.x(xContext)
@@ -224,6 +298,8 @@ TheTimeline = function () {
 											.classed("border");
 
 			
+			
+		
 			
 			
 		});
@@ -293,8 +369,22 @@ TheTimeline = function () {
 //#######################################################
 			timeline.brushed = function() {
 				//log("extent: " + theBrush.extent());
+				//log(new Date(startTimeRange) + " : " + new Date(endTimeRange))
 				//xContext.domain(theBrush.empty() ? xContext.domain() : theBrush.extent());	
 				theRange = theBrush.extent();
+				
+				var startD = new Date(theRange[0]).getTime();
+				var endD = new Date(theRange[1]).getTime();
+								
+				//don't go smaller than 1 seconds
+				if(endD < (startD + 1000)){
+					
+					endD = startD + 1000;
+					theRange[1] = new Date(endD);
+					
+					context.select('.brush').call(theBrush.extent(theRange));
+				}
+				
 				for(var i = 0; i < noOfData; i++) {
 					//context.select('.line').attr('d', lineGen(data[0].data())); //lineContext //show the context line
 				}
@@ -323,23 +413,27 @@ TheTimeline = function () {
 			
 			function calculateTimeRange(data){
 				//log("calculating time range");
+				
 				var start, end;
 				if(data.length >= 1) {
 					start = data[0].data();
-					start = start[0].timestamp + 0;
+					start = start[0].timestamp - 0;
 					//log("start: " + start);
 					
 					end = data[0].data();
-					end = end[end.length - 1].timestamp + 0;
+					end = end[end.length - 1].timestamp - 0;
+					
+					startTimeRange = start;
+					endTimeRange = end;
 					//log("end: " + end);
 				}
-				if(data.length > 1) {						
+				if(data.length > 1) {
 					for(var i = 1; i < data.length; i++) {
 						var s = data[i].data();
-						s = s[0].timestamp + 0;
+						s = s[0].timestamp - 0;
 						
 						var e = data[i].data();
-						e = e[e.length - 1].timestamp + 0;
+						e = e[e.length - 1].timestamp - 0;
 						
 						
 						if(s < start) {
@@ -350,7 +444,7 @@ TheTimeline = function () {
 						}
 					}
 				
-					//log("Start timestamp: " + start + " and End timestamp: " + end );
+					//log("timeline:   Start: " + new Date(startTimeRange) + " and End : " + new Date(endTimeRange) );
 				}
 			}
 			
@@ -363,6 +457,7 @@ TheTimeline = function () {
 		//log("before " + theBrush.extent());
 		theRange = range;
 		theBrush.extent(range);
+		//log("t: range = " + range);
 		
 		//log("after  " + theBrush.extent());
 		if(theBrush.extent() != null) {

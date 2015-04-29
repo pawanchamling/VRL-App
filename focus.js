@@ -81,6 +81,37 @@ TheFocus = function () {
 
 			});
 			
+			//### Calculating the start and the end timeline among the data ###
+			var startValue = xDomain[0] - 0;
+			var startIndex = 0;
+			var endValue   = xDomain[xDomain.length - 1] - 0;
+			var endIndex = xDomain.length - 1;
+			for(var i = 0; i < xDomain.length; i++) {
+				if(xDomain[i] < startValue) {
+					startValue = xDomain[i];
+					startIndex = i;
+				}
+				if(xDomain[i] > endValue) {
+					endValue = xDomain[i];
+					endIndex = i;
+				}
+			}
+			var temp = xDomain[0];
+			xDomain[0] = startValue;
+			xDomain[startIndex] = temp;
+			
+			temp = xDomain[xDomain.length - 1];
+			xDomain[xDomain.length - 1] = endValue;
+			xDomain[endIndex] = temp;
+					
+			var startDate = new Date(startValue - 0);
+			var lastDate = new Date(endValue - 0);
+			//log("start date :" + startDate);
+			//log("Stop date :" + lastDate);
+			//###-----------------------------------------------------------------
+			
+			
+			
 			startTimeRange = xDomain[0];
 			endTimeRange = xDomain[xDomain.length - 1];
 			
@@ -106,9 +137,12 @@ TheFocus = function () {
 				.attr('height', height + margin.top + margin.bottom);
 
 				
-			xFocus = d3.time.scale().range([0, availableWidth]); //for theFocus			
+			xFocus = d3.time.scale().range([0, availableWidth]); //.nice(d3.time.day) //for theFocus			
 			yFocus = d3.scale.linear().range([availableHeight, 0]);
 
+			
+			//var formatTime = d3.time.format("%H:%M");
+			//var formatMinutes = function(d) { return formatTime(new Date(2015, 0, 1, 0, d)); };
 			xAxisFocus 			= d3.svg.axis().scale(xFocus).orient('bottom').tickFormat(d3.time.format("%X"));
             var yAxisFocusLeft 	= d3.svg.axis().scale(yFocus).orient('left');
             var yAxisFocusRight = d3.svg.axis().scale(yFocus).orient('right');
@@ -140,6 +174,18 @@ TheFocus = function () {
 					return yFocus(d.value - 0);
 				})
 				.interpolate("monotone");
+			
+			//circle generator
+			/*
+			circleGen = d3.svg.circle()
+					.cx(function (d){
+						return xFocus(new Date(d.timestamp - 0));
+					})
+					.cy(function (d) {
+						return yFocus(2);
+					})
+			*/	
+			
 			
 			focus.drawLines(data);
 
@@ -303,26 +349,109 @@ TheFocus = function () {
 	
 	focus.drawLines = function(data) {
 		for (var i = 0; i < noOfData; i++) {
-			theFocus.append('path')
-				.attr("id", "line" + i)
-                .attr('class', 'theLine')
-				.attr('d', lineGen(data[i].data()))
-				.attr('stroke', data[i].style.dataColor())
-				.attr('stroke-width', data[i].style.lineSize())
-				.attr('fill', 'none');
+			
+			if(data[i].dataType() == 0){
+				//Nominal values
+				var d = data[i].data();
+				//d = d.values;					
+				d.map(function(dd, index) {
+					var startPos = xFocus(dd.timestamp);
+					
+					theFocus.append('circle')
+							.attr("id", "circleNominal" + i + "-" + index)
+							.attr('class', 'theCircle')
+							.attr("cx", xFocus(dd.timestamp))
+							.attr("cy", yFocus(2))
+							.attr("r", 10)
+							.attr('stroke', data[i].style.dataColor()) //based on the index
+							.attr('stroke-width', 1)
+							.attr('fill', data[i].styles[dd.value]);
+							
+					//log(circleGen(data[i].data()));		
+				});
+									
+			}
+			else if(data[i].dataType() == 2) {
+				theFocus.append('path')
+					.attr("id", "line" + i)
+					.attr('class', 'theLine')
+					.attr('d', lineGen(data[i].data()))
+					.attr('stroke', data[i].style.dataColor())
+					.attr('stroke-width', data[i].style.lineSize())
+					.attr('fill', 'none');
+					
+					//log(lineGen(data[i].data()));
+			}				
+			else if(data[i].dataType() == 1){
+				var d = data[i].data();
+				//d = d.values;					
+				d.map(function(dd, index) {
+					var startPos = xFocus(dd.timestamp);
+					
+					theFocus.append('circle')
+							.attr("id", "circle" + i + "-" + index)
+							.attr('class', 'theCircle')
+							.attr("cx", xFocus(dd.timestamp))
+							.attr("cy", yFocus(2))
+							.attr("r", 10)
+							.attr('stroke', data[i].styles[dd.value]) //based on the index
+							.attr('stroke-width', 1)
+							.attr('fill', data[i].styles[dd.value]);
+							
+					//log(circleGen(data[i].data()));		
+				});
+									
+			}
+			
+			
 		}
 	};
 
 	focus.redrawLines = function(data) {
 		for (var i = 0; i < noOfData; i++) {
-			theFocus.select('#' + 'line' + i).attr('d', lineGen(data[i].data()));
+			if(data[i].dataType() == 0) {
+				//Nominal data
+				var d = data[i].data();
+				d.map(function(dd, index) {
+					//log("here we go")
+					theFocus.select("#" + "circleNominal" + i + "-" + index)
+							.attr('class', 'theCircle')
+							//.attr('d', circleGen(data[i].data()));						
+							.attr("cx", xFocus(dd.timestamp))
+							.attr("cy", yFocus(2))
+							.attr("r", 10)
+							.attr('stroke', data[i].style.dataColor()) //based on the index
+							.attr('stroke-width', 1)
+							.attr('fill', data[i].styles[dd.value]);
+				});
+			}
+			else if(data[i].dataType() == 1) {
+				//Ordinal data
+				var d = data[i].data();
+				d.map(function(dd, index) {
+					//log("here we go")
+					theFocus.select("#" + "circle" + i + "-" + index)
+							.attr('class', 'theCircle')
+							//.attr('d', circleGen(data[i].data()));						
+							.attr("cx", xFocus(dd.timestamp))
+							.attr("cy", yFocus(2))
+							.attr("r", 10)
+							.attr('stroke', data[i].styles[dd.value]) //based on the index
+							.attr('stroke-width', 1)
+							.attr('fill', data[i].styles[dd.value]);
+				});
+			}
+			else if(data[i].dataType() == 2){
+				//Sensor data
+				theFocus.select('#' + 'line' + i).attr('d', lineGen(data[i].data()));
+			}
 		}
 	}
 	
 	focus.zoomed = function() {
 		//check if domain is okay
 		//log(startTimeRange)
-		log(d3.event.translate[0] + " - " + d3.event.translate[1] + " : " + theRange);
+	//log(d3.event.translate[0] + " - " + d3.event.translate[1] + " : " + theRange);
 		//theZoom.translate([0,0]);
 		//log(xFocus.domain().length)
 		//log(xFocus.domain()[0] + " : "+ xFocus.domain()[1] + " : "+ startTimeRange )
@@ -341,8 +470,9 @@ TheFocus = function () {
 			
 		}
 		else {
-			theZoom.translate([0,0]);
+			//theZoom.translate([0,0]);
 		}
+		
 		theRange = xFocus.domain();
 		if (theRange[0] < startTimeRange) {
 			//log("here")

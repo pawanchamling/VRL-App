@@ -97,6 +97,7 @@ VRL.TheData = function(data) {
 		var data = data.values;					
 		
 		this.style = new VRL.DataStyle();
+		this.styles = [];
 		
 		this.dataName = function(_) {
 				if (!arguments.length)

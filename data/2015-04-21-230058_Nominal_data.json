@@ -1,0 +1,17 @@
+{
+	"name" : "User Notes",
+	"Source" : "Android Mobile",
+	"type" : "0",
+	"valueInfo" : {},
+	"values" : [{
+			"timestamp" : "1429650069290",
+			"value" : "one"
+		}, {
+			"timestamp" : "1429650076268",
+			"value" : ""
+		}, {
+			"timestamp" : "1429650082773",
+			"value" : "what"
+		}
+	]
+}

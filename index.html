@@ -21,6 +21,9 @@ svg {
     clip-path: url(#clip);
 }
 
+.theCircle {
+    clip-path: url(#clip);
+}
 
 .axis path,
 .axis line {
@@ -332,7 +335,7 @@ VRL.TheData = function(data) {
 			
 			//log("here we go");
 			
-			d3.json("Noise_data.json", function (data) {
+			d3.json("data/Noise_data.json", function (data) {
 				//log(data.values);
 				//log("here", "red");
 				//theData.push(data);	
@@ -341,13 +344,32 @@ VRL.TheData = function(data) {
 				loadData2()
 			});
 			function loadData2() {
-				d3.json("Noise_data3.json", function (data) {				
+				d3.json("data/Noise_data3.json", function (data) {				
 					//theData.push(data);	
 					TheApp.addData(data);
 					TheApp.getDataAt(1).style.dataColor("#ff0000");
+					loadData3();
+				});	
+			}
+			function loadData3() {
+				d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {				
+					//theData.push(data);	
+					TheApp.addData(data);
+					TheApp.getDataAt(2).style.dataColor("#00ff00");
+					TheApp.getDataAt(2).styles.push("#007900");
+					TheApp.getDataAt(2).styles.push("#00df00");
+					TheApp.getDataAt(2).styles.push("#3cff3c");
+					loadData4();
+				});	
+			}
+			function loadData4() {
+				d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {				
+					//theData.push(data);	
+					TheApp.addData(data);
+					TheApp.getDataAt(3).style.dataColor("#000000");
 					loadChart();
 				});	
-			}			
+			}
 			
 			function loadChart() {
 				//log(theData);

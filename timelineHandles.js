@@ -62,7 +62,7 @@ TheTimelineHandles = function () {
 			
 			noOfData = data.length;
 			//log("noOfData = " + noOfData);
-			calculateTimeRange(data);
+			//calculateTimeRange(data);
 			
 			//log("data size = " + data);
 			//log("data str : " + JSON.stringify(data));
@@ -102,6 +102,42 @@ TheTimelineHandles = function () {
 			});
 			//log("xDomain = " + xDomain);
 			/**/
+			
+			//### Calculating the start and the end timeline among the data ###
+			var startValue = xDomain[0] - 0;
+			var startIndex = 0;
+			var endValue   = xDomain[xDomain.length - 1] - 0;
+			var endIndex = xDomain.length - 1;
+			for(var i = 0; i < xDomain.length; i++) {
+				if(xDomain[i] < startValue) {
+					startValue = xDomain[i];
+					startIndex = i;
+				}
+				if(xDomain[i] > endValue) {
+					endValue = xDomain[i];
+					endIndex = i;
+				}
+			}
+			
+			//log("start date :" + xDomain[0]);
+			//log("Stop date :" + xDomain[xDomain.length - 1]);
+			
+			var temp = xDomain[0];
+			xDomain[0] = startValue;
+			xDomain[startIndex] = temp;
+			
+			temp = xDomain[xDomain.length - 1];
+			xDomain[xDomain.length - 1] = endValue;
+			xDomain[endIndex] = temp;
+					
+			var startDate = new Date(startValue - 0);
+			var lastDate = new Date(endValue - 0);
+			//log("start date :" + startDate);
+			//log("start date :" + xDomain[0]);
+			//log("Stop date :" + lastDate);
+			//log("Stop date :" + xDomain[xDomain.length - 1]);
+			//###-----------------------------------------------------------------
+			
 			
 	
 			//for context
@@ -184,13 +220,55 @@ TheTimelineHandles = function () {
 			for(var i = 0; i < noOfData; i++) {
 				//log("l "  + data[i].data());
 				//log("dataColor = " + data[i].style.dataColor());
-				context.append('path')
-						//.data(data[i].data())
-						//.attr('class', 'line')						
-						.attr('d', lineGen(data[i].data()))
-						.attr('stroke', data[i].style.dataColor())
-						.attr('stroke-width', data[i].style.lineSize())
-						.attr('fill', 'none');
+				
+				if(data[i].dataType() == 0) {
+					//if Nominal data
+					
+					var d = data[i].data();		
+					d.map(function(dd) {
+						var startPos = xContext(dd.timestamp);
+						//log("some nominal data here")
+						
+						context.append('circle')
+								.attr("cx", startPos)
+								.attr("cy", yContext(2))
+								.attr("r", 10)
+								.attr('stroke', data[i].style.dataColor()) //based on the index
+								.attr('stroke-width', 1)
+								.attr('fill', data[i].styles[dd.value]);
+					});
+					
+				}				
+				else if(data[i].dataType() == 1){
+					//ordinal data
+					
+					var d = data[i].data();
+					//d = d.values;					
+					d.map(function(dd) {
+						var startPos = xContext(dd.timestamp);
+						
+						context.append('circle')
+								.attr("cx", startPos)
+								.attr("cy", yContext(2))
+								.attr("r", 10)
+								.attr('stroke', data[i].styles[dd.value]) //based on the index
+								.attr('stroke-width', 1)
+								.attr('fill', data[i].styles[dd.value]);
+					});
+										
+				}
+				else if(data[i].dataType() == 2) {
+					//sensor data
+					
+					context.append('path')
+							//.data(data[i].data())
+							//.attr('class', 'line')						
+							.attr('d', lineGen(data[i].data()))
+							.attr('stroke', data[i].style.dataColor())
+							.attr('stroke-width', data[i].style.lineSize())
+							.attr('fill', 'none');
+				}
+				
 			}
 			
 			context.append('g')
@@ -200,8 +278,8 @@ TheTimelineHandles = function () {
 
 			var startDate = new Date(xDomain[0] - 0);
 			var lastDate = new Date(xDomain[xDomain.length - 1] - 0);
-			//log("start date :" + startDate);
-			//log("Stop date :" + lastDate);
+			//log("th start date :" + startDate);
+			//log("th Stop date :" + lastDate);
 
 			theBrush = d3.svg.brush()
 									.x(xContext)
@@ -213,7 +291,7 @@ TheTimelineHandles = function () {
 					.call(theBrush);
 
 			//show the charts
-			brushed();
+			//brushed();
 			//brushed();
 
 			// Don't allow the brushing from background and single click context switch
@@ -236,6 +314,19 @@ TheTimelineHandles = function () {
 			function brushed() {
 				//log("extent: " + theBrush.extent());
 				theRange = theBrush.extent();
+				
+				var startD = new Date(theRange[0]).getTime();
+				var endD = new Date(theRange[1]).getTime();
+								
+				//don't go smaller than 1 seconds
+				if(endD < (startD + 1000)){
+					
+					endD = startD + 1000;
+					theRange[1] = new Date(endD);
+					
+					context.select('.brush').call(theBrush.extent(theRange));
+				}				
+				
 				for(var i = 0; i < noOfData; i++) {
 					//context.select('.line').attr('d', lineGen(data[0].data())); //lineContext //show the context line
 				}
@@ -253,20 +344,24 @@ TheTimelineHandles = function () {
 				var start, end;
 				if(data.length >= 1) {
 					start = data[0].data();
-					start = start[0].timestamp + 0;
+					start = start[0].timestamp - 0;
 					//log("start: " + start);
 					
 					end = data[0].data();
-					end = end[end.length - 1].timestamp + 0;
+					end = end[end.length - 1].timestamp - 0;
+					
+					
+					startTimeRange = start;
+					endTimeRange = end;
 					//log("end: " + end);
 				}
 				if(data.length > 1) {						
 					for(var i = 1; i < data.length; i++) {
 						var s = data[i].data();
-						s = s[0].timestamp + 0;
+						s = s[0].timestamp - 0;
 						
 						var e = data[i].data();
-						e = e[e.length - 1].timestamp + 0;
+						e = e[e.length - 1].timestamp - 0;
 						
 						
 						if(s < start) {
@@ -277,7 +372,7 @@ TheTimelineHandles = function () {
 						}
 					}
 				
-					//log("Start timestamp: " + start + " and End timestamp: " + end );
+					//log("timelinehandler: Start timestamp: " + start + " and End timestamp: " + end );
 				}
 			}
 			
@@ -353,6 +448,7 @@ TheTimelineHandles = function () {
 		//log("before " + theBrush.extent());
 		theRange = range;
 		theBrush.extent(range);
+		log("th: range = " + range);
 		
 		//log("after  " + theBrush.extent());
 		if(theBrush.extent() != null) {
