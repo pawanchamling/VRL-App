@@ -358,7 +358,7 @@ VRL.TheData = function(data) {
 					TheApp.getDataAt(2).style.dataColor("#00ff00");
 					TheApp.getDataAt(2).styles.push("#007900");
 					TheApp.getDataAt(2).styles.push("#00df00");
-					TheApp.getDataAt(2).styles.push("#3cff3c");
+					TheApp.getDataAt(2).styles.push("#88ff88");
 					loadData4();
 				});	
 			}
@@ -405,6 +405,8 @@ VRL.TheData = function(data) {
 			
 			timeline.addObserver(timelineHandles);
 			timeline.addObserver(focus);
+			
+			focus.addObserver(timelineHandles)
 			
 			function loadMoreData() {
 				//widget.addData();

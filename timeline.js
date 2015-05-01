@@ -15,7 +15,7 @@ TheTimeline = function () {
 		right : 40
 	};
 
-	var width = 960;
+	var width = 1260;
 	var height = 120;
 
 	var contextHeight = 100;
@@ -53,7 +53,7 @@ TheTimeline = function () {
 	
 	timeline.handlesUpdated = function fetchRange() {
 		// notify our observers of the stock change
-		subject.notify(theRange);
+		subject.notify(theRange, "timeline");
 	};
 	//##############################################
 			
@@ -392,7 +392,7 @@ TheTimeline = function () {
 				//timeline.changeHandles();
 				
 				
-				subject.notify(theRange);//notifying all the observers about the change in range
+				subject.notify(theRange, "timeline");//notifying all the observers about the change in range
 			};
 	
 			timeline.changeHandles = function(){
@@ -452,7 +452,7 @@ TheTimeline = function () {
 			
 
 	//the handle was updated
-	timeline.update = function (range) {
+	timeline.update = function (range, caller) {
 		//log("theBrush : " + theBrush.extent());
 		//log("before " + theBrush.extent());
 		theRange = range;

@@ -15,7 +15,7 @@ TheTimelineHandles = function () {
 		right : 40
 	};
 
-	var width = 960;
+	var width = 1260;
 	var height = 120;
 
 	var contextHeight = 100;
@@ -28,6 +28,9 @@ TheTimelineHandles = function () {
 	//The total time range
 	var startTimeRange = 0;
 	var endTimeRange = 0;
+	
+	var theStartValue = 0;
+	var theEndValue = 0;
 	
 	//
 		
@@ -51,7 +54,7 @@ TheTimelineHandles = function () {
 	
 	timelineHandles.handlesUpdated = function fetchRange() {
 		// notify our observers of the stock change
-		subject.notify(theRange);
+		subject.notify(theRange, "timelineHandles");
 	};
 	//##############################################
 	
@@ -132,6 +135,10 @@ TheTimelineHandles = function () {
 					
 			var startDate = new Date(startValue - 0);
 			var lastDate = new Date(endValue - 0);
+			
+			theStartValue = startValue;
+			theEndValue = endValue;
+			
 			//log("start date :" + startDate);
 			//log("start date :" + xDomain[0]);
 			//log("Stop date :" + lastDate);
@@ -214,7 +221,7 @@ TheTimelineHandles = function () {
 			//log("yMax = " + yMax);
 
 			xContext.domain(d3.extent(xDomain));
-			yContext.domain([0, yMax]);
+			yContext.domain([0, yMax + 2]);
 
 		
 			for(var i = 0; i < noOfData; i++) {
@@ -232,7 +239,7 @@ TheTimelineHandles = function () {
 						context.append('circle')
 								.attr("cx", startPos)
 								.attr("cy", yContext(2))
-								.attr("r", 10)
+								.attr("r", 5)
 								.attr('stroke', data[i].style.dataColor()) //based on the index
 								.attr('stroke-width', 1)
 								.attr('fill', data[i].styles[dd.value]);
@@ -250,7 +257,7 @@ TheTimelineHandles = function () {
 						context.append('circle')
 								.attr("cx", startPos)
 								.attr("cy", yContext(2))
-								.attr("r", 10)
+								.attr("r", 5)
 								.attr('stroke', data[i].styles[dd.value]) //based on the index
 								.attr('stroke-width', 1)
 								.attr('fill', data[i].styles[dd.value]);
@@ -284,15 +291,15 @@ TheTimelineHandles = function () {
 			theBrush = d3.svg.brush()
 									.x(xContext)
 									.extent([startDate, lastDate])
-									.on('brush', brushed);
+									.on('brush', timelineHandles.brushed);
 
 			context.append('g')
 					.attr('class', 'x brush')
 					.call(theBrush);
 
 			//show the charts
-			//brushed();
-			//brushed();
+			//timelineHandles.brushed();
+			//timelineHandles.brushed();
 
 			// Don't allow the brushing from background and single click context switch
 			context.select(".background")
@@ -311,28 +318,7 @@ TheTimelineHandles = function () {
 
 
 			//#######################################################
-			function brushed() {
-				//log("extent: " + theBrush.extent());
-				theRange = theBrush.extent();
-				
-				var startD = new Date(theRange[0]).getTime();
-				var endD = new Date(theRange[1]).getTime();
-								
-				//don't go smaller than 1 seconds
-				if(endD < (startD + 1000)){
-					
-					endD = startD + 1000;
-					theRange[1] = new Date(endD);
-					
-					context.select('.brush').call(theBrush.extent(theRange));
-				}				
-				
-				for(var i = 0; i < noOfData; i++) {
-					//context.select('.line').attr('d', lineGen(data[0].data())); //lineContext //show the context line
-				}
-				subject.notify(theRange);//notifying all the observers about the change in range
-			}
-
+			
 			function nobrush(a, b, c) {
 				//to stop the brushing from the chart background
 				//log('Brushing from background diabled')
@@ -441,22 +427,83 @@ TheTimelineHandles = function () {
 		return timelineHandles;
 	};
 
+	timelineHandles.brushed = function() {
+		//log("extent: " + theBrush.extent());
+		theRange = theBrush.extent();
+		
+		var startD = new Date(theRange[0]).getTime();
+		var endD = new Date(theRange[1]).getTime();
+						
+		//don't go smaller than 1 seconds
+		if(endD < (startD + 1000)){
+			
+			endD = startD + 1000;
+			theRange[1] = new Date(endD);
+			
+			context.select('.brush').call(theBrush.extent(theRange));
+		}				
+		
+		for(var i = 0; i < noOfData; i++) {
+			//context.select('.line').attr('d', lineGen(data[0].data())); //lineContext //show the context line
+		}
+		subject.notify(theRange, "timelineHandles");//notifying all the observers about the change in range
+	};
 
-	timelineHandles.update = function (range) {
+	
+	timelineHandles.update = function (range, caller) {
 		
 		//log("theBrush : " + theBrush.extent());
 		//log("before " + theBrush.extent());
 		theRange = range;
-		theBrush.extent(range);
-		log("th: range = " + range);
+		//theBrush.extent(range);
+		log("th: range = " + range + " ### Caller : " + caller);
 		
 		//log("after  " + theBrush.extent());
 		if(theBrush.extent() != null) {
 			//timeline.changeHandles();
-			context.select('.brush').call(theBrush.extent(theRange));
+			if(caller == "focus") {
+				//log("called by focus")
+				
+				//don't let the range go below or above the initla range
+				//log("theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime())
+				if(new Date(theRange[0] - 0).getTime() < theStartValue) {
+					
+					var diff = (theStartValue - new Date(theRange[0] - 0).getTime());
+					theRange[0] = new Date(theStartValue - 0);
+					
+					theRange[1] = new Date(new Date(theRange[1] - 0).getTime() + diff);				
+					
+					//log("< too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
+				}
+				if(new Date(theRange[1] - 0).getTime() > theEndValue) {
+					
+					var diff = (new Date(theRange[1] - 0).getTime() - theEndValue);
+					
+					theRange[1] = new Date(theEndValue - 0);
+					
+					theRange[0] = new Date(new Date(theRange[0] - 0).getTime() - diff);	
+					if(new Date(theRange[0] - 0).getTime() < theStartValue){
+						theRange[0] = new Date(theStartValue - 0);
+					}
+					//log("too big: fixed");
+				}
+				//theBrush.extent(theRange);
+				context.select('.brush').call(theBrush.extent(theRange));
+				timelineHandles.brushed();
+			}
+			else {
+			
+				context.select('.brush').call(theBrush.extent(theRange));
+			}
 		}
 		
+		
+		
 	}
+	
+	
+	
+	
 	
 	return timelineHandles;
 };
