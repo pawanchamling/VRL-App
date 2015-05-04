@@ -480,32 +480,48 @@ TheTimelineHandles = function () {
 				}
 				else {
 				
-				//don't let the range go below or above the initial range
-				log("tiH: theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime() + " diff: " + (theStartValue - new Date(theRange[0] - 0).getTime()));
-				log("tiH: theEndValue   = " + theEndValue + " : " + new Date(theRange[1] - 0).getTime() + " diff: " + (new Date(theRange[1] - 0).getTime() - theEndValue));
-				if(new Date(theRange[0] - 0).getTime() < theStartValue) {
+					var rangeStart  = new Date(theRange[0] - 0).getTime();
+					var rangeEnd	= new Date(theRange[1] - 0).getTime();
+					//don't let the range go below or above the initial range
+					log("tiH: theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime() + " diff: " + (theStartValue - new Date(theRange[0] - 0).getTime()));
+					log("tiH: theEndValue   = " + theEndValue + " : " + new Date(theRange[1] - 0).getTime() + " diff: " + (new Date(theRange[1] - 0).getTime() - theEndValue));
 					
-					var diff = (theStartValue - new Date(theRange[0] - 0).getTime());
-					theRange[0] = new Date(theStartValue - 0);
-					
-					theRange[1] = new Date(new Date(theRange[1] - 0).getTime() + diff);				
-					if(new Date(theRange[1] - 0).getTime() > theEndValue){
-						theRange[1] = new Date(theEndValue - 0);
+					//if less than 1 second
+					if((rangeEnd - rangeStart) < 1000) {
+						if(theEndValue > (theEndValue + 1000)) {
+							theRange[1] = new Date(rangeStart + 1000);
+						}
+						else {
+							theRange[0] = new Date(rangeEnd - 1000);
+						}
 					}
-					log("tiH: < too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
-				}
-				if(new Date(theRange[1] - 0).getTime() > theEndValue) {
 					
-					var diff = (new Date(theRange[1] - 0).getTime() - theEndValue);
-					
-					theRange[1] = new Date(theEndValue - 0);
-					
-					theRange[0] = new Date(new Date(theRange[0] - 0).getTime() - diff);	
-					if(new Date(theRange[0] - 0).getTime() < theStartValue){
+					if(rangeStart < theStartValue) {
+						
+						var diff = (theStartValue - rangeStart);
 						theRange[0] = new Date(theStartValue - 0);
+						
+						theRange[1] = new Date(rangeEnd + diff);				
+						if(rangeEnd > theEndValue){
+							theRange[1] = new Date(theEndValue - 0);
+						}
+						log("tiH: < too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
 					}
-					log("tiH: > too big: fixed");
-				}
+					
+					if(rangeEnd > theEndValue) {
+						
+						var diff = (rangeEnd - theEndValue);
+						
+						theRange[1] = new Date(theEndValue - 0);
+						
+						theRange[0] = new Date(rangeStart - diff);	
+						if(rangeStart < theStartValue){
+							theRange[0] = new Date(theStartValue - 0);
+						}
+						log("tiH: > too big: fixed");
+					}
+					
+					
 				
 				}
 				//theBrush.extent(theRange);

@@ -367,6 +367,16 @@ VRL.TheData = function(data) {
 					//theData.push(data);	
 					TheApp.addData(data);
 					TheApp.getDataAt(3).style.dataColor("#000000");
+					//loadData5();
+					loadChart();
+				});	
+			}
+			function loadData5() {
+			//2015-05-02-200533_Noise_data
+				d3.json("data/2015-05-02-200533_Noise_data.json", function (data) {				
+					//theData.push(data);	
+					TheApp.addData(data);
+					TheApp.getDataAt(3).style.dataColor("#000000");
 					loadChart();
 				});	
 			}
