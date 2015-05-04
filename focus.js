@@ -48,6 +48,7 @@ TheFocus = function () {
 	
 	
 	var lastZoomScale = 1;
+	var previousZoomCaller = "";
 	
 	//##############################################
 	//For Observer Pattern
@@ -643,42 +644,24 @@ TheFocus = function () {
 		log("foc: update: range = " + theRange + " caller : " + caller);
 		if (theFocus != undefined ) {	
 			log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " #########");		
+			
 			xFocus.domain(theRange);
+			
 			if(caller != "timelineHandlesZoomed") {
 				//theZoom.scale(scaleVal);
-				//theZoom.x(xFocus);
+				theZoom.x(xFocus);
 			}				
+			
 			//theZoom.x(xFocus);
+			
 			log("foc: update: scale : " + theZoom.scale());
 			
 			//log("foc: update: x " + theZoom.x());
 			
 			var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
 			var scaleVal = fullTimeRangeDifference / dateRangeDiff;
-			//theZoom.scale(scaleVal);
-			//theZoom.scale(zoomScale - 0);
-			
-			//theZoom.scale(1)
-			//log("foc: update: start : " + new Date(theRange[0]).getTime() + " - end : " + new Date(theRange[1]).getTime())
-			//log("foc: update: scaleb : " + theZoom.scale());
-			
-			//var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
-			
-			//var calculatedScale = dateRangeDiff/fullTimeRangeDifference * Math.pow(2, 6.8);
-			//log("foc: update: dateRangeDiff : " + dateRangeDiff);
-			//log("foc: update: calculatedScale : " + calculatedScale);
-			
-			//var powerVal = ((dateRangeDiff - fullTimeRangeDifference) * 6.8 ) / (1000 - fullTimeRangeDifference);
-			//log("foc: update: powerVal : " + powerVal);					
-			//var scaleVal2 = Math.pow(2, powerVal);
 			
 			log("foc: update: scaleVal : " + scaleVal);
-			//log("foc: update: scaleVal2 : " + scaleVal2);
-			//theZoom.scale(scaleVal);
-			
-			//theZoom.scale(scaleVal);
-			//log("foc: update: scaleu : " + theZoom.scale());
-			//log("foc: update: scale now : " + theZoom.scale());
 			
 			focus.redrawLines(theData);
 			
@@ -689,6 +672,9 @@ TheFocus = function () {
 				//theZoom.scale(scaleVal);
 				//theZoom.x(xFocus);
 				lastZoomScale = scaleVal;
+				if(previousZoomCaller != "timelineHandlesZoomed") {
+					theZoom.scale(scaleVal);
+				}
 			}
 			else {
 				//theZoom.scale(zoomScale);
@@ -714,6 +700,8 @@ TheFocus = function () {
 			theFocus.select('.x.axis').call(xAxisFocus);
 		}
 		*/
+		previousZoomCaller = caller;
+		
 	};
 
 	return focus;
