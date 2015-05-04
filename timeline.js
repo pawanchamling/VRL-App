@@ -119,7 +119,7 @@ TheTimeline = function () {
 				//log("d = " + d);
 				d.map(function(dd) {
 					//log("dd = " + dd.timestamp);
-					xDomain.push(new Date(dd.timestamp - 0));
+					xDomain.push(new Date(dd.timestamp - 0).getTime());
 				});
 				
 			});

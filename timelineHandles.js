@@ -64,13 +64,13 @@ TheTimelineHandles = function () {
 			//var data = selection;
 			
 			noOfData = data.length;
-			//log("noOfData = " + noOfData);
+			//log("tiH:noOfData = " + noOfData);
 			//calculateTimeRange(data);
 			
-			//log("data size = " + data);
-			//log("data str : " + JSON.stringify(data));
+			//log("tiH:data size = " + data);
+			//log("tiH:data str : " + JSON.stringify(data));
 			//data = data.getData();
-			//log("data str: " + JSON.stringify(data));
+			//log("tiH:data str: " + JSON.stringify(data));
 			//log(data);	
 						
 			
@@ -96,20 +96,20 @@ TheTimelineHandles = function () {
 			var xDomain = [];
 			data.forEach(function (d) {
 				d = d.data();
-				//log("d = " + d);
+				//log("tiH:d = " + d);
 				d.map(function(dd) {
-					//log("dd = " + dd.timestamp);
-					xDomain.push(new Date(dd.timestamp - 0));
+					//log("tiH:dd = " + dd.timestamp);
+					xDomain.push(new Date(dd.timestamp - 0).getTime());
 				});
 				
 			});
-			//log("xDomain = " + xDomain);
+			//log("tiH:xDomain = " + xDomain);
 			/**/
 			
 			//### Calculating the start and the end timeline among the data ###
 			var startValue = xDomain[0] - 0;
 			var startIndex = 0;
-			var endValue   = xDomain[xDomain.length - 1] - 0;
+			var endValue = xDomain[1] - 0;
 			var endIndex = xDomain.length - 1;
 			for(var i = 0; i < xDomain.length; i++) {
 				if(xDomain[i] < startValue) {
@@ -122,8 +122,8 @@ TheTimelineHandles = function () {
 				}
 			}
 			
-			//log("start date :" + xDomain[0]);
-			//log("Stop date :" + xDomain[xDomain.length - 1]);
+			//log("tiH:start date :" + xDomain[0]);
+			//log("tiH:Stop date :" + xDomain[xDomain.length - 1]);
 			
 			var temp = xDomain[0];
 			xDomain[0] = startValue;
@@ -139,10 +139,12 @@ TheTimelineHandles = function () {
 			theStartValue = startValue;
 			theEndValue = endValue;
 			
-			//log("start date :" + startDate);
-			//log("start date :" + xDomain[0]);
-			//log("Stop date :" + lastDate);
-			//log("Stop date :" + xDomain[xDomain.length - 1]);
+			//log("tiH:Start : " + startValue + " -- End : " + endValue );
+			
+			//log("tiH:start date :" + startDate);
+			//log("tiH:start date :" + xDomain[0]);
+			//log("tiH:Stop date :" + lastDate);
+			//log("tiH:Stop date :" + xDomain[xDomain.length - 1]);
 			//###-----------------------------------------------------------------
 			
 			
@@ -205,28 +207,28 @@ TheTimelineHandles = function () {
 			var yValues = [];
 			data.forEach(function (d) {
 				d = d.data();
-				//log("d = " + d);
+				//log("tiH:d = " + d);
 				d.map(function(dd) {
-					//log("dd = " + dd.timestamp);
+					//log("tiH:dd = " + dd.timestamp);
 					//xDomain.push(new Date(dd.timestamp - 0));
 					yValues.push(dd.value - 0);
 				});
 				
 			});
-			//log("yValues : " + yValues);
+			//log("tiH:yValues : " + yValues);
 			
 			var yMax = d3.max(yValues);
 			//var yMax = d3.max(data.map(function(d) { return d[1]; } )); //for array of data
 			
-			//log("yMax = " + yMax);
+			//log("tiH:yMax = " + yMax);
 
 			xContext.domain(d3.extent(xDomain));
 			yContext.domain([0, yMax + 2]);
 
 		
 			for(var i = 0; i < noOfData; i++) {
-				//log("l "  + data[i].data());
-				//log("dataColor = " + data[i].style.dataColor());
+				//log("tiH:l "  + data[i].data());
+				//log("tiH:dataColor = " + data[i].style.dataColor());
 				
 				if(data[i].dataType() == 0) {
 					//if Nominal data
@@ -234,7 +236,7 @@ TheTimelineHandles = function () {
 					var d = data[i].data();		
 					d.map(function(dd) {
 						var startPos = xContext(dd.timestamp);
-						//log("some nominal data here")
+						//log("tiH:some nominal data here")
 						
 						context.append('circle')
 								.attr("cx", startPos)
@@ -285,8 +287,8 @@ TheTimelineHandles = function () {
 
 			var startDate = new Date(xDomain[0] - 0);
 			var lastDate = new Date(xDomain[xDomain.length - 1] - 0);
-			//log("th start date :" + startDate);
-			//log("th Stop date :" + lastDate);
+			//log("tiH:th start date :" + startDate);
+			//log("tiH:th Stop date :" + lastDate);
 
 			theBrush = d3.svg.brush()
 									.x(xContext)
@@ -326,12 +328,12 @@ TheTimelineHandles = function () {
 			}
 			
 			function calculateTimeRange(data){
-				//log("calculating time range");
+				//log("tiH:calculating time range");
 				var start, end;
 				if(data.length >= 1) {
 					start = data[0].data();
 					start = start[0].timestamp - 0;
-					//log("start: " + start);
+					//log("tiH:start: " + start);
 					
 					end = data[0].data();
 					end = end[end.length - 1].timestamp - 0;
@@ -339,7 +341,7 @@ TheTimelineHandles = function () {
 					
 					startTimeRange = start;
 					endTimeRange = end;
-					//log("end: " + end);
+					//log("tiH:end: " + end);
 				}
 				if(data.length > 1) {						
 					for(var i = 1; i < data.length; i++) {
@@ -358,7 +360,7 @@ TheTimelineHandles = function () {
 						}
 					}
 				
-					//log("timelinehandler: Start timestamp: " + start + " and End timestamp: " + end );
+					//log("tiH: timelinehandler: Start timestamp: " + start + " and End timestamp: " + end );
 				}
 			}
 			
@@ -428,7 +430,8 @@ TheTimelineHandles = function () {
 	};
 
 	timelineHandles.brushed = function() {
-		//log("extent: " + theBrush.extent());
+		log("tiH: $$$$$$$$$$$$$$$$$$$$$$$$ brushed $$$$$$$$$$$$$$$$$$$$$$$$")
+		//log("tiH: extent: " + theBrush.extent());
 		theRange = theBrush.extent();
 		
 		var startD = new Date(theRange[0]).getTime();
@@ -449,31 +452,47 @@ TheTimelineHandles = function () {
 		subject.notify(theRange, "timelineHandles");//notifying all the observers about the change in range
 	};
 
-	
 	timelineHandles.update = function (range, caller) {
+		//log("tiH:$$$$$$$$$$$$")
+		theRange = range;
+		context.select('.brush').call(theBrush.extent(theRange));
 		
-		//log("theBrush : " + theBrush.extent());
-		//log("before " + theBrush.extent());
+	};
+	
+	timelineHandles.update = function (range, caller, zoomScale) {
+		
+		log("tiH: caller = " + caller);
+		//log("tiH: theBrush : " + theBrush.extent());
+		//log("tiH: before " + theBrush.extent());
 		theRange = range;
 		//theBrush.extent(range);
-		log("th: range = " + range + " ### Caller : " + caller);
+		log("tiH: range = " + theRange + " ### Caller : " + caller + "###");
 		
-		//log("after  " + theBrush.extent());
+		//log("tiH: after  " + theBrush.extent());
 		if(theBrush.extent() != null) {
 			//timeline.changeHandles();
-			if(caller == "focus") {
-				//log("called by focus")
+			if(caller == "focusZoomed") {
+				log("tiH: called by focus")
 				
-				//don't let the range go below or above the initla range
-				//log("theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime())
+				if(zoomScale == 1) {
+					theRange[0] = new Date(theStartValue - 0);
+					theRange[1] = new Date(theEndValue - 0);
+				}
+				else {
+				
+				//don't let the range go below or above the initial range
+				log("tiH: theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime() + " diff: " + (theStartValue - new Date(theRange[0] - 0).getTime()));
+				log("tiH: theEndValue   = " + theEndValue + " : " + new Date(theRange[1] - 0).getTime() + " diff: " + (new Date(theRange[1] - 0).getTime() - theEndValue));
 				if(new Date(theRange[0] - 0).getTime() < theStartValue) {
 					
 					var diff = (theStartValue - new Date(theRange[0] - 0).getTime());
 					theRange[0] = new Date(theStartValue - 0);
 					
 					theRange[1] = new Date(new Date(theRange[1] - 0).getTime() + diff);				
-					
-					//log("< too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
+					if(new Date(theRange[1] - 0).getTime() > theEndValue){
+						theRange[1] = new Date(theEndValue - 0);
+					}
+					log("tiH: < too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
 				}
 				if(new Date(theRange[1] - 0).getTime() > theEndValue) {
 					
@@ -485,11 +504,14 @@ TheTimelineHandles = function () {
 					if(new Date(theRange[0] - 0).getTime() < theStartValue){
 						theRange[0] = new Date(theStartValue - 0);
 					}
-					//log("too big: fixed");
+					log("tiH: > too big: fixed");
+				}
+				
 				}
 				//theBrush.extent(theRange);
 				context.select('.brush').call(theBrush.extent(theRange));
-				timelineHandles.brushed();
+				//timelineHandles.brushed();
+				subject.notify(theRange, "timelineHandlesZoomed", zoomScale)
 			}
 			else {
 			
@@ -499,7 +521,7 @@ TheTimelineHandles = function () {
 		
 		
 		
-	}
+	};
 	
 	
 	
