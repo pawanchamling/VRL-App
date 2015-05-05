@@ -1,4 +1,4 @@
-TheTimelineHandles = function () {
+VRL.TheTimelineHandles = function (docWidth, docHeight) {
 	"use strict";
 	// default settings
 	var margin = {
@@ -15,10 +15,10 @@ TheTimelineHandles = function () {
 		right : 40
 	};
 
-	var width = 1260;
-	var height = 120;
+	var width = docWidth - margin.left - padding.left;
+	var height = 70;
 
-	var contextHeight = 100;
+	var contextHeight = height - 20;
 	var contextHeightPadding = 5;
 	var areaSpace = 40;
 
@@ -461,18 +461,18 @@ TheTimelineHandles = function () {
 	
 	timelineHandles.update = function (range, caller, zoomScale) {
 		
-		log("tiH: caller = " + caller);
+		//log("tiH: caller = " + caller);
 		//log("tiH: theBrush : " + theBrush.extent());
 		//log("tiH: before " + theBrush.extent());
 		theRange = range;
 		//theBrush.extent(range);
-		log("tiH: range = " + theRange + " ### Caller : " + caller + "###");
+		//log("tiH: range = " + theRange + " ### Caller : " + caller + "###");
 		
 		//log("tiH: after  " + theBrush.extent());
 		if(theBrush.extent() != null) {
 			//timeline.changeHandles();
 			if(caller == "focusZoomed") {
-				log("tiH: called by focus")
+				//log("tiH: called by focus")
 				
 				if(zoomScale == 1) {
 					theRange[0] = new Date(theStartValue - 0);
@@ -483,8 +483,8 @@ TheTimelineHandles = function () {
 					var rangeStart  = new Date(theRange[0] - 0).getTime();
 					var rangeEnd	= new Date(theRange[1] - 0).getTime();
 					//don't let the range go below or above the initial range
-					log("tiH: theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime() + " diff: " + (theStartValue - new Date(theRange[0] - 0).getTime()));
-					log("tiH: theEndValue   = " + theEndValue + " : " + new Date(theRange[1] - 0).getTime() + " diff: " + (new Date(theRange[1] - 0).getTime() - theEndValue));
+					//log("tiH: theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime() + " diff: " + (theStartValue - new Date(theRange[0] - 0).getTime()));
+					//log("tiH: theEndValue   = " + theEndValue + " : " + new Date(theRange[1] - 0).getTime() + " diff: " + (new Date(theRange[1] - 0).getTime() - theEndValue));
 					
 					//if less than 1 second
 					if((rangeEnd - rangeStart) < 1000) {
@@ -505,7 +505,7 @@ TheTimelineHandles = function () {
 						if(rangeEnd > theEndValue){
 							theRange[1] = new Date(theEndValue - 0);
 						}
-						log("tiH: < too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
+						//log("tiH: < too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
 					}
 					
 					if(rangeEnd > theEndValue) {
@@ -518,7 +518,7 @@ TheTimelineHandles = function () {
 						if(rangeStart < theStartValue){
 							theRange[0] = new Date(theStartValue - 0);
 						}
-						log("tiH: > too big: fixed");
+						//log("tiH: > too big: fixed");
 					}
 					
 					

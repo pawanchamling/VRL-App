@@ -1,4 +1,4 @@
-TheFocus = function () {
+VRL.TheFocus = function (docWidth, docHeight) {
 	"use strict";
 	// default settings
 	var margin = {
@@ -15,10 +15,10 @@ TheFocus = function () {
 		right : 40
 	};
 
-	var width = 1260;
-	var height = 240;
+	var width = docWidth - margin.left - padding.left;
+	var height = 200;
 
-	var focusHeight = 200;
+	var focusHeight = height - 40;
 	var focusHeightPadding = 5;
 	var areaSpace = 40;
 
@@ -641,9 +641,9 @@ TheFocus = function () {
 		//log("foc: who called me");
 		
 		theRange = range;
-		log("foc: update: range = " + theRange + " caller : " + caller);
+		//log("foc: update: range = " + theRange + " caller : " + caller);
 		if (theFocus != undefined ) {	
-			log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " #########");		
+			//log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " #########");		
 			
 			xFocus.domain(theRange);
 			
@@ -654,14 +654,14 @@ TheFocus = function () {
 			
 			//theZoom.x(xFocus);
 			
-			log("foc: update: scale : " + theZoom.scale());
+			//log("foc: update: scale : " + theZoom.scale());
 			
 			//log("foc: update: x " + theZoom.x());
 			
 			var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
 			var scaleVal = fullTimeRangeDifference / dateRangeDiff;
 			
-			log("foc: update: scaleVal : " + scaleVal);
+			//log("foc: update: scaleVal : " + scaleVal);
 			
 			focus.redrawLines(theData);
 			
@@ -684,8 +684,8 @@ TheFocus = function () {
 				lastZoomScale = scaleVal;
 				
 			}
-			log("foc: update: scaleu2: " + theZoom.scale());
-			log("foc: update: range = " + theRange + " caller : " + caller);
+			//log("foc: update: scaleu2: " + theZoom.scale());
+			//log("foc: update: range = " + theRange + " caller : " + caller);
 			
 		}
 		/*

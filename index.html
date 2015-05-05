@@ -55,23 +55,57 @@ rect.pane {
 .w {
   fill: #35baf6;
 }
+
+/*#####################*/
+
+#LocationAndNotesDIV {
+	height: 500px;
+	background: #bbb;
+}
+
+#LocationDIV {	
+  width: 70%;
+  background-color: #eee;
+  height: 100%;
+  float: left;
+}
+
+#NotesDIV {
+  background-color: #111;
+  width: 30%;
+  height: 100%;
+  float: left;
+}
+
+
 </style>
 
     <script src="vrl.js"></script>
     <script src="script.js"></script>
     <script src="focus.js"></script>
     <script src="timeline.js"></script>
+    <script src="theMap.js"></script>
     <script src="timelineHandles.js"></script>
 	<!--
     <script src="Noise_data.js"></script>
 	-->
     <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="libs\jquery-2.1.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
   </head>
 
   <body>
     <div id="FocusDIV"></div>
     <div id="TimeLineHandlerDIV"></div>
     <div id="TimeLineDIV"></div>
+	<div id="LocationAndNotesDIV">
+		<div id="LocationDIV">
+		
+		</div>
+		<div id="NotesDIV">
+		
+		</div>
+	</div>
 
     <script>
 //#######################################################	
@@ -166,137 +200,12 @@ var Subject2 = (function (window, undefined) {
 //#######################################################
 	
 	
-        var parseDate = d3.time.format("%b %Y").parse;
-
-        function type(d) {
-            d[0] = parseDate(d[0]);
-            d[1] = +d[1];
-            return d;
-        }
-        
-        var values = [
-			["Jan 2000", 1394.46],
-			["Feb 2000", 1366.42],
-			["Mar 2000", 1498.58],
-			["Apr 2000", 1452.43],
-			["May 2000", 1420.6],
-			["Jun 2000", 1454.6],
-			["Jul 2000", 1430.83],
-			["Aug 2000", 1517.68],
-			["Sep 2000", 1436.51],
-			["Oct 2000", 1429.4],
-			["Nov 2000", 1314.95],
-			["Dec 2000", 1320.28],
-			["Jan 2001", 1366.01],
-			["Feb 2001", 1239.94],
-			["Mar 2001", 1160.33],
-			["Apr 2001", 1249.46],
-			["May 2001", 1255.82],
-			["Jun 2001", 1224.38],
-			["Jul 2001", 1211.23],
-			["Aug 2001", 1133.58],
-			["Sep 2001", 1040.94],
-			["Oct 2001", 1059.78],
-			["Nov 2001", 1139.45],
-			["Dec 2001", 1148.08],
-			["Jan 2002", 1130.2],
-			["Feb 2002", 1106.73],
-			["Mar 2002", 1147.39],
-			["Apr 2002", 1076.92],
-			["May 2002", 1067.14]
-        ];
-
-            values.forEach(type);
-			
 //#######################################################
 
 //global namespace
 //var VRL = VRL || {};
-
-	/*
 			
- //#######################################################    
-//The styles for TheData 
-VRL.DataStyle = function() {
-	var dataColor = "0000ff"; // hex
-	var lineSize = 5; //in pixels
-	var timelineSize = 20; //in pixels
-	
-	this.dataColor = function(_) {
-			if (!arguments.length)
-				return dataColor;
-			dataColor = _;
-	};
-	this.lineSize = function(_) {
-			if (!arguments.length)
-				return lineSize;
-			lineSize = _;
-	};
-	this.timelineSize = function(_) {
-			if (!arguments.length)
-				return timelineSize;
-			timelineSize = _;
-	};
-}
- 
-//The Data
-VRL.TheData = function(data) {
-		data = JSON.parse(data);
-		var dataName = data.name;
-		var dataSource = data.source;
-		var dataType = data.type;
-		var dataInfo = data.valueInfo;
-		var data = data.values;					
-		
-		this.style = new VRL.DataStyle();
-		
-		this.dataName = function(_) {
-				if (!arguments.length)
-					return dataName;
-				dataName = _;
-		};
-		this.dataSource = function(_) {
-				if (!arguments.length)
-					return dataSource;
-				dataSource = _;
-		};
-		this.dataType = function(_) {
-				if (!arguments.length)
-					return dataType;
-				dataType = _;
-		};
-		this.dataInfo = function(_) {
-				if (!arguments.length)
-					return dataInfo;
-				dataInfo = _;
-		};
-		this.data = function(_) {
-				if (!arguments.length)
-					return data;
-				data = _;
-		};
-				
-}
-
-			
-	*/
-	
-			/*
-			TheData.prototype.getDataName = function(_) {
-					if (!arguments.length)
-						return dataName;
-					dataName = _;
-					//return timelineHandles;
-			};
-			*/
- 
- var jsonData = "{	\"name\" : \"Noise Data\",\"Source\" : \"Android Mobile\"," + 
-		"\"type\" : \"2\",	\"valueInfo\" : {\"max\" : \"10.682592592592593\",\"min\" : \"0.34703703703703703\"," +
-		"\"threshold\" : \"8\"	},	\"values\" : [{	\"timestamp\" : \"1429650061696\",\"value\" : \"0.6388888888888888\"" +
-		"}, {\"timestamp\" : \"1429650064693\",	\"value\" : \"2.442962962962963\"}]}";
-			//var theD = new VRL.TheData(jsonData);
-			
-			var TheApp = VRL();
+			//var TheApp = VRL();
 			//TheApp.addData(jsonData);
 			//log(TheApp.allData);
 			//log(TheApp.getData());
@@ -306,21 +215,33 @@ VRL.TheData = function(data) {
 	
 			
 			
-			
+				//log($(window).height());   // returns height of browser viewport
+			//log($(document).height()); // returns height of HTML document
+			//log($(window).width());   // returns width of browser viewport
+			//log($(document).width()); // returns width of HTML document
+			//log(screen.height)//screen height
+			//log(screen.width)//screen width
+		   
+		   var docWidth  = $(document).width();
+		   var docHeight = $(document).height();
+		   
 			
 			
 			
 			//
 			//var widget = myWidget();
 			
+			var TheApp = VRL();
 			
-			var timelineHandles = TheTimelineHandles();
-			var timeline = TheTimeline();
-			var focus = TheFocus();
+			var timelineHandles = VRL.TheTimelineHandles(docWidth, docHeight);
+			var timeline = VRL.TheTimeline(docWidth, docHeight);
+			var focus = VRL.TheFocus(docWidth, docHeight);
+			
+			var mapDIV = document.getElementById("LocationDIV");
+			var map = VRL.TheMap(mapDIV);
 		   
 		   
-		   
-		   
+		
 		   
 		   
 		   //log(values);
@@ -367,16 +288,16 @@ VRL.TheData = function(data) {
 					//theData.push(data);	
 					TheApp.addData(data);
 					TheApp.getDataAt(3).style.dataColor("#000000");
-					//loadData5();
-					loadChart();
+					loadData5();
+					//loadChart();
 				});	
 			}
 			function loadData5() {
 			//2015-05-02-200533_Noise_data
-				d3.json("data/2015-05-02-200533_Noise_data.json", function (data) {				
+				d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {				
 					//theData.push(data);	
 					TheApp.addData(data);
-					TheApp.getDataAt(3).style.dataColor("#000000");
+					TheApp.getDataAt(4).style.dataColor("#000000");
 					loadChart();
 				});	
 			}
@@ -399,6 +320,9 @@ VRL.TheData = function(data) {
 						.datum(TheApp.getData())
 						.call(focus);
 				
+				//initialize map
+				map.initialize(TheApp.getData());
+				
 				loadMoreData();
 				
 			}
@@ -409,14 +333,22 @@ VRL.TheData = function(data) {
 				}
 			};
 			
-			//adding the Observers
+			//###########  adding the Observers   ########################
 			timelineHandles.addObserver(timeline);
 			timelineHandles.addObserver(focus);
+			timelineHandles.addObserver(map);
 			
 			timeline.addObserver(timelineHandles);
 			timeline.addObserver(focus);
+			timeline.addObserver(map);
 			
 			focus.addObserver(timelineHandles)
+			
+			
+			
+			
+			//###########
+			
 			
 			function loadMoreData() {
 				//widget.addData();

@@ -1,4 +1,4 @@
-TheTimeline = function () {
+VRL.TheTimeline = function (docWidth, docHeight) {
 	"use strict";
 	// default settings
 	var margin = {
@@ -15,10 +15,10 @@ TheTimeline = function () {
 		right : 40
 	};
 
-	var width = 1260;
-	var height = 120;
+	var width = docWidth - margin.left - padding.left;
+	var height = 70;
 
-	var contextHeight = 100;
+	var contextHeight = height - 20;
 	var contextHeightPadding = 5;
 	var areaSpace = 40;
 
