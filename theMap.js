@@ -10,7 +10,12 @@ VRL.TheMap = function (theMapDIV) {
 	var gpsPoints = [];
 	var markers = [];
 	var paths = [];
+	var startCircle;
+	var endCircle;
 	
+	
+	var startPathImage = "client/images/startPathImageSmall.png";
+	var endPathImage   = "client/images/endPathImageSmall.png";
 	
 	var isMapInitialized = false;
 	
@@ -124,7 +129,7 @@ VRL.TheMap = function (theMapDIV) {
 		
 		
 		
-		theMap.showMarkers();
+		//theMap.showMarkers();
 		theMap.showPaths(data);
 	};
 	
@@ -166,10 +171,16 @@ VRL.TheMap = function (theMapDIV) {
 		var rangeStart  = new Date(theRange[0] - 0).getTime();
 		var rangeEnd	= new Date(theRange[1] - 0).getTime();
 		
+		//-- removing the previous paths and images
 		for (var i = 0; i < paths.length; i++) {
 			paths[i].setMap(null);
 		}
-		paths = [];		
+		paths = [];	
+		if(startCircle != undefined) {
+			startCircle.setMap(null);
+			endCircle.setMap(null);
+		}
+		
 		
 		data.forEach(function (d, index) {
 			var coordinates = [];
@@ -196,6 +207,34 @@ VRL.TheMap = function (theMapDIV) {
 			
 				pathLine.setMap(map);
 				paths.push(pathLine);
+				var startCircleImage = new google.maps.MarkerImage(startPathImage,
+										// This marker is 20 pixels wide by 32 pixels tall.
+										null, 
+										// The origin for this image is 0,0.
+										new google.maps.Point(0,0),
+										// The anchor for this image is the base of the flagpole at 0,32.
+										new google.maps.Point(10, 10)
+									);
+				var endCircleImage = new google.maps.MarkerImage(endPathImage,
+										// This marker is 20 pixels wide by 32 pixels tall.
+										null, 
+										// The origin for this image is 0,0.
+										new google.maps.Point(0,0),
+										// The anchor for this image is the base of the flagpole at 0,32.
+										new google.maps.Point(10, 10)
+									);
+				
+				startCircle = new google.maps.Marker({
+									position: coordinates[0],
+									map: map,
+									icon: startCircleImage
+								});
+				endCircle = new google.maps.Marker({
+									position: coordinates[coordinates.length - 1],
+									map: map,
+									icon: endCircleImage
+								});
+				
 			}
 		});
 			
@@ -207,7 +246,7 @@ VRL.TheMap = function (theMapDIV) {
 		
 		////if(currentTime > (previousTime + 1000)) {
 			//log("theMap: previousTime = " + previousTime + " currentTime = " + currentTime);
-			theMap.showMarkers();
+			//theMap.showMarkers();
 			theMap.showPaths(gpsData);
 			
 		//}

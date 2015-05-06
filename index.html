@@ -257,31 +257,31 @@ var Subject2 = (function (window, undefined) {
 			//log("here we go");
 			
 			d3.json("data/Noise_data.json", function (data) {
-				TheApp.addData(data);
+				//TheApp.addData(data);
 				
 				loadData2()
 			});
 			function loadData2() {
 				d3.json("data/Noise_data3.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(1).style.dataColor("#ff0000");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(1).style.dataColor("#ff0000");
 					loadData3();
 				});	
 			}
 			function loadData3() {
 				d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(2).style.dataColor("#00ff00");
-					TheApp.getDataAt(2).styles.push("#007900");
-					TheApp.getDataAt(2).styles.push("#00df00");
-					TheApp.getDataAt(2).styles.push("#88ff88");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(2).style.dataColor("#00ff00");
+					//TheApp.getDataAt(2).styles.push("#007900");
+					//TheApp.getDataAt(2).styles.push("#00df00");
+					//TheApp.getDataAt(2).styles.push("#88ff88");
 					loadData4();
 				});	
 			}
 			function loadData4() {
 				d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(3).style.dataColor("#000000");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(3).style.dataColor("#000000");
 					loadData5();
 					//loadChart();
 				});	
@@ -289,8 +289,8 @@ var Subject2 = (function (window, undefined) {
 			function loadData5() {
 			//2015-05-02-200533_Noise_data
 				d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(4).style.dataColor("#e1d600");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(4).style.dataColor("#e1d600");
 					loadData6();
 				});	
 			}
@@ -298,7 +298,7 @@ var Subject2 = (function (window, undefined) {
 			//2015-05-02-200533_Noise_data
 				d3.json("data/2015-04-29-181948_GPS_data.json", function (data) {	
 					TheApp.addData(data);
-					TheApp.getDataAt(5).style.dataColor("#e1d600");
+					//TheApp.getDataAt(5).style.dataColor("#e1d600");
 					loadChart();
 				});	
 			}
