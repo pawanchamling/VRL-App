@@ -229,12 +229,16 @@ VRL.TheMap = function (theMapDIV) {
 									map: map,
 									icon: startCircleImage
 								});
-				endCircle = new google.maps.Marker({
+						
+
+				//log("theMap: coordinates length : " + coordinates.length);						
+				if(coordinates.length > 1) {
+					endCircle = new google.maps.Marker({
 									position: coordinates[coordinates.length - 1],
 									map: map,
 									icon: endCircleImage
 								});
-				
+				}
 			}
 		});
 			

@@ -438,7 +438,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 	};
 
 	timelineHandles.brushed = function() {
-		log("tiH: $$$$$$$$$$$$$$$$$$$$$$$$ brushed $$$$$$$$$$$$$$$$$$$$$$$$")
+		//log("tiH: $$$$$$$$$$$$$$$$$$$$$$$$ brushed $$$$$$$$$$$$$$$$$$$$$$$$")
 		//log("tiH: extent: " + theBrush.extent());
 		theRange = theBrush.extent();
 		

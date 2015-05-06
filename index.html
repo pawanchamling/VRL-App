@@ -3,6 +3,7 @@
 
   <head>
     <!--<link rel="stylesheet" href="style.css">-->
+	<link rel="stylesheet" href="libs\nanoscroller.css">
 	
 <style>
 
@@ -71,11 +72,68 @@ rect.pane {
 }
 
 #NotesDIV {
-  background-color: #111;
   width: 30%;
   height: 100%;
   float: left;
 }
+
+
+
+.noteTimeStamp {
+	float: left;
+}
+
+.noteColor {
+	background: #00ee00;
+	width: 10px;
+	float: left;
+	
+}
+
+/*####################################*/
+
+.noteBox {
+	width: 100%;
+	background: #fff;		
+	background: -moz-linear-gradient(top, #fff 0%, #d9ebf9 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#d9ebf9)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fff 0%,#d9ebf9 100%); /* Chrome10+,Safari5.1+ */
+	
+	border-top: 1px solid #5398ff;
+	border-right: 1px solid #003c95;
+}
+
+.noteBoxColor {
+	width: 15px;
+	float: left;
+	margin: 3px;
+	
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.noteBoxTimestamp {
+	width: 145px;
+	font-size: 13px;
+	float: left;
+	padding: 5px 0px 0px 5px;
+}
+
+.noteBoxNotes {
+	font-size: 15px;
+	padding: 5px 0px 0px 5px;
+	float: left;
+}
+
+/*####################################*/
+
+.nano { 
+}
+.nano .nano-content { padding: 0px; }
+.nano .nano-pane   { background: #68aee8; }
+.nano .nano-slider { background: #fff; }
+
 
 
 </style>
@@ -85,12 +143,14 @@ rect.pane {
     <script src="focus.js"></script>
     <script src="timeline.js"></script>
     <script src="theMap.js"></script>
+    <script src="theNotes.js"></script>
     <script src="timelineHandles.js"></script>
 	<!--
     <script src="Noise_data.js"></script>
 	-->
     <script src="http://d3js.org/d3.v3.js"></script>
     <script src="libs\jquery-2.1.3.min.js"></script>
+    <script src="libs\jquery.nanoscroller.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
   </head>
 
@@ -103,7 +163,12 @@ rect.pane {
 		
 		</div>
 		<div id="NotesDIV">
+			All the nominal and Ordinal notes
 		
+			<div id="NotesPanel" class="nano">
+				<div id="NotesPanelContents" class="nano-content">
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -239,7 +304,9 @@ var Subject2 = (function (window, undefined) {
 			
 			var mapDIV = document.getElementById("LocationDIV");
 			var map = VRL.TheMap(mapDIV);
-		   
+			
+			var notesDIV = document.getElementById("NotesPanelContents");
+			var theNotes = VRL.TheNotes(notesDIV);
 		   
 		
 		   
@@ -257,31 +324,31 @@ var Subject2 = (function (window, undefined) {
 			//log("here we go");
 			
 			d3.json("data/Noise_data.json", function (data) {
-				//TheApp.addData(data);
+				TheApp.addData(data);
 				
 				loadData2()
 			});
 			function loadData2() {
 				d3.json("data/Noise_data3.json", function (data) {	
-					//TheApp.addData(data);
-					//TheApp.getDataAt(1).style.dataColor("#ff0000");
+					TheApp.addData(data);
+					TheApp.getDataAt(1).style.dataColor("#ff0000");
 					loadData3();
 				});	
 			}
 			function loadData3() {
 				d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {	
-					//TheApp.addData(data);
-					//TheApp.getDataAt(2).style.dataColor("#00ff00");
-					//TheApp.getDataAt(2).styles.push("#007900");
-					//TheApp.getDataAt(2).styles.push("#00df00");
-					//TheApp.getDataAt(2).styles.push("#88ff88");
+					TheApp.addData(data);
+					TheApp.getDataAt(2).style.dataColor("#00ff00");
+					TheApp.getDataAt(2).styles.push("#007900");
+					TheApp.getDataAt(2).styles.push("#00df00");
+					TheApp.getDataAt(2).styles.push("#88ff88");
 					loadData4();
 				});	
 			}
 			function loadData4() {
 				d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {	
-					//TheApp.addData(data);
-					//TheApp.getDataAt(3).style.dataColor("#000000");
+					TheApp.addData(data);
+					TheApp.getDataAt(3).style.dataColor("#000000");
 					loadData5();
 					//loadChart();
 				});	
@@ -289,15 +356,15 @@ var Subject2 = (function (window, undefined) {
 			function loadData5() {
 			//2015-05-02-200533_Noise_data
 				d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {	
-					//TheApp.addData(data);
-					//TheApp.getDataAt(4).style.dataColor("#e1d600");
+					TheApp.addData(data);
+					TheApp.getDataAt(4).style.dataColor("#e1d600");
 					loadData6();
 				});	
 			}
 			function loadData6() {
 			//2015-05-02-200533_Noise_data
 				d3.json("data/2015-04-29-181948_GPS_data.json", function (data) {	
-					TheApp.addData(data);
+					//TheApp.addData(data);
 					//TheApp.getDataAt(5).style.dataColor("#e1d600");
 					loadChart();
 				});	
@@ -326,6 +393,7 @@ var Subject2 = (function (window, undefined) {
 				
 				//initialize map
 				map.initialize(TheApp.getData());
+				theNotes.initialize(TheApp.getData());
 				
 				loadMoreData();
 				
@@ -341,10 +409,12 @@ var Subject2 = (function (window, undefined) {
 			timelineHandles.addObserver(timeline);
 			timelineHandles.addObserver(focus);
 			timelineHandles.addObserver(map);
+			timelineHandles.addObserver(theNotes);
 			
 			timeline.addObserver(timelineHandles);
 			timeline.addObserver(focus);
 			timeline.addObserver(map);
+			timeline.addObserver(theNotes);
 			
 			focus.addObserver(timelineHandles)
 			
