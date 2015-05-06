@@ -61,6 +61,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 	
 	function timelineHandles(selection) {
 		selection.each(function (data) {
+			log("tiH: timelineHandles");
 			//var data = selection;
 			
 			noOfData = data.length;
@@ -85,7 +86,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 			
 			var xContext = d3.time.scale().range([0, availableWidth]); //for context
 			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]);
-			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom').tickFormat(d3.time.format("%X"));
+			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom');//.tickFormat(d3.time.format("%X"));
 
 			//var xDomain = data.map(function(d) { return d[0]; });//if array
 			
@@ -138,6 +139,13 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 			
 			theStartValue = startValue;
 			theEndValue = endValue;
+			
+			if(xDomain[0] + (1000*60*60*24) > xDomain[xDomain.length - 1]) {
+				log("tiH: range smaller than a day");
+				//put hourly ticks for the x-axis
+				xAxisContext.tickFormat(d3.time.format("%X"));
+				
+			}
 			
 			//log("tiH:Start : " + startValue + " -- End : " + endValue );
 			

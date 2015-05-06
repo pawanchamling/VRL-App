@@ -61,11 +61,12 @@ VRL.TheTimeline = function (docWidth, docHeight) {
 				
 	function timeline(selection) {
 		selection.each(function (data) {
+			log("timeL: timeline");
 			//var data = selection;
 			
 			noOfData = data.length;
-			//log("noOfData = " + noOfData);
-			calculateTimeRange(data);
+			//log("timeL: noOfData = " + noOfData);
+			//calculateTimeRange(data);
 			
 			var container = d3.select(this);
 			var svg = container.append('svg')
@@ -80,7 +81,7 @@ VRL.TheTimeline = function (docWidth, docHeight) {
 			
 			xContext = d3.time.scale().range([0, availableWidth]); //for context
 			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]); 
-			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom').tickFormat(d3.time.format("%X"));
+			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom');//.tickFormat(d3.time.format("%X"));
 			
 			svg.append('defs').append('clipPath')
 								.attr('id', 'clip')
@@ -97,9 +98,8 @@ VRL.TheTimeline = function (docWidth, docHeight) {
 				.attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')');
 			
 			//Generate lines for the linecharts
-			function lineG(d){			
-				//log("here")
-				//log("val " +  JSON.stringify(d)  )
+			function lineG(d) {
+				//log("timeL: val " +  JSON.stringify(d)  )
 				var lineGen = d3.svg.line()
 						.x(function(d) {
 							return xContext(new Date(d.timestamp - 0));
@@ -123,6 +123,8 @@ VRL.TheTimeline = function (docWidth, docHeight) {
 				});
 				
 			});
+			
+			//log("timeL: xDomain size = " + xDomain.length);
 			
 			//### Calculating the start and the end timeline among the data ###
 			var startValue = xDomain[0] - 0;
@@ -148,8 +150,15 @@ VRL.TheTimeline = function (docWidth, docHeight) {
 			xDomain[endIndex] = temp;
 					
 			
-			//log("t start date :" + startDate);
-			//log("t Stop date :" + lastDate);
+			//log("timeL: start date :" + xDomain[0]);
+			//log("timeL: Stop date  :" + xDomain[xDomain.length - 1]);
+			
+			if(xDomain[0] + (1000*60*60*24) > xDomain[xDomain.length - 1]) {
+				log("timeL: range smaller than a day");
+				//put hourly ticks for the x-axis
+				xAxisContext.tickFormat(d3.time.format("%X"));
+				
+			}
 			//###
 			
 		
@@ -180,7 +189,7 @@ VRL.TheTimeline = function (docWidth, docHeight) {
 		
 			//### for drawing the lines based on the data
 			var no = noOfData;
-			var h = contextHeight - contextHeightPadding;
+			var h = contextHeight - contextHeightPadding - 5;
 				h = h/no;
 			var hy = h;	//h  for height of the lines
 						//hy for 'y' coordinate for each line
@@ -243,7 +252,7 @@ VRL.TheTimeline = function (docWidth, docHeight) {
 					});
 					
 				}
-				else if(data[i].dataType() == 2) {
+				else if(data[i].dataType() == 2 || data[i].dataType() == 3) {
 					//if sensor data
 					context.append('line')
 							.attr("x1", start)

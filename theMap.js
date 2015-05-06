@@ -39,17 +39,20 @@ VRL.TheMap = function (theMapDIV) {
 	
 
 	function theMap() {
-		log("theMap: initializing");
+		//log("theMap: initializing");
 		
 		theMap.initialize();
 	}
 	
 
 	theMap.initialize = function(data) {
+		log("theMap: map initialized")
+		
+		
 		theData = data;
 		isMapInitialized = true;
 		
-		log("theMap: map initialized")
+		//
 		var gpsDataAvailable = false;
 		theData.forEach(function (d) {
 			//d = d.data();
@@ -70,7 +73,7 @@ VRL.TheMap = function (theMapDIV) {
 				}
 
 			});
-			log("theMap: no. of GPS data = " + gpsData.length);
+			//log("theMap: no. of GPS data = " + gpsData.length);
 			
 			var firstData = gpsData[0].data();
 			var firstLat, firstLong;
@@ -86,7 +89,7 @@ VRL.TheMap = function (theMapDIV) {
 				zoom: 13
 				//,mapTypeId: google.maps.MapTypeId.ROADMAP
 			}			
-			log("theMap: firstLat " + firstLat + " firstLong " + firstLong);
+			//log("theMap: firstLat " + firstLat + " firstLong " + firstLong);
 			
 			
 			theMap.loadMap(mapOptions);
@@ -170,7 +173,12 @@ VRL.TheMap = function (theMapDIV) {
 		
 		data.forEach(function (d, index) {
 			var coordinates = [];
+			var dataColor = d.style.dataColor();
+			
 			d = d.data();
+			
+			//d.style().dataColor()
+			
 			d.forEach(function(dd, index) {
 				//log("theMap: " + dd.timestamp)
 				if(dd.timestamp >= rangeStart && dd.timestamp <= rangeEnd) {
@@ -178,16 +186,16 @@ VRL.TheMap = function (theMapDIV) {
 				}
 			});			
 			if(coordinates.length > 0) {
-				var path = new google.maps.Polyline({
+				var pathLine = new google.maps.Polyline({
 								path: coordinates,
 								geodesic: true,
-								strokeColor: '#FF0000',
+								strokeColor: dataColor,
 								strokeOpacity: 1.0,
 								strokeWeight: 2
 							});
 			
-				path.setMap(map);
-				paths.push(path);
+				pathLine.setMap(map);
+				paths.push(pathLine);
 			}
 		});
 			

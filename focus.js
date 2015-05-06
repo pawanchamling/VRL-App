@@ -72,6 +72,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 
 	function focus(selection) {
 		selection.each(function (data) {
+			log("foc: focus");
 			//var data = selection;
 			theData = data;
 			noOfData = data.length;
@@ -155,7 +156,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			
 			//var formatTime = d3.time.format("%H:%M");
 			//var formatMinutes = function(d) { return formatTime(new Date(2015, 0, 1, 0, d)); };
-			xAxisFocus 			= d3.svg.axis().scale(xFocus).orient('bottom').tickFormat(d3.time.format("%X"));
+			xAxisFocus 			= d3.svg.axis().scale(xFocus).orient('bottom');//.tickFormat(d3.time.format("%X"));
             var yAxisFocusLeft 	= d3.svg.axis().scale(yFocus).orient('left');
             var yAxisFocusRight = d3.svg.axis().scale(yFocus).orient('right');
 

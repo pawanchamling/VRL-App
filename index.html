@@ -257,24 +257,19 @@ var Subject2 = (function (window, undefined) {
 			//log("here we go");
 			
 			d3.json("data/Noise_data.json", function (data) {
-				//log(data.values);
-				//log("here", "red");
-				//theData.push(data);	
 				TheApp.addData(data);
 				
 				loadData2()
 			});
 			function loadData2() {
-				d3.json("data/Noise_data3.json", function (data) {				
-					//theData.push(data);	
+				d3.json("data/Noise_data3.json", function (data) {	
 					TheApp.addData(data);
 					TheApp.getDataAt(1).style.dataColor("#ff0000");
 					loadData3();
 				});	
 			}
 			function loadData3() {
-				d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {				
-					//theData.push(data);	
+				d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {	
 					TheApp.addData(data);
 					TheApp.getDataAt(2).style.dataColor("#00ff00");
 					TheApp.getDataAt(2).styles.push("#007900");
@@ -284,8 +279,7 @@ var Subject2 = (function (window, undefined) {
 				});	
 			}
 			function loadData4() {
-				d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {				
-					//theData.push(data);	
+				d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {	
 					TheApp.addData(data);
 					TheApp.getDataAt(3).style.dataColor("#000000");
 					loadData5();
@@ -294,27 +288,37 @@ var Subject2 = (function (window, undefined) {
 			}
 			function loadData5() {
 			//2015-05-02-200533_Noise_data
-				d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {				
-					//theData.push(data);	
+				d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {	
 					TheApp.addData(data);
-					TheApp.getDataAt(4).style.dataColor("#000000");
+					TheApp.getDataAt(4).style.dataColor("#e1d600");
+					loadData6();
+				});	
+			}
+			function loadData6() {
+			//2015-05-02-200533_Noise_data
+				d3.json("data/2015-04-29-181948_GPS_data.json", function (data) {	
+					TheApp.addData(data);
+					TheApp.getDataAt(5).style.dataColor("#e1d600");
 					loadChart();
 				});	
 			}
+			//
 			
 			function loadChart() {
 				//log(theData);
 				//var dat = TheApp.getData();
 				//log("array size = " + dat.length);
 				
+				d3.select('#TimeLineDIV')
+						.datum(TheApp.getData())
+						.call(timeline);
+				
 				d3.select('#TimeLineHandlerDIV')
 						.datum(TheApp.getData())
 						.call(timelineHandles);
 				//equivalent to : timelineHandles(d3.select('#TimeLineHandlerDIV').datum(theData))
 				
-				d3.select('#TimeLineDIV')
-						.datum(TheApp.getData())
-						.call(timeline);
+				
 				
 				d3.select('#FocusDIV')
 						.datum(TheApp.getData())
