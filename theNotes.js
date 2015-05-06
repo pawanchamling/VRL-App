@@ -71,21 +71,24 @@ VRL.TheNotes = function (notesDIV) {
 							timestamp: ddd.timestamp - 0,
 							value: noteStr
 						};
-						log(noteStr)
-						var strValue = "this is one long note that a user may enter. because some of the user are so crazy that they would just do these kind of things just for fun. you know the psychopaths. anyways even the testers are the psychopaths. they would alwasys find some problem. alsways.";
+						//log(noteStr)
+						
+						//test to see how it looks when the text is very long
+						//aNote.value = "this is one long note that a user may enter. because some of the user are so crazy that they would just do these kind of things just for fun. you know the psychopaths. anyways even the testers are the psychopaths. they would alwasys find some problem. alsways.";
 						
 						var str = "<div id='" + aNote.timestamp + "' class='noteBox'>";
 						str += "<div id='" + aNote.timestamp + "ColorBox' class='noteBoxColor' style='background: " + aNote.color + "'></div>";
 						str += "<div class='noteBoxTimestamp'>" + new Date(aNote.timestamp).toLocaleString() + "</div>";
-						str += "<div id='" + aNote.timestamp + "Notes' class='noteBoxNotes'>" + strValue + "</div></div>";
+						str += "<div id='" + aNote.timestamp + "Notes' class='noteBoxNotes'><b>\"" + aNote.value + "\"</b></div></div>";
 						
 						$(notesDIV).append(str);
 						
 						var divWidth = $("#" + aNote.timestamp).width();
+						$("#" + aNote.timestamp).css("width", divWidth)
 						//log("divWidth = " + divWidth);
 						//log("divHeight = " + divHeight);
 						
-						$("#" + aNote.timestamp + " .noteBoxNotes").css("width", divWidth - 200);
+						$("#" + aNote.timestamp + " .noteBoxNotes").css("width", divWidth - 180);
 						
 						var divHeight = $("#" + aNote.timestamp + "Notes").height();
 						if(divHeight < 17){divHeight = 17};
@@ -148,6 +151,18 @@ VRL.TheNotes = function (notesDIV) {
 		//removing the previous notes
 		//$(notesDIV).empty();
 		
+		//only show the DIVs/Notes within the range
+		notesData.forEach(function (d) {
+			//log(d.timestamp)			
+			if(d.timestamp >= rangeStart && d.timestamp <= rangeEnd){
+				$("#" + d.timestamp).css("display", "block");
+			}
+			else {
+				$("#" + d.timestamp).css("display", "none");
+			}
+			
+		});
+		
 		
 		
 	};
@@ -157,7 +172,7 @@ VRL.TheNotes = function (notesDIV) {
 	theNotes.update = function (range, caller) {
 		//log("theNotes: caller = " + caller + " : range = " + range);
 		theRange = range;
-		
+		theNotes.showData();
 	
 		
 	};

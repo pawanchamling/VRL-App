@@ -61,7 +61,7 @@ rect.pane {
 
 #LocationAndNotesDIV {
 	height: 500px;
-	background: #bbb;
+	background: #eee;
 }
 
 #LocationDIV {	
@@ -72,45 +72,47 @@ rect.pane {
 }
 
 #NotesDIV {
-  width: 30%;
-  height: 100%;
-  float: left;
-}
-
-
-
-.noteTimeStamp {
+	width: 30%;
+	height: 100%;
 	float: left;
+	border: 1px solid #5398ff;
 }
 
-.noteColor {
-	background: #00ee00;
-	width: 10px;
-	float: left;
-	
+#NotesTitleDIV {
+	background-color: #ddd;
+	height: 25px;
+	text-align: center;
+	border-bottom: 1px solid #5398ff;
+	padding-top: 5px;
 }
+
+
 
 /*####################################*/
 
 .noteBox {
 	width: 100%;
 	background: #fff;		
-	background: -moz-linear-gradient(top, #fff 0%, #d9ebf9 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#d9ebf9)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #fff 0%,#d9ebf9 100%); /* Chrome10+,Safari5.1+ */
+	background: -moz-linear-gradient(top, #fff 0%, #F0F8FF 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff), color-stop(100%,#F0F8FF)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fff 0%,#F0F8FF 100%); /* Chrome10+,Safari5.1+ */
 	
-	border-top: 1px solid #5398ff;
-	border-right: 1px solid #003c95;
+	border-bottom: 1px solid #5398ff;
+	/*
+	border-left: 1px solid #5398ff;
+	border-right: 1px solid #5398ff;
+	*/
 }
+
 
 .noteBoxColor {
 	width: 15px;
 	float: left;
 	margin: 3px;
 	
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 }
 
 .noteBoxTimestamp {
@@ -130,9 +132,18 @@ rect.pane {
 
 .nano { 
 }
-.nano .nano-content { padding: 0px; }
-.nano .nano-pane   { background: #68aee8; }
-.nano .nano-slider { background: #fff; }
+
+.nano .nano-content { 
+	padding: 0px; 
+}
+
+.nano .nano-pane   { 
+	background: #eee; 
+}
+
+.nano .nano-slider { 
+	background: #68aee8; 
+}
 
 
 
@@ -163,8 +174,9 @@ rect.pane {
 		
 		</div>
 		<div id="NotesDIV">
-			All the nominal and Ordinal notes
-		
+			<div id="NotesTitleDIV">
+				<b>User-submitted Notes</b>
+			</div>
 			<div id="NotesPanel" class="nano">
 				<div id="NotesPanelContents" class="nano-content">
 				</div>
@@ -287,10 +299,12 @@ var Subject2 = (function (window, undefined) {
 			//log(screen.height)//screen height
 			//log(screen.width)//screen width
 		   
-		   var docWidth  = $(document).width();
-		   var docHeight = $(document).height();
+			var docWidth  = $(document).width();
+			var docHeight = $(document).height();
 		   
-			
+			var notesDIVwidth = $("#NotesDIV").width();
+			log("notesDIVwidth = " + notesDIVwidth);
+			$("#NotesDIV").css("width", notesDIVwidth - 4 );
 			
 			
 			//
