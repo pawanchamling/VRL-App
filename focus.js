@@ -42,6 +42,8 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	var theZoom = d3.behavior.zoom();
 	var drag = d3.behavior.drag();
 	
+	var tooltip = d3.tip();
+	
 	var fullTimeRangeDifference = 0;
 	var initialStartDateTime = 0;
 	
@@ -166,7 +168,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 						
 			svg.append('defs').append('clipPath')
 				.attr('id', 'clip')
-				.append('rect')
+			  .append('rect')
 				.attr('width', availableWidth)
 				.attr('height', availableHeight + 10); //just adding some more height so that the lines are shown smooth - not cut out
 
@@ -180,13 +182,13 @@ VRL.TheFocus = function (docWidth, docHeight) {
 
 			//line generator			
 			lineGen = d3.svg.line()
-				.x(function (d) {
-					return xFocus(new Date(d.timestamp - 0));
-				})
-				.y(function (d) {
-					return yFocus(d.value - 0);
-				})
-				.interpolate("monotone");
+							.x(function (d) {
+								return xFocus(new Date(d.timestamp - 0));
+							})
+							.y(function (d) {
+								return yFocus(d.value - 0);
+							})
+							.interpolate("monotone");
 			
 			//circle generator
 			/*
@@ -199,6 +201,15 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					})
 			*/	
 			
+			tooltip = d3.tip()
+					.attr('class', 'd3-tip')
+					.offset([-10, 0])
+					.html(function (d, index) {
+						log(index)
+						return "<strong>Frequency:</strong> <span style='color:red'>" + d + "</span>";
+					})	
+			//theFocus.call(tooltip);	
+			
 			
 			focus.drawLines(data);
 
@@ -207,9 +218,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
                 .call(yAxisFocusLeft);
 
             theFocus.append('g')
-                .attr('class', 'y axis')
-                .attr('transform', 'translate(' + availableWidth + ',0)')
-                .call(yAxisFocusRight);
+					.attr('class', 'y axis')
+					.attr('transform', 'translate(' + availableWidth + ',0)')
+					.call(yAxisFocusRight);
 			
 			theFocus.append('g')
 					.attr('class', 'x axis')
@@ -237,18 +248,22 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			
 			*/
 			
-//Used for zoom function
+			/*
+			//Used for zoom function
 			theFocus.append("rect")
 						.attr("class", "pane")
 						.attr("width", availableWidth)
-						.attr("height", availableHeight)
+						.attr("height", availableHeight - 20)
 						.call(theZoom);
-						
+			*/
+			
 			// Don't allow the brushing from background and single click theFocus switch
 			theFocus.select(".background")
-			.on("mousedown.brush", nobrush)
-			.on("touchstart.brush", nobrush);
+					.on("mousedown.brush", nobrush)
+					.on("touchstart.brush", nobrush);
 
+					
+			
 			
 			//#######################################################
 			function brushed() {
@@ -302,6 +317,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			}
 
 			//#######################################################
+		
 
 		});
 
@@ -380,6 +396,44 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr('stroke-width', 1)
 							.attr('fill', data[i].styles[dd.value]);
 							
+					$("#circleNominal" + i + "-" + index).tipsy({ 
+								gravity: 'sw', 
+								html: true, 
+								title: function() {								 
+								  return '<span style="color:#fff">' + dd.value + '</span>'; 
+								}
+						  });
+		
+					//log(circleGen(data[i].data()));		
+				});
+									
+			}
+			else if(data[i].dataType() == 1){
+				var d = data[i].data();
+				var dataInfo = data[i].dataInfo();
+				//d = d.values;					
+				d.map(function(dd, index) {
+					var startPos = xFocus(dd.timestamp);
+					
+					theFocus.append('circle')							
+							.attr("id", "circle" + i + "-" + index)
+							.attr('class', 'theCircle')
+							.attr("cx", xFocus(dd.timestamp))
+							.attr("cy", yFocus(2))
+							.attr("r", 10)
+							.attr('stroke', data[i].styles[dd.value]) //based on the index
+							.attr('stroke-width', 1)
+							.attr('fill', data[i].styles[dd.value]);
+							
+							
+					$("#circle" + i + "-" + index).tipsy({
+								gravity: 'sw', 
+								html: true, 
+								title: function() {									
+									var valIs = getKey(dataInfo, dd.value - 0);								
+									return '<span style="color:#fff">' + valIs + '</span>'; 
+								}
+					});
 					//log(circleGen(data[i].data()));		
 				});
 									
@@ -394,32 +448,19 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					.attr('fill', 'none');
 					
 					//log(lineGen(data[i].data()));
-			}				
-			else if(data[i].dataType() == 1){
-				var d = data[i].data();
-				//d = d.values;					
-				d.map(function(dd, index) {
-					var startPos = xFocus(dd.timestamp);
-					
-					theFocus.append('circle')
-							.attr("id", "circle" + i + "-" + index)
-							.attr('class', 'theCircle')
-							.attr("cx", xFocus(dd.timestamp))
-							.attr("cy", yFocus(2))
-							.attr("r", 10)
-							.attr('stroke', data[i].styles[dd.value]) //based on the index
-							.attr('stroke-width', 1)
-							.attr('fill', data[i].styles[dd.value]);
-							
-					//log(circleGen(data[i].data()));		
-				});
-									
 			}
 			
 			
 		}
 	};
-
+	
+	function getKey(obj, val) {
+		for (var key in obj) {
+			if (val === obj[key])
+				return key;
+		}
+	}
+	
 	focus.redrawLines = function(data) {
 		for (var i = 0; i < noOfData; i++) {
 			if(data[i].dataType() == 0) {
