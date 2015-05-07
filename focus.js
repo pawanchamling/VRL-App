@@ -52,6 +52,12 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	var lastZoomScale = 1;
 	var previousZoomCaller = "";
 	
+	
+	var div = d3.select("body")
+				.append("div")
+					.attr("class", "tooltip")
+					.style("opacity", 0);
+	
 	//##############################################
 	//For Observer Pattern
 	
@@ -180,15 +186,6 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				.attr('class', 'theFocus')
 				.attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')');
 
-			//line generator			
-			lineGen = d3.svg.line()
-							.x(function (d) {
-								return xFocus(new Date(d.timestamp - 0));
-							})
-							.y(function (d) {
-								return yFocus(d.value - 0);
-							})
-							.interpolate("monotone");
 			
 			//circle generator
 			/*
@@ -211,6 +208,19 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			//theFocus.call(tooltip);	
 			
 			
+			
+			
+			//line generator			
+			lineGen = d3.svg.line()
+							.x(function (d) {
+								return xFocus(new Date(d.timestamp - 0));
+							})
+							.y(function (d) {
+								return yFocus(d.value - 0);
+							})
+							.interpolate("monotone");
+			
+			//### draw the lines
 			focus.drawLines(data);
 
 			theFocus.append('g')
@@ -397,18 +407,19 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr('fill', data[i].styles[dd.value]);
 							
 					$("#circleNominal" + i + "-" + index).tipsy({ 
-								gravity: 'sw', 
-								html: true, 
-								title: function() {								 
-								  return '<span style="color:#fff">' + dd.value + '</span>'; 
-								}
-						  });
+							gravity: 'sw', 
+							html: true, 
+							title: function() {								 
+								return '<span style="color:#fff">' + dd.value + '</span>'; 
+							}
+					});
 		
 					//log(circleGen(data[i].data()));		
 				});
 									
 			}
 			else if(data[i].dataType() == 1){
+				//Ordinal values
 				var d = data[i].data();
 				var dataInfo = data[i].dataInfo();
 				//d = d.values;					
@@ -416,7 +427,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					var startPos = xFocus(dd.timestamp);
 					
 					theFocus.append('circle')							
-							.attr("id", "circle" + i + "-" + index)
+							.attr("id", "circleOrdinal" + i + "-" + index)
 							.attr('class', 'theCircle')
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", yFocus(2))
@@ -426,7 +437,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr('fill', data[i].styles[dd.value]);
 							
 							
-					$("#circle" + i + "-" + index).tipsy({
+					$("#circleOrdinal" + i + "-" + index).tipsy({
 								gravity: 'sw', 
 								html: true, 
 								title: function() {									
@@ -447,6 +458,71 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					.attr('stroke-width', data[i].style.lineSize())
 					.attr('fill', 'none');
 					
+				var d  = data[i].data();
+				//var d2 = data[i].data();
+				
+				theFocus.append("g")
+						.selectAll(".dot")
+						.data(function (dd) {
+							return data[i].data();
+						})
+					.enter()
+					.append("circle")					
+						.attr("id", function(dd) { 
+							return "circlePoint" + i + "" + (dd.timestamp - 0);
+						})
+						.attr('class', 'theCircle')
+						.attr("stroke", function (dd) {
+							log(data[i].style.dataColor())
+							return data[i].style.dataColor(); //return color("#00ff00")//this.parentNode.__data__.name)
+						})
+						.attr("cx", function (dd) {
+							return xFocus(new Date(dd.timestamp - 0));
+						})
+						.attr("cy", function (dd) {
+							return yFocus(dd.value - 0);
+						})
+						.attr("r", 5)
+						.attr("fill", "white")
+						.attr("fill-opacity", .5)
+						.attr("stroke-width", 2)						
+						.on("mouseover", function (dd) {
+							
+							div.transition().duration(100).style("opacity", .9);
+							var val = dd.value - 0;
+							
+							div.html( "<br/>" + val.toFixed(3))
+								.style("left", (d3.event.pageX + 10) + "px")
+								.style("top", (d3.event.pageY - 28) + "px")
+								.attr('r', 8);
+								
+							d3.select(this)
+								.attr('r', 8)
+								.attr("fill", "white")
+								.attr("fill-opacity", 1);
+						}).on("mouseout", function (dd) {
+							
+							div.transition().duration(100).style("opacity", 0)
+							
+							d3.select(this)
+								.attr('r', 5)
+								.attr("fill", "white")
+								.attr("fill-opacity", .5);
+						});						
+						
+						/*
+					d.map(function(d2, index) {	
+						log("#circlePoint" + i + "" + d2);
+						$("#circlePoint" + i + "" + d2.timestamp).tipsy({
+							gravity: 'n', 
+							html: true, 
+							title: function() {		
+								var val = d2.value - 0;
+								return '<span style="color:#fff">' + val.toFixed(3) + '</span>'; 
+							}
+						});
+					});
+						*/
 					//log(lineGen(data[i].data()));
 			}
 			
@@ -469,8 +545,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				d.map(function(dd, index) {
 					//log("foc:here we go")
 					theFocus.select("#" + "circleNominal" + i + "-" + index)
-							.attr('class', 'theCircle')
-							//.attr('d', circleGen(data[i].data()));						
+							.attr('class', 'theCircle')						
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", yFocus(2))
 							.attr("r", 10)
@@ -484,20 +559,59 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				var d = data[i].data();
 				d.map(function(dd, index) {
 					//log("foc:here we go")
-					theFocus.select("#" + "circle" + i + "-" + index)
-							.attr('class', 'theCircle')
-							//.attr('d', circleGen(data[i].data()));						
+					theFocus.select("#" + "circleOrdinal" + i + "-" + index)
+							.attr('class', 'theCircle')						
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", yFocus(2))
 							.attr("r", 10)
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
 							.attr('stroke-width', 1)
 							.attr('fill', data[i].styles[dd.value]);
+							
 				});
 			}
 			else if(data[i].dataType() == 2){
 				//Sensor data
 				theFocus.select('#' + 'line' + i).attr('d', lineGen(data[i].data()));
+				var d = data[i].data();
+				//log("d = "  + d)
+				d.map(function(dd, index) {
+					//log(dd.timestamp)
+					theFocus.select("#" + "circlePoint" + i + "" + dd.timestamp)
+							.attr('class', 'theCircle')
+							.attr("cx", xFocus(new Date(dd.timestamp - 0)))
+							.attr("cy", yFocus(dd.value - 0))
+							.attr("r", 5)
+							.attr("stroke", data[i].style.dataColor()	)
+							.attr("stroke-width", 2)
+							.attr("fill", "white")
+							.attr("fill-opacity", .5)						
+						.on("mouseover", function () {
+							
+							div.transition().duration(100).style("opacity", .9);
+							var val = dd.value - 0;
+							
+							
+							div.html( "<br/>" + val.toFixed(3))
+								.style("left", (d3.event.pageX + 10) + "px")
+								.style("top", (d3.event.pageY - 28) + "px")
+								.attr('r', 8);
+								
+							d3.select(this)
+								.attr('r', 8)
+								.attr("fill", "white")
+								.attr("fill-opacity", 1);
+						})
+						.on("mouseout", function () {
+							
+							div.transition().duration(100).style("opacity", 0);
+							
+							d3.select(this)
+								.attr('r', 5)
+								.attr("fill", "white")
+								.attr("fill-opacity", .5);
+						});
+				});
 			}
 		}
 	}
