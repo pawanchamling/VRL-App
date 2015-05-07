@@ -187,17 +187,20 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				.attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')');
 
 			
-			//circle generator
-			/*
-			circleGen = d3.svg.circle()
-					.cx(function (d){
-						return xFocus(new Date(d.timestamp - 0));
-					})
-					.cy(function (d) {
-						return yFocus(2);
-					})
-			*/	
+			//### the Zoom effect	
+			theZoom = d3.behavior.zoom()
+								.x(xFocus)
+								.scaleExtent([1, 111])
+								.on("zoom", focus.zoomed); //.x(x1).scaleExtent([1,10])		
+		
+			//### the area where the zooming can be detected.
+			theFocus.append("rect")
+					.attr("class", "pane")
+					.attr("width", availableWidth)
+					.attr("height", availableHeight - 20)
+					.call(theZoom);
 			
+			//### the tooltip -- not in use right now
 			tooltip = d3.tip()
 					.attr('class', 'd3-tip')
 					.offset([-10, 0])
@@ -244,10 +247,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					.call(theBrush);
 
 			//.x(x1).scaleExtent([1,10]) //limits zoom from 1X to 10X
-			theZoom = d3.behavior.zoom()
-									.x(xFocus)
-									.scaleExtent([1, 111])
-									.on("zoom", focus.zoomed); //.x(x1).scaleExtent([1,10])		
+		
 			
 			/*
 			drag = d3.behavior.drag()
@@ -260,6 +260,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			
 			/*
 			//Used for zoom function
+			//this is where the zooming is detected
 			theFocus.append("rect")
 						.attr("class", "pane")
 						.attr("width", availableWidth)
