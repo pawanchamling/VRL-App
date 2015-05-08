@@ -267,7 +267,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			svg.append('defs').append('clipPath')
 				.attr('id', 'clip')
 			  .append('rect')
-				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
+				.attr('transform', 'translate(' + (0  ) + ',' + (0) + ')')
 				.attr('width', availableWidth)
 				.attr('height', availableHeight + 10); //just adding some more height so that the lines are shown smooth - not cut out
 
@@ -544,6 +544,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr("r", 10)
 							.attr('stroke', data[i].style.dataColor()) //based on the index
 							.attr('stroke-width', 1)
+				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value]);
 							
 					$("#circleNominal" + i + "-" + index).tipsy({ 
@@ -574,6 +575,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr("r", 10)
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
 							.attr('stroke-width', 1)
+				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value]);
 							
 							
@@ -597,6 +599,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					.attr('d', genLine(data[i].data(), (yFocusArrIndex["" + i] - 0)))
 					.attr('stroke', data[i].style.dataColor())
 					.attr('stroke-width', data[i].style.lineSize())
+				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 					.attr('fill', 'none');
 					
 				var d  = data[i].data();				
@@ -626,7 +629,8 @@ VRL.TheFocus = function (docWidth, docHeight) {
 						.attr("r", 5)
 						.attr("fill", "white")
 						.attr("fill-opacity", .5)
-						.attr("stroke-width", 2)						
+						.attr("stroke-width", 2)
+				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 						.on("mouseover", function (dd) {
 							
 							div.transition().duration(100).style("opacity", .9);
@@ -694,6 +698,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr("r", 10)
 							.attr('stroke', data[i].style.dataColor()) //based on the index
 							.attr('stroke-width', 1)
+				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value]);
 				});
 			}
@@ -709,6 +714,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr("r", 10)
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
 							.attr('stroke-width', 1)
+				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value]);
 							
 				});
@@ -730,6 +736,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr("stroke", data[i].style.dataColor()	)
 							.attr("stroke-width", 2)
 							.attr("fill", "white")
+				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr("fill-opacity", .5)						
 						.on("mouseover", function () {
 							
