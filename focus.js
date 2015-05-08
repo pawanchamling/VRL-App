@@ -22,7 +22,8 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	var focusHeightPadding = 5;
 	var areaSpace = 40;
 
-	var noOfData = 1;
+	var noOfData = 0;
+	var noOfSensorData = 0;
 
 	//The total time range
 	var startTimeRange = 0;
@@ -32,12 +33,18 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	//
 
 	var theData;
+	var theSensorData = [];
+	
 	var theFocus;
 	var theRange = d3.svg.brush();
 	var theBrush = d3.svg.brush();
 	var xFocus = d3.time.scale();
 	var yFocus = d3.scale.linear();
+	
+	var yFocusArr = [];
+	var yFocusArrIndex = {};
 	var xAxisFocus = d3.svg.axis();
+	var yAxisFocus = [];
 	var lineGen = d3.svg.line();
 	var theZoom = d3.behavior.zoom();
 	var drag = d3.behavior.drag();
@@ -84,6 +91,18 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			//var data = selection;
 			theData = data;
 			noOfData = data.length;
+			
+			//collecting all the sensor data in one place
+			for(var i = 0; i < noOfData; i++) {
+				if(theData[i].dataType() == 2) {
+					theSensorData.push(theData[i]);
+					yFocusArrIndex["" + i] = (theSensorData.length - 1) ;
+				
+					//log("###" + yFocusArrIndex["" + i])
+				}
+			}			
+			noOfSensorData = theSensorData.length;
+			//log("noOfSensorData = " +noOfSensorData)
 			
 			calculateTimeRange(data);
 			
@@ -139,15 +158,34 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			panExtent = [startTimeRange, endTimeRange];
 			
 			var yValues = [];
-			data.forEach(function (d) {
+			theSensorData.forEach(function (d) {
 				d = d.data();
 				d.map(function (dd) {
 					yValues.push(dd.value - 0);
 				});
 
 			});
+			
+			var yValArr = [noOfSensorData];
+			theSensorData.forEach(function (d, index) {
+				d = d.data();
+				yValArr[index] = [];
+				log(index)
+				d.map(function (dd) {
+					yValArr[index].push(dd.value - 0);
+				});
 
+			});
+			
+			
 			var yMax = d3.max(yValues);
+			log("focus: yMax = " + yMax);
+			
+			var yMaxArr = [];
+			for(var i = 0; i < noOfSensorData; i++){
+				yMaxArr.push(d3.max(yValArr[i]));
+			}
+			
 			
 			var availableWidth = width - padding.left - padding.right;
 			var availableHeight = height - padding.top - padding.bottom;
@@ -165,11 +203,30 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			//var formatTime = d3.time.format("%H:%M");
 			//var formatMinutes = function(d) { return formatTime(new Date(2015, 0, 1, 0, d)); };
 			xAxisFocus 			= d3.svg.axis().scale(xFocus).orient('bottom');//.tickFormat(d3.time.format("%X"));
-            var yAxisFocusLeft 	= d3.svg.axis().scale(yFocus).orient('left');
-            var yAxisFocusRight = d3.svg.axis().scale(yFocus).orient('right');
+			for(var i = 0; i < noOfSensorData; i++ ) {
+				
+				yFocusArr.push(d3.scale.linear().range([availableHeight, 0]));			
+				
+				if(i % 2 == 0) {
+					//even
+					yAxisFocus.push(d3.svg.axis().scale(yFocusArr[i]).orient('left'));
+				}
+				else {
+					//odd
+					yAxisFocus.push(d3.svg.axis().scale(yFocusArr[i]).orient('right'));
+				}
+			}
+           // var yAxisFocusLeft 	= d3.svg.axis().scale(yFocus).orient('left');
+           // var yAxisFocusRight = d3.svg.axis().scale(yFocus).orient('right');
 
+		   log("yFocusArr length = " + yFocusArr.length);
+		   
 			xFocus.domain(d3.extent(xDomain));			
-			yFocus.domain([0, yMax + 2]);	
+			yFocus.domain([0, yMax + 2]);			
+			for(var i = 0; i < noOfSensorData; i++) {
+				yFocusArr[i].domain([0, yMaxArr[i] + 2]);
+			}
+			
 			
 						
 			svg.append('defs').append('clipPath')
@@ -213,12 +270,14 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			
 			
 			
+			
 			//line generator			
 			lineGen = d3.svg.line()
 							.x(function (d) {
 								return xFocus(new Date(d.timestamp - 0));
 							})
-							.y(function (d) {
+							.y(function (d, i) {
+								log(i)
 								return yFocus(d.value - 0);
 							})
 							.interpolate("monotone");
@@ -226,6 +285,21 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			//### draw the lines
 			focus.drawLines(data);
 
+			
+			for(var i = 0; i < noOfSensorData; i++ ) {
+				if(i % 2 == 0) {					
+					theFocus.append('g')
+						.attr('class', 'y axis')
+						.call(yAxisFocus[i]);
+				}
+				else {
+					theFocus.append('g')
+						.attr('class', 'y axis')
+						.attr('transform', 'translate(' + availableWidth + ')')
+						.call(yAxisFocus[i]);
+				}
+			}
+			/*
 			theFocus.append('g')
                 .attr('class', 'y axis')
                 .call(yAxisFocusLeft);
@@ -234,7 +308,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					.attr('class', 'y axis')
 					.attr('transform', 'translate(' + availableWidth + ',0)')
 					.call(yAxisFocusRight);
-			
+			*/
 			theFocus.append('g')
 					.attr('class', 'x axis')
 					.attr('transform', 'translate(0,' + availableHeight + ')')
@@ -385,6 +459,24 @@ VRL.TheFocus = function (docWidth, docHeight) {
 		return focus;
 	};
 
+	
+	
+	function genLine(dd, index) {
+		
+		//log("d = " + JSON.stringify(dd))
+		//log("index = " + index)
+		var theLine = d3.svg.line()
+							.x(function (d) {
+								//log("index = " + index)
+								return xFocus(new Date(d.timestamp - 0));
+							})
+							.y(function (d) {
+								//log("index = " + yFocusArr[index])
+								return yFocusArr[index](d.value - 0);
+							})
+							.interpolate("monotone");
+				return theLine(dd)
+			}
 	//##############################################
 	
 	focus.drawLines = function(data) {
@@ -451,10 +543,11 @@ VRL.TheFocus = function (docWidth, docHeight) {
 									
 			}
 			else if(data[i].dataType() == 2) {
+				
 				theFocus.append('path')
 					.attr("id", "line" + i)
 					.attr('class', 'theLine')
-					.attr('d', lineGen(data[i].data()))
+					.attr('d', genLine(data[i].data(), (yFocusArrIndex["" + i] - 0)))
 					.attr('stroke', data[i].style.dataColor())
 					.attr('stroke-width', data[i].style.lineSize())
 					.attr('fill', 'none');
@@ -481,7 +574,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							return xFocus(new Date(dd.timestamp - 0));
 						})
 						.attr("cy", function (dd) {
-							return yFocus(dd.value - 0);
+							return yFocusArr[(yFocusArrIndex["" + i] - 0)](dd.value - 0);//yFocus(dd.value - 0);
 						})
 						.attr("r", 5)
 						.attr("fill", "white")
@@ -492,7 +585,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							div.transition().duration(100).style("opacity", .9);
 							var val = dd.value - 0;
 							
-							div.html( "<br/>" + val.toFixed(3))
+							div.html( "" + val.toFixed(3))
 								.style("left", (d3.event.pageX + 10) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
@@ -573,7 +666,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			}
 			else if(data[i].dataType() == 2){
 				//Sensor data
-				theFocus.select('#' + 'line' + i).attr('d', lineGen(data[i].data()));
+				theFocus.select('#' + 'line' + i).attr('d', genLine(data[i].data(), (yFocusArrIndex["" + i] - 0)));
 				var d = data[i].data();
 				//log("d = "  + d)
 				d.map(function(dd, index) {
@@ -581,7 +674,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					theFocus.select("#" + "circlePoint" + i + "" + dd.timestamp)
 							.attr('class', 'theCircle')
 							.attr("cx", xFocus(new Date(dd.timestamp - 0)))
-							.attr("cy", yFocus(dd.value - 0))
+							.attr("cy", yFocusArr[(yFocusArrIndex["" + i] - 0)](dd.value - 0))
 							.attr("r", 5)
 							.attr("stroke", data[i].style.dataColor()	)
 							.attr("stroke-width", 2)
@@ -593,7 +686,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							var val = dd.value - 0;
 							
 							
-							div.html( "<br/>" + val.toFixed(3))
+							div.html( "" + val.toFixed(3))
 								.style("left", (d3.event.pageX + 10) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
