@@ -65,6 +65,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	var previousZoomCaller = "";
 	
 	
+	//for the tooltip
 	var div = d3.select("body")
 				.append("div")
 					.attr("class", "tooltip")
@@ -286,9 +287,14 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			//log("padding.left = " + padding.left)
 			
 			theFocus = wrap.append('g')
+				.attr('id', 'theFocus')
 				.attr('class', 'theFocus')
 				.attr('transform', 'translate(' + (padding.left ) + ',' + (padding.top) + ')');
 
+			//### a temporary place	
+			theFocus.append("g")
+				.attr('id', 'theTemp');
+						
 			
 			//### the Zoom effect	
 			theZoom = d3.behavior.zoom()
@@ -581,12 +587,12 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					
 					theFocus.append('circle')
 							.attr("id", "circleNominal" + i + "-" + index)
-							.attr('class', 'theCircle')
+							.attr('class', 'theCircle dataElement')
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", yFocus(0))
-							.attr("r", 10)
+							.attr("r", d2.style.userNodeFocusRadius())
 							.attr('stroke', data[i].style.dataColor()) //based on the index
-							.attr('stroke-width', 1)
+							.attr('stroke-width',  data[i].style.lineSize())
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value])							
 						.on("mouseover", function () {
@@ -600,7 +606,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 								
 							d3.select(this)
 								.attr("cy", yFocus(2))
-								.attr('r', 12)
+								.attr('r', (d2.style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								
 						}).on("mouseout", function (dd) {
@@ -609,7 +615,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							
 							d3.select(this)
 								.attr("cy", yFocus(0))
-								.attr('r', 10)
+								.attr('r', d2.style.userNodeFocusRadius())
 								.attr("fill-opacity", 1);
 						});		
 					
@@ -632,6 +638,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			else if(data[i].dataType() == 1){
 				//Ordinal values
 				var d = data[i].data();
+				var d2 = data[i];
 				var dataInfo = data[i].dataInfo();
 				//d = d.values;					
 				d.map(function(dd, index) {
@@ -639,12 +646,12 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					
 					theFocus.append('circle')							
 							.attr("id", "circleOrdinal" + i + "-" + index)
-							.attr('class', 'theCircle')
+							.attr('class', 'theCircle dataElement')
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", yFocus(0))
-							.attr("r", 10)
+							.attr("r", (d2.style.userNodeFocusRadius() ))
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
-							.attr('stroke-width', 1)
+							.attr('stroke-width', data[i].style.lineSize())
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value])													
 						.on("mouseover", function () {
@@ -660,7 +667,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 								
 							d3.select(this)
 								.attr("cy", yFocus(2))
-								.attr('r', 12)
+								.attr('r', (d2.style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								
 						}).on("mouseout", function (dd) {
@@ -669,7 +676,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							
 							d3.select(this)
 								.attr("cy", yFocus(0))
-								.attr('r', 10)
+								.attr('r', (d2.style.userNodeFocusRadius() ))
 								.attr("fill-opacity", 1);
 						});		
 							
@@ -689,8 +696,12 @@ VRL.TheFocus = function (docWidth, docHeight) {
 									
 			}
 			else if(data[i].dataType() == 2) {
+				//the sensor data
 				
-				theFocus.append('path')
+				theFocus.append("g")
+					.attr("id", "line" + i + "cover")
+					.attr('class', 'lineCovers dataElement')
+				.append('path')
 					.attr("id", "line" + i)
 					.attr('class', 'theLine')
 					.attr('d', genLine(data[i].data(), (yFocusArrIndex["" + i] - 0)))
@@ -702,7 +713,8 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				var d  = data[i].data();				
 				var d2 = data[i];
 				
-				theFocus.append("g")
+				//drawing circles for each datapoints/nodes
+				theFocus.select("#line" + i + "cover")
 						.selectAll(".dot")
 						.data(function (dd) {
 							return data[i].data();
@@ -723,14 +735,14 @@ VRL.TheFocus = function (docWidth, docHeight) {
 						.attr("cy", function (dd) {
 							return yFocusArr[(yFocusArrIndex["" + i] - 0)](dd.value - 0);//yFocus(dd.value - 0);
 						})
-						.attr("r", 5)
+						.attr("r", data[i].style.lineNodeRadius() - 0)
 						.attr("fill", "white")
-						.attr("fill-opacity", .5)
-						.attr("stroke-width", 2)
+						.attr("fill-opacity", 1)
+						.attr("stroke-width", data[i].style.lineSize())
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 						.on("mouseover", function (dd) {
 							
-							div.transition().duration(100).style("opacity", .9);
+							div.transition().duration(100).style("opacity", .8);
 							var val = dd.value - 0;
 							
 							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + "</span>"
@@ -740,18 +752,42 @@ VRL.TheFocus = function (docWidth, docHeight) {
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
 								
+								//log("radius = " + d2.style.lineNodeRadius());
 							d3.select(this)
-								.attr('r', 8)
+								.attr('r', (d2.style.lineNodeRadius() + 3))
 								.attr("fill", "white")
 								.attr("fill-opacity", 1);
+								
+							//### bring the line in the front
+							//var sel = d3.select("#line" + i + "cover");
+							//log("sel = " + sel)
+							//sel.moveToFront();							
+							
+							var lastDataElementID = $( "#theFocus .dataElement" ).last().attr( "id" );
+							//log("lastDataElementID is " + lastDataElementID);
+							var theParentElement = $( "#theFocus");
+							
+							if(lastDataElementID != "#line" + i + "cover") {
+								
+								// move element "on top of" all others within the same grouping
+								$("#line" + i + "cover").appendTo((theParentElement)); 
+								
+								//log("Not the same line at the last");
+								//$('lastDataElementID').each(function() {
+									//var a = $("#line" + i + "cover").detach();
+									//$("#line" + i + "cover").append("#theTemp");
+									//a.appendTo($("#theTemp"));
+								//});
+							}
+							
 						}).on("mouseout", function (dd) {
 							
 							div.transition().duration(100).style("opacity", 0)
 							
 							d3.select(this)
-								.attr('r', 5)
+								.attr('r', d2.style.lineNodeRadius())
 								.attr("fill", "white")
-								.attr("fill-opacity", .5);
+								.attr("fill-opacity", 1);
 						});						
 						
 						/*
@@ -787,16 +823,17 @@ VRL.TheFocus = function (docWidth, docHeight) {
 		for (var i = 0; i < noOfData; i++) {
 			if(data[i].dataType() == 0) {
 				//Nominal data
-				var d = data[i].data();
+				var d = data[i].data();				
+				var d2 = data[i];
 				d.map(function(dd, index) {
 					//log("foc:here we go")
 					theFocus.select("#" + "circleNominal" + i + "-" + index)
 							.attr('class', 'theCircle')						
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", yFocus(0))
-							.attr("r", 10)
+							.attr("r", (d2.style.userNodeFocusRadius() ))
 							.attr('stroke', data[i].style.dataColor()) //based on the index
-							.attr('stroke-width', 1)
+							.attr('stroke-width', data[i].style.lineSize())
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value]);
 				});
@@ -810,9 +847,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr('class', 'theCircle')						
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", yFocus(0))
-							.attr("r", 10)
+							.attr("r", (d2.style.userNodeFocusRadius() ))
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
-							.attr('stroke-width', 1)
+							.attr('stroke-width', data[i].style.lineSize())
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value]);
 							
@@ -831,12 +868,12 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr('class', 'theCircle')
 							.attr("cx", xFocus(new Date(dd.timestamp - 0)))
 							.attr("cy", yFocusArr[(yFocusArrIndex["" + i] - 0)](dd.value - 0))
-							.attr("r", 5)
+							.attr("r", data[i].style.lineNodeRadius())
 							.attr("stroke", data[i].style.dataColor()	)
-							.attr("stroke-width", 2)
+							.attr("stroke-width", data[i].style.lineSize())
 							.attr("fill", "white")
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
-							.attr("fill-opacity", .5)						
+							.attr("fill-opacity", 1)						
 						.on("mouseover", function () {
 							
 							div.transition().duration(100).style("opacity", .9);
@@ -851,7 +888,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 								.attr('r', 8);
 								
 							d3.select(this)
-								.attr('r', 8)
+								.attr('r', (d2.style.lineNodeRadius() + 3))
 								.attr("fill", "white")
 								.attr("fill-opacity", 1);
 						})
@@ -860,9 +897,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							div.transition().duration(100).style("opacity", 0);
 							
 							d3.select(this)
-								.attr('r', 5)
+								.attr('r', d2.style.lineNodeRadius())
 								.attr("fill", "white")
-								.attr("fill-opacity", .5);
+								.attr("fill-opacity", 1);
 						});
 				});
 			}

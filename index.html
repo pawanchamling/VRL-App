@@ -233,6 +233,7 @@ div.tooltip {
     <script src="http://d3js.org/d3.v3.js"></script>
 	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script src="libs\jquery-2.1.3.min.js"></script>
+    <script src="libs\jquery.svg.js"></script>
     <script src="libs\jquery.tipsy.js"></script>
     <script src="libs\jquery.nanoscroller.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
@@ -348,7 +349,12 @@ var Subject2 = (function (window, undefined) {
 })(window);
 
 //#######################################################
-	
+
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};	
 	
 //#######################################################
 
@@ -377,7 +383,7 @@ var Subject2 = (function (window, undefined) {
 		   
 			var notesDIVwidth = $("#NotesDIV").width();
 			log("notesDIVwidth = " + notesDIVwidth);
-			$("#NotesDIV").css("width", notesDIVwidth - 4 );
+			$("#NotesDIV").css("width", notesDIVwidth - 5 );
 			
 			
 			//

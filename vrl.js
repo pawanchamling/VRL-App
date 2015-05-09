@@ -69,6 +69,9 @@ VRL.DataStyle = function() {
 	var dataColor = "#0000ff"; // hex
 	var lineSize = 2; //in pixels
 	var timelineSize = 20; //in pixels
+	var lineNodeRadius = 5;
+	var userNodeFocusRadius = 9;
+	var userNodeContexRadius = 10;
 	
 	this.dataColor = function(_) {
 			if (!arguments.length)
@@ -84,6 +87,21 @@ VRL.DataStyle = function() {
 			if (!arguments.length)
 				return timelineSize;
 			timelineSize = _;
+	};
+	this.lineNodeRadius = function(_) {
+			if (!arguments.length)
+				return lineNodeRadius;
+			lineNodeRadius = _;
+	};
+	this.userNodeFocusRadius = function(_) {
+			if (!arguments.length)
+				return userNodeFocusRadius;
+			userNodeFocusRadius = _;
+	};
+	this.userNodeContexRadius = function(_) {
+			if (!arguments.length)
+				return userNodeContexRadius;
+			userNodeContexRadius = _;
 	};
 }
 
