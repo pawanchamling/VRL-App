@@ -13,6 +13,7 @@ VRL.TheMap = function (theMapDIV) {
 	var startCircle;
 	var endCircle;
 	
+	var zoomLevel = 14;
 	
 	var startPathImage = "client/images/startPathImageSmall.png";
 	var endPathImage   = "client/images/endPathImageSmall.png";
@@ -91,7 +92,7 @@ VRL.TheMap = function (theMapDIV) {
 			
 			var mapOptions = {
 				center: new google.maps.LatLng(firstLat, firstLong),
-				zoom: 13
+				zoom: zoomLevel
 				//,mapTypeId: google.maps.MapTypeId.ROADMAP
 			}			
 			//log("theMap: firstLat " + firstLat + " firstLong " + firstLong);

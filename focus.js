@@ -45,6 +45,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	var yFocusArrIndex = {};
 	var xAxisFocus = d3.svg.axis();
 	var yAxisFocus = [];
+	
+	var axisSpace = 40;
+	
 	var lineGen = d3.svg.line();
 	var theZoom = d3.behavior.zoom();
 	var drag = d3.behavior.drag();
@@ -116,12 +119,12 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			}			
 						
 			if(noOfSpaces % 2 == 0) {
-				leftAxisSpace = (noOfSpaces/2) * 30;
+				leftAxisSpace = (noOfSpaces/2) * axisSpace;
 				rightAxisSpace = leftAxisSpace;
 			}
 			else {
-				leftAxisSpace = (noOfSpaces + 1)/2 * 30;
-				rightAxisSpace = (noOfSpaces - 1)/2 * 30;
+				leftAxisSpace = (noOfSpaces + 1)/2 * axisSpace;
+				rightAxisSpace = (noOfSpaces - 1)/2 * axisSpace;
 			}
 			
 			log("no of spaces needed = " + noOfSpaces )
@@ -214,7 +217,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			
 			
 			var availableWidth = width - padding.left - padding.right - leftAxisSpace - rightAxisSpace ;
-			var availableHeight = height - padding.top - padding.bottom;
+			var availableHeight = height - padding.top - padding.bottom - 10; //10 so that the x-axis ticks are longer
 			
 			log("foc: availableWidth = " + availableWidth)
 
@@ -330,17 +333,40 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				if(i % 2 == 0) {
 					var evenIndex = i / 2;
 					theFocus.append('g')
+						.attr('id', 'axis' + i)
 						.attr('class', 'y axis')
-						.attr('transform', 'translate(' + (evenIndex * 30) + ')')
+						.attr('transform', 'translate(' + (evenIndex * axisSpace) + ')')
 						.call(yAxisFocus[i]);
+						
+					//the y-axis label		
+					theFocus.append("text")
+						.attr('class', 'y-axis-label')
+						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+						.attr("transform", "translate("+ (evenIndex * axisSpace - 20) +","+(availableHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+						.text(theSensorData[i].dataName());
 				}
 				else {
 					var oddIndex = (i - 1) / 2;
 					theFocus.append('g')
+						.attr('id', 'axis' + i)
 						.attr('class', 'y axis')
-						.attr('transform', 'translate(' + (availableWidth + leftAxisSpace+  (oddIndex * 30))  + ')')
+						.attr('transform', 'translate(' + (availableWidth + leftAxisSpace+  (oddIndex * axisSpace))  + ')')
 						.call(yAxisFocus[i]);
+						
+					//the y-axis label		
+					theFocus.append("text")
+						.attr('class', 'y-axis-label')
+						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+						.attr("transform", "translate("+ (availableWidth + leftAxisSpace +  (oddIndex * axisSpace) + 30) +","+(availableHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+						.text(theSensorData[i].dataName());
 				}
+			
+
+				
+				
+				//### color the axis based on the line color ###
+				$("#axis" + i + " line").css("stroke", theSensorData[i].style.dataColor());
+				$("#axis" + i + " path").css("stroke", theSensorData[i].style.dataColor());
 			}
 			/*
 			theFocus.append('g')
@@ -356,11 +382,13 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			//log("leftAxisSpace  = " + leftAxisSpace + " rightAxisSpace  = " + rightAxisSpace)
 			
 			theFocus.append('g')
+					.attr('id', 'xaxis')
 					.attr('class', 'x axis')
 					.attr('transform', 'translate(' + (leftAxisSpace) +',' + availableHeight + ')')
 					.call(xAxisFocus);
 
-			
+			theFocus.selectAll("#xaxis line").attr("y2", 15);
+			theFocus.selectAll("#xaxis text").attr("y", 19);
 			
 			theFocus.append('g')
 					.attr('class', 'x brush')
@@ -526,11 +554,14 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	//##############################################
 	
 	focus.drawLines = function(data) {
+		
+		
 		for (var i = 0; i < noOfData; i++) {
 			
 			if(data[i].dataType() == 0){
 				//Nominal values
 				var d = data[i].data();
+				var d2 = data[i];
 				//d = d.values;					
 				d.map(function(dd, index) {
 					//var startPos = xFocus(dd.timestamp);
@@ -540,13 +571,38 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr("id", "circleNominal" + i + "-" + index)
 							.attr('class', 'theCircle')
 							.attr("cx", xFocus(dd.timestamp))
-							.attr("cy", yFocus(2))
+							.attr("cy", yFocus(0))
 							.attr("r", 10)
 							.attr('stroke', data[i].style.dataColor()) //based on the index
 							.attr('stroke-width', 1)
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
-							.attr('fill', data[i].styles[dd.value]);
+							.attr('fill', data[i].styles[dd.value])							
+						.on("mouseover", function () {
 							
+							div.transition().duration(100).style("opacity", .9);
+							
+							div.html( "<span class='.tooltipMainValue'>" + dd.value + "</span>")
+								.style("left", (d3.event.pageX + 10) + "px")
+								.style("top", (d3.event.pageY - 28) + "px")
+								.attr('r', 8);
+								
+							d3.select(this)
+								.attr("cy", yFocus(2))
+								.attr('r', 12)
+								.attr("fill-opacity", .9);
+								
+						}).on("mouseout", function (dd) {
+							
+							div.transition().duration(100).style("opacity", 0)
+							
+							d3.select(this)
+								.attr("cy", yFocus(0))
+								.attr('r', 10)
+								.attr("fill-opacity", 1);
+						});		
+					
+					/*
+					//tooltip using jQuery tipsy
 					$("#circleNominal" + i + "-" + index).tipsy({ 
 							gravity: 'sw', 
 							html: true, 
@@ -554,7 +610,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
 								return '<span style="color:#fff">' + dd.value + '</span>'; 
 							}
 					});
-		
+					*/
+					
+					
 					//log(circleGen(data[i].data()));		
 				});
 									
@@ -571,14 +629,40 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							.attr("id", "circleOrdinal" + i + "-" + index)
 							.attr('class', 'theCircle')
 							.attr("cx", xFocus(dd.timestamp))
-							.attr("cy", yFocus(2))
+							.attr("cy", yFocus(0))
 							.attr("r", 10)
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
 							.attr('stroke-width', 1)
 				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
-							.attr('fill', data[i].styles[dd.value]);
+							.attr('fill', data[i].styles[dd.value])													
+						.on("mouseover", function () {
 							
+							div.transition().duration(100).style("opacity", .9);
 							
+							var valIs = getKey(dataInfo, dd.value - 0);
+							
+							div.html( "<span class='.tooltipMainValue'>" + valIs + "</span>")
+								.style("left", (d3.event.pageX + 10) + "px")
+								.style("top", (d3.event.pageY - 28) + "px")
+								.attr('r', 8);
+								
+							d3.select(this)
+								.attr("cy", yFocus(2))
+								.attr('r', 12)
+								.attr("fill-opacity", .9);
+								
+						}).on("mouseout", function (dd) {
+							
+							div.transition().duration(100).style("opacity", 0)
+							
+							d3.select(this)
+								.attr("cy", yFocus(0))
+								.attr('r', 10)
+								.attr("fill-opacity", 1);
+						});		
+							
+					/*
+					//### Tooltip with jQuery tipsy	
 					$("#circleOrdinal" + i + "-" + index).tipsy({
 								gravity: 'sw', 
 								html: true, 
@@ -587,6 +671,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 									return '<span style="color:#fff">' + valIs + '</span>'; 
 								}
 					});
+					*/
 					//log(circleGen(data[i].data()));		
 				});
 									
@@ -675,6 +760,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			
 			
 		}
+		
 	};
 	
 	function getKey(obj, val) {
@@ -685,6 +771,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 	}
 	
 	focus.redrawLines = function(data) {
+		
 		for (var i = 0; i < noOfData; i++) {
 			if(data[i].dataType() == 0) {
 				//Nominal data
@@ -694,7 +781,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					theFocus.select("#" + "circleNominal" + i + "-" + index)
 							.attr('class', 'theCircle')						
 							.attr("cx", xFocus(dd.timestamp))
-							.attr("cy", yFocus(2))
+							.attr("cy", yFocus(0))
 							.attr("r", 10)
 							.attr('stroke', data[i].style.dataColor()) //based on the index
 							.attr('stroke-width', 1)
@@ -710,7 +797,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 					theFocus.select("#" + "circleOrdinal" + i + "-" + index)
 							.attr('class', 'theCircle')						
 							.attr("cx", xFocus(dd.timestamp))
-							.attr("cy", yFocus(2))
+							.attr("cy", yFocus(0))
 							.attr("r", 10)
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
 							.attr('stroke-width', 1)
@@ -768,6 +855,8 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				});
 			}
 		}
+		
+		
 	}
 	
 	focus.zoomed = function() {
@@ -944,6 +1033,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
 			theFocus.select('.x.axis').call(xAxisFocus);
 			
+		theFocus.selectAll("#xaxis line").attr("y2", 15);
+		theFocus.selectAll("#xaxis text").attr("y", 19);
+			
 		}
 	};
 	
@@ -977,6 +1069,12 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			
 			//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
 			theFocus.select('.x.axis').call(xAxisFocus);
+			
+			//update the x-axis ticks with longer height
+			theFocus.selectAll("#xaxis line").attr("y2", 15);
+			theFocus.selectAll("#xaxis text").attr("y", 19);
+			
+			
 			//theZoom.scale(scaleVal);
 			if(caller == "timelineHandlesZoomed") {
 				//theZoom.scale(scaleVal);
@@ -1011,6 +1109,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
 		}
 		*/
 		previousZoomCaller = caller;
+		
+		
+		
 		
 	};
 
