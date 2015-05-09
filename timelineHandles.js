@@ -22,9 +22,19 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 	var contextHeightPadding = 5;
 	var areaSpace = 40;
 
-	var noOfData = 1;
+	var theData;
+	var theSensorData = [];	
+	
+	var noOfData = 0;
+	var noOfSensorData = 0;
 	var timelineBarHeight = 20; //timelineHeight / noOfData;
 
+		
+	var yContextArr = [];
+	var yContextArrIndex = {};
+	var yAxisContext = [];
+	
+	
 	//The total time range
 	var startTimeRange = 0;
 	var endTimeRange = 0;
@@ -64,16 +74,21 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 			log("tiH: timelineHandles");
 			//var data = selection;
 			
-			noOfData = data.length;
-			//log("tiH:noOfData = " + noOfData);
-			//calculateTimeRange(data);
-			
-			//log("tiH:data size = " + data);
-			//log("tiH:data str : " + JSON.stringify(data));
-			//data = data.getData();
-			//log("tiH:data str: " + JSON.stringify(data));
-			//log(data);	
+			theData = data;
+			noOfData = theData.length;
 						
+			
+			//collecting all the sensor data in one place
+			for(var i = 0; i < noOfData; i++) {
+				if(theData[i].dataType() == 2) {
+					theSensorData.push(theData[i]);
+					yContextArrIndex["" + i] = (theSensorData.length - 1) ;
+				
+					//log("###" + yContextArrIndex["" + i])
+				}
+			}			
+			noOfSensorData = theSensorData.length;
+			//log("noOfSensorData = " +noOfSensorData)
 			
 			
 			var availableWidth = width - padding.left - padding.right;
@@ -88,6 +103,9 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]);
 			var xAxisContext = d3.svg.axis().scale(xContext).orient('bottom');//.tickFormat(d3.time.format("%X"));
 
+			for(var i = 0; i < noOfSensorData; i++ ) {				
+				yContextArr.push(d3.scale.linear().range([availableHeight, 0]));
+			}
 			//var xDomain = data.map(function(d) { return d[0]; });//if array
 			
 		
@@ -145,8 +163,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 				//put hourly ticks for the x-axis
 				xAxisContext.tickFormat(d3.time.format("%X"));
 				
-			}
-			
+			}				
 			//log("tiH:Start : " + startValue + " -- End : " + endValue );
 			
 			//log("tiH:start date :" + startDate);
@@ -226,12 +243,34 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 			//log("tiH:yValues : " + yValues);
 			
 			var yMax = d3.max(yValues);
+			
+			
+			var yValArr = [noOfSensorData];
+			theSensorData.forEach(function (d, index) {
+				d = d.data();
+				yValArr[index] = [];
+				//log(index)
+				d.map(function (dd) {
+					yValArr[index].push(dd.value - 0);
+				});
+
+			});
+			
+			var yMaxArr = [];
+			for(var i = 0; i < noOfSensorData; i++){
+				yMaxArr.push(d3.max(yValArr[i]));
+			}
+			
+			
 			//var yMax = d3.max(data.map(function(d) { return d[1]; } )); //for array of data
 			
 			//log("tiH:yMax = " + yMax);
 
 			xContext.domain(d3.extent(xDomain));
-			yContext.domain([0, yMax + 2]);
+			yContext.domain([0, yMax + 2]);		
+			for(var i = 0; i < noOfSensorData; i++) {
+				yContextArr[i].domain([0, yMaxArr[i] + 2]);
+			}
 
 		
 			for(var i = 0; i < noOfData; i++) {
@@ -280,13 +319,30 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 					context.append('path')
 							//.data(data[i].data())
 							//.attr('class', 'line')						
-							.attr('d', lineGen(data[i].data()))
+							.attr('d', genLine(data[i].data(), (yContextArrIndex["" + i] - 0)))
 							.attr('stroke', data[i].style.dataColor())
 							.attr('stroke-width', data[i].style.lineSize())
 							.attr('fill', 'none');
 				}
 				
 			}
+			function genLine(dd, index) {
+		
+				//log("d = " + JSON.stringify(dd))
+				//log("index = " + index)
+				var theLine = d3.svg.line()
+									.x(function (d) {
+										//log("index = " + index)
+										return xContext(new Date(d.timestamp - 0));
+									})
+									.y(function (d) {
+										//log("index = " + yContextArr[index])
+										return yContextArr[index](d.value - 0);
+									})
+									.interpolate("monotone");
+						return theLine(dd)
+			}
+			
 			
 			context.append('g')
 					.attr('class', 'x axis')

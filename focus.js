@@ -194,33 +194,34 @@ VRL.TheFocus = function (docWidth, docHeight) {
 				});
 
 			});
+			var yMax = d3.max(yValues);
+			//log("focus: yMax = " + yMax);
 			
+			//### Arrays of sensor values for each sensor data for finding the max values in each array
 			var yValArr = [noOfSensorData];
 			theSensorData.forEach(function (d, index) {
 				d = d.data();
 				yValArr[index] = [];
-				//log(index)
 				d.map(function (dd) {
 					yValArr[index].push(dd.value - 0);
 				});
 
-			});
+			});		
 			
-			
-			var yMax = d3.max(yValues);
-			//log("focus: yMax = " + yMax);
-			
+			//### Now finding the max and min value for each of the arrays of sensordata
 			var yMaxArr = [];
+			var yMinArr = [];
 			for(var i = 0; i < noOfSensorData; i++){
 				yMaxArr.push(d3.max(yValArr[i]));
+				yMinArr.push(d3.min(yValArr[i]));
 			}
 			
-			
+			//### Calculating the available height and width for the chart
 			var availableWidth = width - padding.left - padding.right - leftAxisSpace - rightAxisSpace ;
 			var availableHeight = height - padding.top - padding.bottom - 10; //10 so that the x-axis ticks are longer
-			
-			log("foc: availableWidth = " + availableWidth)
+			//log("foc: availableWidth = " + availableWidth)
 
+			
 			var container = d3.select(this);
 			var svg = container.append('svg')
 				.attr('width', width + margin.left + margin.right)
@@ -262,7 +263,10 @@ VRL.TheFocus = function (docWidth, docHeight) {
 			xFocus.domain(d3.extent(xDomain));			
 			yFocus.domain([0, yMax + 2]);			
 			for(var i = 0; i < noOfSensorData; i++) {
-				yFocusArr[i].domain([0, yMaxArr[i] + 2]);
+				var extraHeight = 0.15 * (yMaxArr[i] - yMinArr[i]);
+				log(i + " = extra space = " + extraHeight);
+				yFocusArr[i].domain([0, yMaxArr[i] + extraHeight]); 
+				//extra height added so that the max value is can be seen properly in the y-axis
 			}
 			
 			
@@ -330,6 +334,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 
 			//### draw the y-axes 
 			for(var i = 0; i < noOfSensorData; i++ ) {
+				
 				if(i % 2 == 0) {
 					var evenIndex = i / 2;
 					theFocus.append('g')
@@ -344,6 +349,9 @@ VRL.TheFocus = function (docWidth, docHeight) {
 						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
 						.attr("transform", "translate("+ (evenIndex * axisSpace - 20) +","+(availableHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
 						.text(theSensorData[i].dataName());
+						
+					//removing the topmost tick that is usually without label
+					theFocus.selectAll("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H-6H16"); //remove the H16 at the end if the lines don't look good
 				}
 				else {
 					var oddIndex = (i - 1) / 2;
@@ -359,6 +367,10 @@ VRL.TheFocus = function (docWidth, docHeight) {
 						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
 						.attr("transform", "translate("+ (availableWidth + leftAxisSpace +  (oddIndex * axisSpace) + 30) +","+(availableHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
 						.text(theSensorData[i].dataName());
+						
+						
+					//removing the topmost tick that is usually without label
+					theFocus.selectAll("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H6H-16"); //remove the H16 at the end if the lines don't look good
 				}
 			
 
@@ -550,7 +562,7 @@ VRL.TheFocus = function (docWidth, docHeight) {
 							})
 							.interpolate("monotone");
 				return theLine(dd)
-			}
+	}
 	//##############################################
 	
 	focus.drawLines = function(data) {
