@@ -354,7 +354,18 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.text(theSensorData[i].dataName());
 						
 					//removing the topmost tick that is usually without label
-					theFocus.selectAll("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H-6H16"); //remove the H16 at the end if the lines don't look good
+					theFocus.select("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H-6H16"); //remove the H16 at the end if the lines don't look good
+								
+					theFocus.select("#"+ "axis" + i )
+						.append("line")
+						.attr("id", "valueTick" + i)
+						.attr("x1", -6)
+						.attr("y1", 0)
+						.attr("x2", 6)
+						.attr("y2", 0)
+						.attr("visibility", "hidden")
+						.attr("stroke-width", 2)
+						.attr("stroke", "#00FF00");
 				}
 				else {
 					var oddIndex = (i - 1) / 2;
@@ -373,7 +384,18 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						
 						
 					//removing the topmost tick that is usually without label
-					theFocus.selectAll("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H6H-16"); //remove the H16 at the end if the lines don't look good
+					theFocus.select("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H6H-16"); //remove the H16 at the end if the lines don't look good
+					
+					theFocus.select("#"+ "axis" + i )
+						.append("line")
+						.attr("id", "valueTick" + i)
+						.attr("x1", -6)
+						.attr("y1", 0)
+						.attr("x2", 6)
+						.attr("y2", 0)
+						.attr("visibility", "hidden")
+						.attr("stroke-width", 2)
+						.attr("stroke", "#00FF00");
 				}
 			
 
@@ -579,7 +601,6 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr('fill', data[i].styles[dd.value])							
 						.on("mouseover", function () {
 							var index = $(this).attr("id").substring(13,14) - 0;
-							log("index = " + index);
 							div.transition().duration(100).style("opacity", .9);
 							
 							//### the tooltip
@@ -645,7 +666,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							div.transition().duration(100).style("opacity", .9);
 							
 							//### the tooltip showing the value
-							var valIs = getKey(data[index].dataInfo(), dd.value - 0);							
+							var valIs = getKey(data[index].dataInfo(), dd.value - 0);
+							
 							div.html( "<span class='.tooltipMainValue'>" + valIs + "</span>")
 								.style("left", (d3.event.pageX + 10) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
@@ -732,13 +754,23 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							
 							div.transition().duration(100).style("opacity", .8);
 							var val = dd.value - 0;
-							log("val = " + val)
+							//log("val = " + val)
+							
+							
+							//Offset the tooltip based on which side of the screen (left or right) the data node is in
+							var xOffset = 0;
+							if(d3.event.pageX > docWidth / 2) {
+								xOffset = 0 - 140;
+							}
+							else {
+								xOffset = 10;
+							}
 							
 							//### the tooltip
 							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + "</span>"
 										+ "<br /><span class='tooltipOtherValue'>" + theSensorData[index].dataName()  + 
 										"<br />" + new Date(dd.timestamp-0).toLocaleString() + "</span>")
-								.style("left", (d3.event.pageX + 10) + "px")
+								.style("left", (d3.event.pageX + xOffset) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
 								
@@ -761,8 +793,17 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							}
 							
 							//### increase the size of the corresponding y-axis line
-							d3.select("#axis" + index )
+							d3.select("#axis" + index + " path" )
 								.attr('stroke-width', 2);
+							
+							//### show the tick on the corresponding y-axis denoting the value
+							var	newY = yFocusArr[index](dd.value - 0);
+							theFocus.select("#valueTick" + index)
+										.attr("x1", -6)
+										.attr("y1", newY)
+										.attr("x2", 6)
+										.attr("y2", newY)
+										.attr("visibility", "visible");
 							
 						}).on("mouseout", function (dd) {
 							//### bring back everything to their normal state
@@ -780,8 +821,12 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								.attr("stroke-width", theSensorData[index].style.lineSize())
 								.attr("fill-opacity", 1);
 							
-							d3.select("#axis" + index )
+							d3.select("#axis" + index + " path")
 								.attr('stroke-width', 1);
+							
+							theFocus.select("#valueTick" + index)
+								.attr("visibility", "hidden");
+							
 						});						
 						
 						/*
@@ -884,8 +929,17 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 									
 							
 							//### increase the size of the corresponding y-axis line
-							d3.select("#axis" + index )
+							d3.select("#axis" + index + " path" )
 								.attr('stroke-width', 2);	
+							
+							//### show the tick on the corresponding y-axis denoting the value
+							var	newY = yFocusArr[index](dd.value - 0);
+							theFocus.select("#valueTick" + index)
+										.attr("x1", -6)
+										.attr("y1", newY)
+										.attr("x2", 6)
+										.attr("y2", newY)
+										.attr("visibility", "visible");
 									
 							//### Bringing the line that the circle belong to at the front
 							var lastDataElementID = $( "#theFocus .dataElement" ).last().attr( "id" );							
@@ -909,8 +963,12 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								.attr("stroke-width", theSensorData[index].style.lineSize())
 								.attr("fill-opacity", 1);
 								
-							d3.select("#axis" + index )
-								.attr('stroke-width', 1);	
+							d3.select("#axis" + index + " path")
+								.attr('stroke-width', 1);
+							
+							
+							theFocus.select("#valueTick" + index)
+								.attr("visibility", "hidden");
 						});
 				});
 			}
