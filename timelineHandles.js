@@ -1,4 +1,4 @@
-VRL.TheTimelineHandles = function (docWidth, docHeight) {
+VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	"use strict";
 	// default settings
 	var margin = {
@@ -11,11 +11,11 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 	var padding = {
 		top : 10,
 		bottom : 10,
-		left : 40,
-		right : 40
+		left : 0,
+		right : 5
 	};
 
-	var width = docWidth - margin.left - padding.left;
+	var width = docWidth - margin.left - margin.right - extraSpaces;
 	var height = 70;
 
 	var contextHeight = height - 20;
@@ -162,7 +162,6 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 				log("tiH: range smaller than a day");
 				//put hourly ticks for the x-axis
 				xAxisContext.tickFormat(d3.time.format("%X"));
-				
 			}				
 			//log("tiH:Start : " + startValue + " -- End : " + endValue );
 			
@@ -257,8 +256,10 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 			});
 			
 			var yMaxArr = [];
+			var yMinArr = [];
 			for(var i = 0; i < noOfSensorData; i++){
 				yMaxArr.push(d3.max(yValArr[i]));
+				yMinArr.push(d3.min(yValArr[i]));
 			}
 			
 			
@@ -269,7 +270,9 @@ VRL.TheTimelineHandles = function (docWidth, docHeight) {
 			xContext.domain(d3.extent(xDomain));
 			yContext.domain([0, yMax + 2]);		
 			for(var i = 0; i < noOfSensorData; i++) {
-				yContextArr[i].domain([0, yMaxArr[i] + 2]);
+				var extraHeight = 0.15 * (yMaxArr[i] - yMinArr[i]);
+				yContextArr[i].domain([0, yMaxArr[i] + extraHeight]);
+				//extra height added so that the max value is can be seen properly in the y-axis
 			}
 
 		

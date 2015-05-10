@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
+<head>
     <!--<link rel="stylesheet" href="style.css">-->
 	<link rel="stylesheet" href="libs\nanoscroller.css">
 	<link rel="stylesheet" href="libs\tipsy.css">
@@ -218,6 +218,27 @@ div.tooltip {
 	left: 0;
 }
 
+/*####################################*/
+body {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	background: #eee;
+}
+
+#mainContainer {
+	margin: 10px;
+	background: #fff;
+	border: 1px solid #ccc;
+}
+
+
+	#FocusDIV, #TimeLineHandlerDIV, TimeLineDIV { 
+		border-bottom: 1px solid #bbb;
+	}
+	
+	
 </style>
 
     <script src="vrl.js"></script>
@@ -231,18 +252,21 @@ div.tooltip {
     <script src="Noise_data.js"></script>
 	-->
     <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="libs\svg.min.js"></script>
 	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script src="libs\jquery-2.1.3.min.js"></script>
     <script src="libs\jquery.svg.js"></script>
     <script src="libs\jquery.tipsy.js"></script>
     <script src="libs\jquery.nanoscroller.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
-  </head>
+</head>
 
-  <body>
-    <div id="FocusDIV"></div>
-    <div id="TimeLineHandlerDIV"></div>
-    <div id="TimeLineDIV"></div>
+<body>
+
+<div id="mainContainer">
+	<div id="FocusDIV"></div>
+	<div id="TimeLineHandlerDIV"></div>
+	<div id="TimeLineDIV"></div>
 	<div id="LocationAndNotesDIV">
 		<div id="LocationDIV">
 		
@@ -257,6 +281,7 @@ div.tooltip {
 			</div>
 		</div>
 	</div>
+</div>
 
     <script>
 //#######################################################	
@@ -380,7 +405,8 @@ d3.selection.prototype.moveToFront = function() {
 		   
 			var docWidth  = $(document).width();
 			var docHeight = $(document).height();
-		   
+			var extraSpaces = 22; //because of margin and border 
+			
 			var notesDIVwidth = $("#NotesDIV").width();
 			log("notesDIVwidth = " + notesDIVwidth);
 			$("#NotesDIV").css("width", notesDIVwidth - 5 );
@@ -391,9 +417,9 @@ d3.selection.prototype.moveToFront = function() {
 			
 			var TheApp = VRL();
 			
-			var timelineHandles = VRL.TheTimelineHandles(docWidth, docHeight);
-			var timeline = VRL.TheTimeline(docWidth, docHeight);
-			var focus = VRL.TheFocus(docWidth, docHeight);
+			var timelineHandles = VRL.TheTimelineHandles(docWidth, docHeight, extraSpaces);
+			var timeline = VRL.TheTimeline(docWidth, docHeight, extraSpaces);
+			var focus = VRL.TheFocus(docWidth, docHeight, extraSpaces);
 			
 			var mapDIV = document.getElementById("LocationDIV");
 			var map = VRL.TheMap(mapDIV);
