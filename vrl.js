@@ -1,149 +1,283 @@
-var VRL = function(){
-
-	var allData = []; //to keep all the data
-	
-	theApp.addData = function(data) {
-		//### Adding a new data in the list of data
-		allData.push(new VRL.TheData(data))
-		log("VRL: Observers Notified");
-		subject.notify(theApp.getData());
-	};
-	
-	theApp.getData = function() {
-		//log("VRL: getData");
-		return allData;
-	};
-	
-	theApp.getDataAt = function(index) {
-		//log("VRL: getData");
+//#######################################################	
+	//==< for browser logs >===
+	function log(msg, color) {
 		
-		if(index < allData.length) { 
-			return allData[index];
+		if($.browser.msie){
+			console.log(msg);
 		}
-		//return null;
-	};
+		else {
+			console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
+		}
+	}
+	function log(msg) {
+		console.log(msg);
+	}
+	//==< for browser logs >===
 	
-	//theApp.updateData = function() {}
-	//###############################################
-	//### For the Observer Pattern
-	var subject = new Subject();
+//#######################################################
+//For the Observer Pattern
 
-	theApp.addObserver = function addObserver(newObserver) {
-		subject.observe(newObserver);
-	};
+var Subject = (function (window, undefined) {
 
-	theApp.removeObserver = function removeObserver(deleteObserver) {
-		subject.unobserve(deleteObserver);
-	};
-	
-	theApp.handlesUpdated = function fetchRange() {
-		// fake fetching the stocks
-		var stocks = {
-			aapl : 167.00,
-			goog : 243.67,
-			msft : 99.34
-		};
-
-		// notify our observers of the stock change
-		subject.notify(theRange);
-	};
-	
-	//###############################################
-
-
-	function theApp() { 
-		
+	function Subject() {
+		this._list = [];
 	}
 
+	// this method will handle adding observers to the internal list
+	Subject.prototype.observe = function observeObject(obj) {
+		console.log('added new observer');
+		this._list.push(obj);
+	};
 
-	return theApp;
-};
+	Subject.prototype.unobserve = function unobserveObject(obj) {
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			if (this._list[i] === obj) {
+				this._list.splice(i, 1);
+				console.log('removed existing observer');
+				return true;
+			}
+		}
+		return false;
+	};
 
+	Subject.prototype.notify = function notifyObservers() {
+		var args = Array.prototype.slice.call(arguments, 0);
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			this._list[i].update.apply(null, args);
+		}
+	};
+
+	return Subject;
+
+})(window);
+
+
+
+var Subject2 = (function (window, undefined) {
+
+	function Subject2() {
+		this._list = [];
+	}
+
+	// this method will handle adding observers to the internal list
+	Subject2.prototype.observe = function observeObject(obj) {
+		console.log('added new observer');
+		this._list.push(obj);
+	};
+
+	Subject2.prototype.unobserve = function unobserveObject(obj) {
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			if (this._list[i] === obj) {
+				this._list.splice(i, 1);
+				console.log('removed existing observer');
+				return true;
+			}
+		}
+		return false;
+	};
+
+	Subject2.prototype.notify = function notifyObservers() {
+		var args = Array.prototype.slice.call(arguments, 0);
+		for (var i = 0, len = this._list.length; i < len; i++) {
+			this._list[i].update.apply(null, args);
+		}
+	};
+
+	return Subject2;
+
+})(window);
+
+//#######################################################
+
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};	
 	
-//VRL.allData = []; //stores all TheData here
+//#######################################################
 
-//VRL.
-
-//Data Styles
-VRL.DataStyle = function() {
-	var dataColor = "#0000ff"; // hex
-	var lineSize = 2; //in pixels
-	var timelineSize = 20; //in pixels
-	var lineNodeRadius = 5;
-	var userNodeFocusRadius = 9;
-	var userNodeContexRadius = 10;
+//global namespace
+//var VRL = VRL || {};
+			
+			//var TheApp = VRL();
+			//TheApp.addData(jsonData);
+			//log(TheApp.allData);
+			//log(TheApp.getData());
+			
+			//log(theD.style.dataColor());
+			//log(theD.dataName());
 	
-	this.dataColor = function(_) {
-			if (!arguments.length)
-				return dataColor;
-			dataColor = _;
-	};
-	this.lineSize = function(_) {
-			if (!arguments.length)
-				return lineSize;
-			lineSize = _;
-	};
-	this.timelineSize = function(_) {
-			if (!arguments.length)
-				return timelineSize;
-			timelineSize = _;
-	};
-	this.lineNodeRadius = function(_) {
-			if (!arguments.length)
-				return lineNodeRadius;
-			lineNodeRadius = _;
-	};
-	this.userNodeFocusRadius = function(_) {
-			if (!arguments.length)
-				return userNodeFocusRadius;
-			userNodeFocusRadius = _;
-	};
-	this.userNodeContexRadius = function(_) {
-			if (!arguments.length)
-				return userNodeContexRadius;
-			userNodeContexRadius = _;
-	};
-}
-
-//The Data Wrapper
-VRL.TheData = function(data) {
-		//data = JSON.parse(data); //only when we have the JSON string
-		var dataName = data.name;
-		var dataSource = data.source;
-		var dataType = data.type;
-		var dataInfo = data.valueInfo;
-		var data = data.values;					
+			
+			
+				//log($(window).height());   // returns height of browser viewport
+			//log($(document).height()); // returns height of HTML document
+			//log($(window).width());   // returns width of browser viewport
+			//log($(document).width()); // returns width of HTML document
+			//log(screen.height)//screen height
+			//log(screen.width)//screen width
+		   
+		   
+		   //### the Document width and height
+			var docWidth  = $(document).width();
+			var docHeight = $(document).height();
+			var extraSpaces = 22; //because of margin and border 
+			
+			var notesDIVwidth = $("#NotesDIV").width();
+			$("#NotesDIV").css("width", notesDIVwidth - 3 );// so that the nodesDIV fits in
+			
+			log("notesDIVwidth = " + notesDIVwidth);
+			
+			//
+			//var widget = myWidget();
+			
+			//### The main App
+			var TheApp = VRL();
+			
+			var timelineHandles = VRL.TheTimelineHandles(docWidth, docHeight, extraSpaces);
+			var timeline = VRL.TheTimeline(docWidth, docHeight, extraSpaces);
+			var focus = VRL.TheFocus(docWidth, docHeight, extraSpaces);
+			
+			var mapDIV = document.getElementById("LocationDIV");
+			var map = VRL.TheMap(mapDIV);
+			
+			var notesDIV = document.getElementById("NotesPanelContents");
+			var theNotes = VRL.TheNotes(notesDIV);
+		   
 		
-		this.style = new VRL.DataStyle();
-		this.styles = [];
-		
-		this.dataName = function(_) {
-				if (!arguments.length)
-					return dataName;
-				dataName = _;
-		};
-		this.dataSource = function(_) {
-				if (!arguments.length)
-					return dataSource;
-				dataSource = _;
-		};
-		this.dataType = function(_) {
-				if (!arguments.length)
-					return dataType;
-				dataType = _;
-		};
-		this.dataInfo = function(_) {
-				if (!arguments.length)
-					return dataInfo;
-				dataInfo = _;
-		};
-		this.data = function(_) {
-				if (!arguments.length)
-					return data;
-				data = _;
-		};
+		   
+		   
+		   //log(values);
+		   
+		   /*
+		   d3.select('#TimeLineHandlerDIV')
+                    .datum(values)
+                    .call(widget);
+			*/
+			
+			var theData = [];
+			
+			//log("here we go");
+			
+			d3.json("data/Noise_data.json", function (data) {
+				TheApp.addData(data);
 				
-}
+				loadData2()
+			});
+			function loadData2() {
+				d3.json("data/Noise_data3.json", function (data) {	
+					TheApp.addData(data);
+					TheApp.getDataAt(1).style.dataColor("#ff0000");
+					loadData3();
+				});	
+			}
+			function loadData3() {
+				d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {	
+					TheApp.addData(data);
+					TheApp.getDataAt(2).style.dataColor("#00ff00");
+					TheApp.getDataAt(2).styles.push("#007900");
+					TheApp.getDataAt(2).styles.push("#00df00");
+					TheApp.getDataAt(2).styles.push("#88ff88");
+					loadData4();
+				});	
+			}
+			function loadData4() {
+				d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {	
+					TheApp.addData(data);
+					TheApp.getDataAt(3).style.dataColor("#000000");
+					loadData5();
+					//loadChart();
+				});	
+			}
+			function loadData5() {
+			//2015-05-02-200533_Noise_data
+				d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {	
+					TheApp.addData(data);
+					TheApp.getDataAt(4).style.dataColor("#e1d600");
+					loadData6();
+				});	
+			}
+			function loadData6() {
+			//2015-05-02-200533_Noise_data
+				d3.json("data/2015-04-29-181948_GPS_data.json", function (data) {	
+					//TheApp.addData(data);
+					//TheApp.getDataAt(5).style.dataColor("#e1d600");
+					loadData7();
+				});	
+			}
+			function loadData7() {
+				d3.json("data/Noise_data4.json", function (data) {	
+					TheApp.addData(data);
+					TheApp.getDataAt(5).style.dataColor("#f015f0");
+					loadData8();
+				});	
+			}
+			function loadData8() {
+				d3.json("data/Noise_data5.json", function (data) {	
+					TheApp.addData(data);
+					TheApp.getDataAt(6).style.dataColor("#40fd09");
+					loadChart();
+				});	
+			}
+			//
+			
+			function loadChart() {
+				//log(theData);
+				//var dat = TheApp.getData();
+				//log("array size = " + dat.length);
+				
+				d3.select('#TimeLineDIV')
+						.datum(TheApp.getData())
+						.call(timeline);
+				
+				d3.select('#TimeLineHandlerDIV')
+						.datum(TheApp.getData())
+						.call(timelineHandles);
+				//equivalent to : timelineHandles(d3.select('#TimeLineHandlerDIV').datum(theData))
+				
+				
+				
+				d3.select('#FocusDIV')
+						.datum(TheApp.getData())
+						.call(focus);
+				
+				//initialize map
+				map.initialize(TheApp.getData());
+				theNotes.initialize(TheApp.getData());
+				
+				loadMoreData();
+				
+			}
 
-
-
+			var someObserver = {
+				update : function () {
+					console.log('"update" called: ', arguments);
+				}
+			};
+			
+			//###########  adding the Observers   ########################
+			timelineHandles.addObserver(timeline);
+			timelineHandles.addObserver(focus);
+			timelineHandles.addObserver(map);
+			timelineHandles.addObserver(theNotes);
+			
+			timeline.addObserver(timelineHandles);
+			timeline.addObserver(focus);
+			timeline.addObserver(map);
+			timeline.addObserver(theNotes);
+			
+			focus.addObserver(timelineHandles)
+			
+			
+			
+			
+			//###########
+			
+			
+			function loadMoreData() {
+				//widget.addData();
+			}
+			
+			
+			
+			
