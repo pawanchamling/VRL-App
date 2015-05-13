@@ -5,13 +5,13 @@
 	"valueInfo" : {},
 	"values" : [{
 			"timestamp" : "1429650069290",
-			"value" : "one"
+			"value" : "studying"
 		}, {
 			"timestamp" : "1429650076268",
-			"value" : ""
+			"value" : "taking a break"
 		}, {
 			"timestamp" : "1429650082773",
-			"value" : "what"
+			"value" : "The weather was nice."
 		}
 	]
 }

@@ -2,7 +2,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	"use strict";
 	// default settings
 	var margin = {
-		top : 10,
+		top : 0,
 		bottom : 10,
 		left : 10,
 		right : 10

@@ -2,7 +2,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	"use strict";
 	// default settings
 	var margin = {
-		top : 10,
+		top : 0,
 		bottom : 10,
 		left : 10,
 		right : 10
@@ -579,6 +579,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	
 	focus.drawLines = function(data) {
 		
+			var startTime = new Date(theRange[0] - 0).toLocaleString();
+			var endTime   = new Date(theRange[1] - 0).toLocaleString();
+			$("#timeRangeFromText").text(startTime);
+			$("#timeRangeToText").text(endTime);
 		
 		for (var i = 0; i < noOfData; i++) {
 			
@@ -1164,6 +1168,12 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		//log("foc: update: range = " + theRange + " caller : " + caller);
 		if (theFocus != undefined ) {	
 			//log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " #########");		
+			
+			//timeRangeText
+			var startTime = new Date(theRange[0] - 0).toLocaleString();
+			var endTime   = new Date(theRange[1] - 0).toLocaleString();
+			$("#timeRangeFromText").text(startTime);
+			$("#timeRangeToText").text(endTime);
 			
 			xFocus.domain(theRange);
 			

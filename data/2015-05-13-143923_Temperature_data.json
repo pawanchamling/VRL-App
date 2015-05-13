@@ -1,0 +1,22 @@
+{
+	"name" : "Temperature Data",
+	"Source" : "Android Mobile",
+	"type" : "2",
+	"valueInfo" : {
+		"max" : "23.898691177368164",
+		"min" : "0.0",
+		"unit" : "Celcius",
+		"threshold" : "8"
+	},
+	"values" : [{
+			"timestamp" : "1431520763179",
+			"value" : "0.0"
+		}, {
+			"timestamp" : "1431520768101",
+			"value" : "23.898691177368164"
+		}, {
+			"timestamp" : "1431520773098",
+			"value" : "23.898691177368164"
+		}
+	]
+}

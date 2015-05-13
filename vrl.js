@@ -97,6 +97,23 @@ d3.selection.prototype.moveToFront = function() {
 	
 //#######################################################
 
+$(".showHide").each( function () {
+	$(this).click( function () {
+			//if()
+			var status = $(this).text();
+			if(status == "Hide") {
+				$(this).text("Show");
+				$(this).parent().next().css("display", "none");
+			}
+			if(status == "Show") {
+				$(this).text("Hide");
+				$(this).parent().next().css("display", "block");
+			}
+	});
+});
+
+
+
 //global namespace
 //var VRL = VRL || {};
 			

@@ -50,7 +50,56 @@ rect.pane {
 }
 
 /*#####################*/
+body {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	background: #404040;
+}
 
+#mainContainer {
+	margin: 10px;
+	background: #fff;
+	border: 1px solid #ccc;
+}
+
+	.timeRangeText { 
+		color: #0000ff;
+	}
+
+	#timeRangeDIV, #FocusDIVCover, #TimeLineHandlerDIVCover, TimeLineDIVCover { 
+		border-bottom: 1px solid #bbb;
+	}
+	
+	#timeRangeDIV {
+		height: 20px;
+		text-size: 14px;
+		text-align: center;
+	}
+	
+	.titleBar {
+		height: 14px;
+		font-size: 12px;
+		padding-top: 2px;
+	}
+	
+	.barTitle {
+		float: left;
+		font-size: 14px;
+		padding-left: 10px;
+	}
+		
+	.showHide { 
+		float: right;
+		padding-right: 5px;
+	}
+	
+	#FocusDIVCover {
+		
+	}
+	
+	
 #LocationAndNotesDIV {
 	height: 500px;
 	background: #eee;
@@ -210,22 +259,4 @@ div.tooltip {
 }
 
 /*####################################*/
-body {
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	margin: 0;
-	background: #404040;
-}
 
-#mainContainer {
-	margin: 10px;
-	background: #fff;
-	border: 1px solid #ccc;
-}
-
-
-	#FocusDIV, #TimeLineHandlerDIV, TimeLineDIV { 
-		border-bottom: 1px solid #bbb;
-	}
-	

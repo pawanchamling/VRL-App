@@ -2,7 +2,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	"use strict";
 	// default settings
 	var margin = {
-		top : 10,
+		top : 0,
 		bottom : 10,
 		left : 10,
 		right : 10
@@ -540,6 +540,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			//timeline.changeHandles();
 			if(caller == "focusZoomed") {
 				//log("tiH: called by focus")
+				
+				
 				
 				if(zoomScale == 1) {
 					theRange[0] = new Date(theStartValue - 0);
