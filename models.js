@@ -114,6 +114,8 @@ VRL.TheData = function(data) {
 		var dataInfo = data.valueInfo;
 		var data = data.values;					
 		
+		this.visible = true; //showing the data or not
+		
 		this.style = new VRL.DataStyle();
 		this.styles = [];
 		
