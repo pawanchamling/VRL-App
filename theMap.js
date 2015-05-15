@@ -10,8 +10,8 @@ VRL.TheMap = function (theMapDIV) {
 	var gpsPoints = [];
 	var markers = [];
 	var paths = [];
-	var startCircle;
-	var endCircle;
+	var startCircle = [];
+	var endCircle = [];
 	
 	var zoomLevel = 14;
 	
@@ -180,9 +180,11 @@ VRL.TheMap = function (theMapDIV) {
 			paths[i].setMap(null);
 		}
 		paths = [];	
-		if(startCircle != undefined) {
-			startCircle.setMap(null);
-			endCircle.setMap(null);
+		for(var i = 0; i < data.length; i++) {
+			if(startCircle[i] != undefined) {
+				startCircle[i].setMap(null);
+				endCircle[i].setMap(null);
+			}
 		}
 		
 		
@@ -228,16 +230,17 @@ VRL.TheMap = function (theMapDIV) {
 										new google.maps.Point(10, 10)
 									);
 				
-				startCircle = new google.maps.Marker({
+				startCircle[index] = new google.maps.Marker({
 									position: coordinates[0],
 									map: map,
 									icon: startCircleImage
 								});
 						
 
-				//log("theMap: coordinates length : " + coordinates.length);						
+				//log("theMap: coordinates length : " + coordinates.length);	
+				//log("theMap: coordinates  : " + coordinates);	
 				if(coordinates.length > 1) {
-					endCircle = new google.maps.Marker({
+					endCircle[index] = new google.maps.Marker({
 									position: coordinates[coordinates.length - 1],
 									map: map,
 									icon: endCircleImage
@@ -249,6 +252,7 @@ VRL.TheMap = function (theMapDIV) {
 	};
 	
 	var previousTime = new Date().getTime();
+	
 	theMap.reloadElements = function(){
 		var currentTime = new Date().getTime();
 		

@@ -167,7 +167,11 @@ VRL.TheNotes = function (notesDIV) {
 		
 	};
 	
-	
+	theNotes.reload = function(data) {
+		notesData = [];
+		$(notesDIV).empty();
+		theNotes.initialize(data);
+	};
 	
 	theNotes.update = function (range, caller) {
 		//log("theNotes: caller = " + caller + " : range = " + range);

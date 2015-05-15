@@ -581,10 +581,12 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	
 	focus.drawLines = function(data) {
 		
-			var startTime = new Date(theRange[0] - 0).toLocaleString();
-			var endTime   = new Date(theRange[1] - 0).toLocaleString();
-			$("#timeRangeFromText").text(startTime);
-			$("#timeRangeToText").text(endTime);
+		//Displaying the selected time range at the top
+		var startTime = new Date(theRange[0] - 0).toLocaleString();
+		var endTime   = new Date(theRange[1] - 0).toLocaleString();
+		$("#timeRangeFromText").text(startTime);
+		$("#timeRangeToText").text(endTime);
+		
 		
 		for (var i = 0; i < noOfData; i++) {
 			
@@ -654,6 +656,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 				//d = d.values;					
 				d.map(function(dd, index) {
 					//var startPos = xFocus(dd.timestamp);
+					log("foc: ordinal data " + getKey(data[i].dataInfo(), dd.value - 0))
 					
 					theFocus.append('circle')							
 							.attr("id", "circleOrdinal" + i + "-" + index)

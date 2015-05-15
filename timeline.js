@@ -66,7 +66,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			//var data = selection;
 			
 			noOfData = data.length;
-			//log("timeL: noOfData = " + noOfData);
+			log("timeL: noOfData = " + noOfData);
 			//calculateTimeRange(data);
 			
 			container = d3.select(this);
@@ -209,6 +209,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 				start = data[i].data();
 				//log(start);
 				if(start.length > 0) {
+					//### Nominal Data
 					start = start[0].timestamp - 0 ;
 				
 					start = xContext(start);
@@ -239,10 +240,12 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 						
 					}
 					else if(data[i].dataType() == 1) {
-						//if Ordinal data
+					//### Ordinal Data
 						
 						var d = data[i].data();		
 						d.map(function(dd) {
+							log("timeline: some ordinal data here");
+							
 							var startPos = xContext(dd.timestamp);
 							
 							context.append('line')

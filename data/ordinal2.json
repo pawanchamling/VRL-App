@@ -1,0 +1,39 @@
+{
+	"name" : "Ordinal Values",
+	"Source" : "Android Mobile",
+	"type" : "1",
+	"valueInfo" : {
+		"Happy" : 0,
+		"Normal" : 1,
+		"Sad" : 2
+	},
+	"values" : [{
+			"timestamp" : "1429650085694",
+			"value" : "0"
+		}, {
+			"timestamp" : "1429650142696",
+			"value" : "2"
+		}, {
+			"timestamp" : "1429650151697",
+			"value" : "1"
+		}, {
+			"timestamp" : "1429650154695",
+			"value" : "0"
+		}, {
+			"timestamp" : "1429650157707",
+			"value" : "2"
+		},{
+			"timestamp" : "1429650160716",
+			"value" : "1"
+		},{
+			"timestamp" : "1429650163709",
+			"value" : "0"
+		}, {
+			"timestamp" : "1429650166708",
+			"value" : "1"
+		}, {
+			"timestamp" : "1429650169693",
+			"value" : "2"
+		}
+	]
+}

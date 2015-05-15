@@ -320,16 +320,22 @@ $('#uploadForm').submit(function() {
 			
 			function loadLastData() {
 				log("Fired after some time")
-				d3.json("data/2015-04-27-010729_Ordinal_data.json", function (data) {	
+				d3.json("data/2015-04-29-181948_GPS_data.json", function (data) {	
 					//2015-04-29-181948_GPS_data
 					
 					TheApp.addData(data);
 					TheApp.getDataAt(6).style.dataColor("#40fd09");
+					TheApp.getDataAt(6).styles.push("#191e80");
+					TheApp.getDataAt(6).styles.push("#4b53dc");
+					TheApp.getDataAt(6).styles.push("#b3b6f0");
 					
 					timeline.reload(TheApp.getData());
 					timelineHandles.reload(TheApp.getData());
 					focus.reload(TheApp.getData());
 					map.reload(TheApp.getData());
+					theNotes.reload(TheApp.getData());
+					
+					
 				});	
 			}
 			
