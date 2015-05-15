@@ -113,6 +113,34 @@ $(".showHide").each( function () {
 });
 
 
+$('#uploadForm').submit(function() {
+        log('uploading the file ...');
+ 
+        $(this).ajaxSubmit({                                                                                                                 
+ 
+            error: function(xhr) {
+				log('Error: ' + xhr.status);
+            },
+ 
+            success: function(response) {				
+				if(response.error) {
+					log('Opps, something bad happened');
+					return;
+				}
+		 
+				var imageUrlOnServer = response.path;
+		 
+				log('Success, file uploaded to:' + imageUrlOnServer);
+				//$('<img/>').attr('src', imageUrlOnServer).appendTo($('body'));
+            }
+	});
+ 
+	// Have to stop the form from submitting and causing                                                                                                       
+	// a page refresh - don't forget this                                                                                                                      
+	return false;
+});
+ 
+
 
 //global namespace
 //var VRL = VRL || {};
@@ -230,11 +258,14 @@ $(".showHide").each( function () {
 				});	
 			}
 			function loadData8() {
+				/*
 				d3.json("data/Noise_data5.json", function (data) {	
 					TheApp.addData(data);
 					TheApp.getDataAt(6).style.dataColor("#40fd09");
-					loadChart();
 				});	
+				*/
+				
+				loadChart();
 			}
 			//
 			
@@ -285,8 +316,22 @@ $(".showHide").each( function () {
 			
 			focus.addObserver(timelineHandles)
 			
+			setTimeout(loadLastData, 5000);
 			
-			
+			function loadLastData() {
+				log("Fired after some time")
+				d3.json("data/2015-04-27-010729_Ordinal_data.json", function (data) {	
+					//2015-04-29-181948_GPS_data
+					
+					TheApp.addData(data);
+					TheApp.getDataAt(6).style.dataColor("#40fd09");
+					
+					timeline.reload(TheApp.getData());
+					timelineHandles.reload(TheApp.getData());
+					focus.reload(TheApp.getData());
+					map.reload(TheApp.getData());
+				});	
+			}
 			
 			//###########
 			

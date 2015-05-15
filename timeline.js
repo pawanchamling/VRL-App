@@ -57,7 +57,8 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	};
 	//##############################################
 			
-	var  context;					
+	var  context;
+	var container;
 				
 	function timeline(selection) {
 		selection.each(function (data) {
@@ -68,7 +69,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			//log("timeL: noOfData = " + noOfData);
 			//calculateTimeRange(data);
 			
-			var container = d3.select(this);
+			container = d3.select(this);
 			var svg = container.append('svg')
 				.attr('width', width + margin.left + margin.right)
 				.attr('height', height + margin.top + margin.bottom);
@@ -206,63 +207,68 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 				hy = i * h +  h/2 + i * 2;
 				
 				start = data[i].data();
-				start = start[0].timestamp - 0 ;
-				start = xContext(start);
-				//log("data: " + data[i].dataType());
+				//log(start);
+				if(start.length > 0) {
+					start = start[0].timestamp - 0 ;
 				
-				end = data[i].data();
-				end = end[end.length - 1].timestamp - 0 ;
-				end = xContext(end);
-					//log("line end: " + end);
-					//log("xContext = " + xContext.domain());
-					//log("yContext" + yContext());
-				if(data[i].dataType() == 0) {
-					//if Nominal data
+					start = xContext(start);
+					//log("data: " + data[i].dataType());
 					
-					var d = data[i].data();		
-					d.map(function(dd) {
-						var startPos = xContext(dd.timestamp);
-						//log("some nominal data here")
-						context.append('line')
-								.attr("x1", startPos)
-								.attr("y1", yContext(hy))
-								.attr("x2", startPos + 3)
-								.attr("y2", yContext(hy))
-								.attr('stroke', data[i].style.dataColor()) //based on the index
-								.attr('stroke-width', h)
-								.attr('fill', 'none');
-					});
-					
-				}
-				else if(data[i].dataType() == 1){
-					//if Ordinal data
-					
-					var d = data[i].data();		
-					d.map(function(dd) {
-						var startPos = xContext(dd.timestamp);
+					end = data[i].data();
+					end = end[end.length - 1].timestamp - 0 ;
+					end = xContext(end);
+						//log("line end: " + end);
+						//log("xContext = " + xContext.domain());
+						//log("yContext" + yContext());
+					if(data[i].dataType() == 0) {
+						//if Nominal data
 						
+						var d = data[i].data();		
+						d.map(function(dd) {
+							var startPos = xContext(dd.timestamp);
+							//log("some nominal data here")
+							context.append('line')
+									.attr("x1", startPos)
+									.attr("y1", yContext(hy))
+									.attr("x2", startPos + 3)
+									.attr("y2", yContext(hy))
+									.attr('stroke', data[i].style.dataColor()) //based on the index
+									.attr('stroke-width', h)
+									.attr('fill', 'none');
+						});
+						
+					}
+					else if(data[i].dataType() == 1) {
+						//if Ordinal data
+						
+						var d = data[i].data();		
+						d.map(function(dd) {
+							var startPos = xContext(dd.timestamp);
+							
+							context.append('line')
+									.attr("x1", startPos)
+									.attr("y1", yContext(hy))
+									.attr("y2", yContext(hy))
+									.attr("x2", startPos + 3)
+									.attr('stroke', data[i].styles[dd.value]) //based on the index
+									.attr('stroke-width', h)
+									.attr('fill', 'none');
+						});
+						
+					}
+					else if(data[i].dataType() == 2 || data[i].dataType() == 3) {
+						//if sensor data
 						context.append('line')
-								.attr("x1", startPos)
+								.attr("x1", start)
 								.attr("y1", yContext(hy))
+								.attr("x2", end)
 								.attr("y2", yContext(hy))
-								.attr("x2", startPos + 3)
-								.attr('stroke', data[i].styles[dd.value]) //based on the index
+								.attr('stroke', data[i].style.dataColor())
 								.attr('stroke-width', h)
 								.attr('fill', 'none');
-					});
-					
+					}
 				}
-				else if(data[i].dataType() == 2 || data[i].dataType() == 3) {
-					//if sensor data
-					context.append('line')
-							.attr("x1", start)
-							.attr("y1", yContext(hy))
-							.attr("x2", end)
-							.attr("y2", yContext(hy))
-							.attr('stroke', data[i].style.dataColor())
-							.attr('stroke-width', h)
-							.attr('fill', 'none');
-				}
+				
 			}
 			
 
@@ -458,7 +464,16 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			}
 			
 			//#######################################################
-			
+	timeline.reload = function(data) {
+		
+		xDomain = [];
+		
+		container.selectAll("*").remove();
+		d3.select('#TimeLineDIV').html("");
+		d3.select('#TimeLineDIV')
+						.datum(data)
+						.call(timeline);
+	};
 
 	//the handle was updated
 	timeline.update = function (range, caller) {

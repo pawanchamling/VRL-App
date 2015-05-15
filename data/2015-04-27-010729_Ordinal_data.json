@@ -1,1 +1,11 @@
-{"name":"Ordinal Values", "Source":"Android Mobile","type":"1","valueInfo":{"High":0,"Medium":1,"Low":2},"values":[]}
+{
+	"name" : "Ordinal Values",
+	"Source" : "Android Mobile",
+	"type" : "1",
+	"valueInfo" : {
+		"High" : 0,
+		"Medium" : 1,
+		"Low" : 2
+	},
+	"values" : []
+}

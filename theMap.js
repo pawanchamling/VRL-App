@@ -15,8 +15,8 @@ VRL.TheMap = function (theMapDIV) {
 	
 	var zoomLevel = 14;
 	
-	var startPathImage = "client/images/startPathImageSmall.png";
-	var endPathImage   = "client/images/endPathImageSmall.png";
+	var startPathImage = "images/startPathImageSmall.png";
+	var endPathImage   = "images/endPathImageSmall.png";
 	
 	var isMapInitialized = false;
 	
@@ -103,7 +103,10 @@ VRL.TheMap = function (theMapDIV) {
 			
 		}
 		else {
-			
+			theMap.loadMap({
+				center: new google.maps.LatLng(63.422467, 10.418033),
+				zoom: zoomLevel
+			});
 		}
 		
 		
@@ -260,6 +263,15 @@ VRL.TheMap = function (theMapDIV) {
 		previousTime = currentTime;
 		
 	}
+	
+	theMap.reload = function (data) {
+		gpsData = [];
+		gpsPoints = [];
+		markers = [];
+		paths = [];
+		theMap.initialize(data);
+		
+	};
 	
 	theMap.update = function (range, caller) {
 		//log("theMap: caller = " + caller + " : range = " + range);

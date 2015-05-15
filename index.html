@@ -16,6 +16,12 @@
 <body>
 
 	<div id="mainContainer">
+		<div id="topMenuBarDIV">
+			<form id="uploadForm" method="post" enctype="multipart/form-data" action="">
+				<input type="file" name="file">
+				<input type="submit" value="Submit">
+			</form>
+		</div>	
 		<div id="timeRangeDIV">
 			<b>Time between <span id="timeRangeFromText" class="timeRangeText" ></span> and 
 			<span id="timeRangeToText" class="timeRangeText" ></span> </b>
@@ -66,6 +72,7 @@
     <script src="libs\jquery.svg.js"></script>
     <script src="libs\jquery.tipsy.js"></script>
     <script src="libs\jquery.nanoscroller.min.js"></script>
+    <script src="libs\jquery.form.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
 	
 	<script src="models.js"></script>

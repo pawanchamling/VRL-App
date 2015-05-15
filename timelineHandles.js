@@ -43,8 +43,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	var theEndValue = 0;
 	
 	//
-		
-	var  context;	
+	var container;	
+	var context;	
 	var theRange = d3.svg.brush();
 	var theBrush = d3.svg.brush();
 
@@ -94,7 +94,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			var availableWidth = width - padding.left - padding.right;
 			var availableHeight = height - padding.top - padding.bottom;
 
-			var container = d3.select(this);
+			container = d3.select(this);
 			var svg = container.append('svg')
 				.attr('width', width + margin.left + margin.right)
 				.attr('height', height + margin.top + margin.bottom);
@@ -518,7 +518,24 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 		}
 		subject.notify(theRange, "timelineHandles");//notifying all the observers about the change in range
 	};
+	
+	//#######################################################
+	timelineHandles.reload = function(data) {
+		
+		theSensorData = [];		
+		yContextArr = [];
+		yContextArrIndex = {};
+		yAxisContext = [];
+	
+		container.selectAll("*").remove();
+		d3.select('#TimeLineHandlerDIV').html("");
+		d3.select('#TimeLineHandlerDIV')
+						.datum(data)
+						.call(timelineHandles);
+	};
 
+	//#######################################################
+	
 	timelineHandles.update = function (range, caller) {
 		//log("tiH:$$$$$$$$$$$$")
 		theRange = range;
