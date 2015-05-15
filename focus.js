@@ -63,6 +63,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	
 	var container; //the container that contains all the SVG
 	
+	var isNoiseDataAvailable = false;
 	
 	//for the tooltip
 	var div = d3.select("body")
@@ -96,6 +97,18 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			//var data = selection;
 			theData = data;
 			noOfData = data.length;
+			
+			
+			
+			//### Checking if the noise data is available or not
+			theData.forEach(function (d) {
+				//d = d.data();
+				if(d.dataType() == 2 ) {
+					isNoiseDataAvailable = true;
+				}
+			});
+			
+			
 			
 			//collecting all the sensor data in one place
 			for(var i = 0; i < noOfData; i++) {
@@ -340,6 +353,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			//### draw the y-axes 
 			for(var i = 0; i < noOfSensorData; i++ ) {
 				
+				var unit = theSensorData[i].dataInfo().unit;	
+				
 				if(i % 2 == 0) {
 					var evenIndex = i / 2;
 					theFocus.append('g')
@@ -347,13 +362,14 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.attr('class', 'y axis')
 						.attr('transform', 'translate(' + (evenIndex * axisSpace) + ')')
 						.call(yAxisFocus[i]);
-						
+					
+					
 					//the y-axis label		
 					theFocus.append("text")
 						.attr('class', 'y-axis-label')
 						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
 						.attr("transform", "translate("+ (evenIndex * axisSpace - 20) +","+(availableHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
-						.text(theSensorData[i].dataName());
+						.text(theSensorData[i].dataName() + " (" + unit + ")");
 						
 					//removing the topmost tick that is usually without label
 					theFocus.select("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H-6H16"); //remove the H16 at the end if the lines don't look good
@@ -382,7 +398,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.attr('class', 'y-axis-label')
 						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
 						.attr("transform", "translate("+ (availableWidth + leftAxisSpace +  (oddIndex * axisSpace) + 30) +","+(availableHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
-						.text(theSensorData[i].dataName());
+						.text(theSensorData[i].dataName() + " (" + unit + ")");
 						
 						
 					//removing the topmost tick that is usually without label
@@ -601,7 +617,14 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr("id", "circleNominal" + i + "-" + index)
 							.attr('class', 'theCircle dataElement')
 							.attr("cx", xFocus(dd.timestamp))
-							.attr("cy", yFocus(0))
+							.attr("cy", function() {
+								if(isNoiseDataAvailable) {
+									return yFocus(0);
+								}
+								else {
+									return 100;
+								}
+							})
 							.attr("r", data[i].style.userNodeFocusRadius())
 							.attr('stroke', data[i].style.dataColor()) //based on the index
 							.attr('stroke-width',  data[i].style.lineSize())
@@ -611,15 +634,33 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							var index = $(this).attr("id").substring(13,14) - 0;
 							div.transition().duration(100).style("opacity", .9);
 							
+							
+							
+							//### Offset the tooltip based on which side of the screen (left or right) the data node is in
+							var xOffset = 0;
+							if(d3.event.pageX > docWidth / 2) {
+								xOffset = 0 - 140;
+							}
+							else {
+								xOffset = 10;
+							}
+							
 							//### the tooltip
 							div.html( "<span class='.tooltipMainValue'>" + dd.value + "</span>")
-								.style("left", (d3.event.pageX + 10) + "px")
+								.style("left", (d3.event.pageX + xOffset) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
 							
 							//### change the radius of the circle
 							d3.select(this)
-								.attr("cy", yFocus(2))
+								.attr("cy", function() {
+								if(isNoiseDataAvailable) {
+										return yFocus(1);
+									}
+									else {
+										return 95;
+									}
+								})
 								.attr('r', (data[index].style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								
@@ -629,7 +670,14 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							div.transition().duration(100).style("opacity", 0)
 							
 							d3.select(this)
-								.attr("cy", yFocus(0))
+								.attr("cy", function() {
+									if(isNoiseDataAvailable) {
+										return yFocus(0);
+									}
+									else {
+										return 100;
+									}
+								})
 								.attr('r', data[index].style.userNodeFocusRadius())
 								.attr("fill-opacity", 1);
 						});		
@@ -662,7 +710,14 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr("id", "circleOrdinal" + i + "-" + index)
 							.attr('class', 'theCircle dataElement')
 							.attr("cx", xFocus(dd.timestamp))
-							.attr("cy", yFocus(0))
+							.attr("cy", function() {
+								if(isNoiseDataAvailable) {
+									return yFocus(0);
+								}
+								else {
+									return 100;
+								}
+							})
 							.attr("r", (data[i].style.userNodeFocusRadius() ))
 							.attr('stroke', data[i].styles[dd.value]) //based on the index
 							.attr('stroke-width', data[i].style.lineSize())
@@ -677,14 +732,31 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							//### the tooltip showing the value
 							var valIs = getKey(data[index].dataInfo(), dd.value - 0);
 							
+							
+							//### Offset the tooltip based on which side of the screen (left or right) the data node is in
+							var xOffset = 0;
+							if(d3.event.pageX > docWidth / 2) {
+								xOffset = 0 - 140;
+							}
+							else {
+								xOffset = 10;
+							}
+							
 							div.html( "<span class='.tooltipMainValue'>" + valIs + "</span>")
-								.style("left", (d3.event.pageX + 10) + "px")
+								.style("left", (d3.event.pageX + xOffset) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
 								
 							//### increase the radius of the circle to show selection
 							d3.select(this)
-								.attr("cy", yFocus(2))
+								.attr("cy", function() {
+									if(isNoiseDataAvailable) {
+										return yFocus(1);
+									}
+									else {
+										return 95;
+									}
+								})
 								.attr('r', (data[index].style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								
@@ -694,7 +766,14 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							div.transition().duration(100).style("opacity", 0)
 							
 							d3.select(this)
-								.attr("cy", yFocus(0))
+								.attr("cy", function() {
+									if(isNoiseDataAvailable) {
+										return yFocus(0);
+									}
+									else {
+										return 100;
+									}
+								})
 								.attr('r', (data[index].style.userNodeFocusRadius() ))
 								.attr("fill-opacity", 1);
 						});		
@@ -775,8 +854,11 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								xOffset = 10;
 							}
 							
+							var unit = theSensorData[index].dataInfo().unit;
+							//log("foc: Data unit is " + unit + "######");
+							
 							//### the tooltip
-							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + "</span>"
+							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + " " + unit + " </span>"
 										+ "<br /><span class='tooltipOtherValue'>" + theSensorData[index].dataName()  + 
 										"<br />" + new Date(dd.timestamp-0).toLocaleString() + "</span>")
 								.style("left", (d3.event.pageX + xOffset) + "px")
@@ -918,10 +1000,20 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							var val = dd.value - 0;
 							
 							
-							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + "</span>"
+							//### Offset the tooltip based on which side of the screen (left or right) the data node is in
+							var xOffset = 0;
+							if(d3.event.pageX > docWidth / 2) {
+								xOffset = 0 - 140;
+							}
+							else {
+								xOffset = 10;
+							}
+							
+							var unit = theSensorData[index].dataInfo().unit;
+							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + " " + unit + " </span>"
 										+ "<br /><span class='tooltipOtherValue'>" + theSensorData[index].dataName()  + 
 										"<br />" + new Date(dd.timestamp-0).toLocaleString() + "</span>")
-								.style("left", (d3.event.pageX + 10) + "px")
+								.style("left", (d3.event.pageX + xOffset) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
 								

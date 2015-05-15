@@ -35,6 +35,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	var yAxisContext = [];
 	
 	
+	var isNoiseDataAvailable = false;
+	
 	//The total time range
 	var startTimeRange = 0;
 	var endTimeRange = 0;
@@ -77,6 +79,14 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			theData = data;
 			noOfData = theData.length;
 						
+			
+			//### Checking if the noise data is available or not
+			theData.forEach(function (d) {
+				//d = d.data();
+				if(d.dataType() == 2 ) {
+					isNoiseDataAvailable = true;
+				}
+			});
 			
 			//collecting all the sensor data in one place
 			for(var i = 0; i < noOfData; i++) {
@@ -290,7 +300,14 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						
 						context.append('circle')
 								.attr("cx", startPos)
-								.attr("cy", yContext(2))
+								.attr("cy", function() {
+									if(isNoiseDataAvailable) {
+										return yContext(2);
+									}
+									else {
+										return 25;
+									}
+								})
 								.attr("r", 5)
 								.attr('stroke', data[i].style.dataColor()) //based on the index
 								.attr('stroke-width', 1)
@@ -308,7 +325,14 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						
 						context.append('circle')
 								.attr("cx", startPos)
-								.attr("cy", yContext(2))
+								.attr("cy", function() {
+									if(isNoiseDataAvailable) {
+										return yContext(2);
+									}
+									else {
+										return 25;
+									}
+								})
 								.attr("r", 5)
 								.attr('stroke', data[i].styles[dd.value]) //based on the index
 								.attr('stroke-width', 1)

@@ -14,6 +14,10 @@ var VRL = function(){
 		return allData;
 	};
 	
+	theApp.noOfData = function() {
+		return allData.length;
+	};
+	
 	theApp.getDataAt = function(index) {
 		//log("VRL: getData");
 		

@@ -205,31 +205,31 @@ $('#uploadForm').submit(function() {
 			//log("here we go");
 			
 			d3.json("data/Noise_data.json", function (data) {
-				TheApp.addData(data);
+				//TheApp.addData(data);
 				
 				loadData2()
 			});
 			function loadData2() {
 				d3.json("data/Noise_data3.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(1).style.dataColor("#ff0000");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(1).style.dataColor("#ff0000");
 					loadData3();
 				});	
 			}
 			function loadData3() {
 				d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(2).style.dataColor("#00ff00");
-					TheApp.getDataAt(2).styles.push("#007900");
-					TheApp.getDataAt(2).styles.push("#00df00");
-					TheApp.getDataAt(2).styles.push("#88ff88");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(2).style.dataColor("#00ff00");
+					//TheApp.getDataAt(2).styles.push("#007900");
+					//TheApp.getDataAt(2).styles.push("#00df00");
+					//TheApp.getDataAt(2).styles.push("#88ff88");
 					loadData4();
 				});	
 			}
 			function loadData4() {
 				d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(3).style.dataColor("#000000");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(3).style.dataColor("#000000");
 					loadData5();
 					//loadChart();
 				});	
@@ -237,8 +237,8 @@ $('#uploadForm').submit(function() {
 			function loadData5() {
 			//2015-05-02-200533_Noise_data
 				d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(4).style.dataColor("#e1d600");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(4).style.dataColor("#e1d600");
 					loadData6();
 				});	
 			}
@@ -252,8 +252,8 @@ $('#uploadForm').submit(function() {
 			}
 			function loadData7() {
 				d3.json("data/Noise_data4.json", function (data) {	
-					TheApp.addData(data);
-					TheApp.getDataAt(5).style.dataColor("#f015f0");
+					//TheApp.addData(data);
+					//TheApp.getDataAt(5).style.dataColor("#f015f0");
 					loadData8();
 				});	
 			}
@@ -316,29 +316,51 @@ $('#uploadForm').submit(function() {
 			
 			focus.addObserver(timelineHandles)
 			
-			setTimeout(loadLastData, 5000);
+			setTimeout(loadLastData, 3000);
 			
 			function loadLastData() {
 				log("Fired after some time")
-				d3.json("data/2015-04-29-181948_GPS_data.json", function (data) {	
+				d3.json("data/Noise_data.json", function (data) {	
+					//2015-04-21-230058_Nominal_data.json
+					//2015-04-21-230058_Ordinal_data.json
 					//2015-04-29-181948_GPS_data
 					
-					TheApp.addData(data);
-					TheApp.getDataAt(6).style.dataColor("#40fd09");
-					TheApp.getDataAt(6).styles.push("#191e80");
-					TheApp.getDataAt(6).styles.push("#4b53dc");
-					TheApp.getDataAt(6).styles.push("#b3b6f0");
 					
-					timeline.reload(TheApp.getData());
-					timelineHandles.reload(TheApp.getData());
-					focus.reload(TheApp.getData());
-					map.reload(TheApp.getData());
-					theNotes.reload(TheApp.getData());
+					TheApp.addData(data);
+					TheApp.getDataAt(TheApp.noOfData() - 1).style.dataColor("#40fd09");
+					TheApp.getDataAt(TheApp.noOfData() - 1).styles.push("#191e80");
+					TheApp.getDataAt(TheApp.noOfData() - 1).styles.push("#4b53dc");
+					TheApp.getDataAt(TheApp.noOfData() - 1).styles.push("#b3b6f0");
 					
 					
 				});	
+				d3.json("data/Noise_data2.json", function (data) {	
+					//2015-04-21-230058_Nominal_data.json
+					//2015-04-21-230058_Ordinal_data.json
+					//2015-04-29-181948_GPS_data
+					
+					
+					TheApp.addData(data);
+					TheApp.getDataAt(TheApp.noOfData() - 1).style.dataColor("#ec11ec");
+					TheApp.getDataAt(TheApp.noOfData() - 1).styles.push("#191e80");
+					TheApp.getDataAt(TheApp.noOfData() - 1).styles.push("#4b53dc");
+					TheApp.getDataAt(TheApp.noOfData() - 1).styles.push("#b3b6f0");
+					
+					
+				});	
+				
+				setTimeout(reloadEverything, 3000);
+					
 			}
 			
+			function reloadEverything() {			
+				//### reload everything
+				timeline.reload(TheApp.getData());
+				timelineHandles.reload(TheApp.getData());
+				focus.reload(TheApp.getData());
+				map.reload(TheApp.getData());
+				theNotes.reload(TheApp.getData());
+			}
 			//###########
 			
 			
@@ -347,5 +369,44 @@ $('#uploadForm').submit(function() {
 			}
 			
 			
-			
+	
+
+$('#uploadForm').submit(function() {
+        log('uploading the file ...');
+ 
+        $(this).ajaxSubmit({                                                                                                                 
+ 
+            error: function(xhr) {
+				log('Error: ' + xhr.status);
+            },
+ 
+            success: function(response) {				
+				if(response.error) {
+					log('Opps, something bad happened');
+					return;
+				}
+		 
+				var imageUrlOnServer = response.path;
+		 
+				log('Success, file uploaded to:' + imageUrlOnServer);
+				
+				//### load the uploaded data
+				d3.json(imageUrlOnServer, function (data) {	
+					TheApp.addData(data);
+					
+					timeline.reload();
+					//loadChart();
+				});	
+				
+				//$('<img/>').attr('src', imageUrlOnServer).appendTo($('body'));
+            }
+	});
+ 
+	// Have to stop the form from submitting and causing                                                                                                       
+	// a page refresh - don't forget this                                                                                                                      
+	return false;
+});
+ 
+
+		
 			

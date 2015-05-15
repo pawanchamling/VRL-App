@@ -5,6 +5,7 @@
 	"valueInfo" : {
 		"max" : "10.682592592592593",
 		"min" : "0.34703703703703703",
+		"unit" : "Amp",
 		"threshold" : "8"
 	},
 	"values" : [{
