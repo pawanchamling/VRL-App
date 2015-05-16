@@ -211,7 +211,7 @@ function loadLastData() {
 	*/
 	
 	setTimeout(reloadEverything, 1000);
-	setTimeout(hideData, 3000);
+	//setTimeout(hideData, 3000);
 		
 }
 
@@ -278,6 +278,31 @@ function setDataColors(data) {
 	
 }
 
+
+$('.easy-modal').easyModal({
+	top: 200,
+	overlay: 0.2
+});
+
+$('.easy-modal-open').click(function(e) {
+	log("VRL: Modal ")
+	var target = $(this).attr('href');
+	$(target).trigger('openModal');
+	e.preventDefault();
+});
+
+
+$('.easy-modal-close').click(function(e) {
+	$('.easy-modal').trigger('closeModal');
+});
+
+$('.easy-modal-animated').easyModal({
+	top: 200,
+	overlay: 0.2,
+	transitionIn: 'animated bounceInDown',
+	transitionOut: 'animated bounceOutUp',
+	closeButtonClass: '.animated-close'
+});
 			
 //### Handle the uploading of data file and loading of the uploaded file
 $('#uploadForm').submit(function() {
