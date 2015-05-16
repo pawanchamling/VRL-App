@@ -598,8 +598,16 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	focus.drawLines = function(data) {
 		
 		//Displaying the selected time range at the top
+		theRange = xFocus.domain();
 		var startTime = new Date(theRange[0] - 0).toLocaleString();
 		var endTime   = new Date(theRange[1] - 0).toLocaleString();
+		log("### startTime = " + theRange);
+		
+		if(theRange[0] == "Invalid Date") {
+			startTime = "unknown";
+			endTime = "unknown";
+		}
+		
 		$("#timeRangeFromText").text(startTime);
 		$("#timeRangeToText").text(endTime);
 		

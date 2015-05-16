@@ -1,0 +1,60 @@
+{
+	"name" : "GPS Data",
+	"Source" : "Android Mobile",
+	"type" : "3",
+	"valueInfo" : {},
+	"values" : [{
+			"timestamp" : "1430324463630",
+			"latitude" : "63.41008482",
+			"longitude" : "10.42816537"
+		}, {
+			"timestamp" : "1430324468635",
+			"latitude" : "63.41001067",
+			"longitude" : "10.42837104"
+		}, {
+			"timestamp" : "1430324473631",
+			"latitude" : "63.41004671",
+			"longitude" : "10.42821892"
+		}, {
+			"timestamp" : "1430324478638",
+			"latitude" : "63.41002258",
+			"longitude" : "10.42815785"
+		}, {
+			"timestamp" : "1430324483698",
+			"latitude" : "63.40995191",
+			"longitude" : "10.42819446"
+		}, {
+			"timestamp" : "1430324488671",
+			"latitude" : "63.40990211",
+			"longitude" : "10.42817474"
+		}, {
+			"timestamp" : "1430324493698",
+			"latitude" : "63.40985493",
+			"longitude" : "10.42815109"
+		}, {
+			"timestamp" : "1430324498693",
+			"latitude" : "63.40981923",
+			"longitude" : "10.42816781"
+		},{
+			"timestamp" : "1430324668635",
+			"latitude" : "63.41168093",
+			"longitude" : "10.43057419"
+		},{
+			"timestamp" : "1430324753719",
+			"latitude" : "63.41167998",
+			"longitude" : "10.43057278"
+		},{
+			"timestamp" : "1430324863635",
+			"latitude" : "63.41167545",
+			"longitude" : "10.43056115"
+		},{
+			"timestamp" : "1430325068720",
+			"latitude" : "63.41166803",
+			"longitude" : "10.4305499"
+		},{
+			"timestamp" : "1430325273656",
+			"latitude" : "63.4116654",
+			"longitude" : "10.43055981"
+		}
+	]
+}

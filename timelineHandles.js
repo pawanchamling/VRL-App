@@ -65,7 +65,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	};
 	
 	timelineHandles.handlesUpdated = function fetchRange() {
-		// notify our observers of the stock change
+		// notify our observers 
 		subject.notify(theRange, "timelineHandles");
 	};
 	//##############################################
@@ -73,7 +73,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	
 	function timelineHandles(selection) {
 		selection.each(function (data) {
-			log("tiH: timelineHandles");
+			log("timelineHandles:");
 			//var data = selection;
 			
 			theData = data;
@@ -125,14 +125,14 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			var xDomain = [];
 			data.forEach(function (d) {
 				d = d.data();
-				//log("tiH:d = " + d);
+				//log("timelineHandles: d = " + d);
 				d.map(function(dd) {
-					//log("tiH:dd = " + dd.timestamp);
+					//log("timelineHandles: dd = " + dd.timestamp);
 					xDomain.push(new Date(dd.timestamp - 0).getTime());
 				});
 				
 			});
-			//log("tiH:xDomain = " + xDomain);
+			//log("timelineHandles: xDomain = " + xDomain);
 			/**/
 			
 			//### Calculating the start and the end timeline among the data ###
@@ -151,8 +151,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 				}
 			}
 			
-			//log("tiH:start date :" + xDomain[0]);
-			//log("tiH:Stop date :" + xDomain[xDomain.length - 1]);
+			//log("timelineHandles: start date :" + xDomain[0]);
+			//log("timelineHandles: Stop date :" + xDomain[xDomain.length - 1]);
 			
 			var temp = xDomain[0];
 			xDomain[0] = startValue;
@@ -169,16 +169,16 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			theEndValue = endValue;
 			
 			if(xDomain[0] + (1000*60*60*24) > xDomain[xDomain.length - 1]) {
-				log("tiH: range smaller than a day");
+				log("timelineHandles:  range smaller than a day");
 				//put hourly ticks for the x-axis
 				xAxisContext.tickFormat(d3.time.format("%X"));
 			}				
-			//log("tiH:Start : " + startValue + " -- End : " + endValue );
+			//log("timelineHandles: Start : " + startValue + " -- End : " + endValue );
 			
-			//log("tiH:start date :" + startDate);
-			//log("tiH:start date :" + xDomain[0]);
-			//log("tiH:Stop date :" + lastDate);
-			//log("tiH:Stop date :" + xDomain[xDomain.length - 1]);
+			//log("timelineHandles: start date :" + startDate);
+			//log("timelineHandles: start date :" + xDomain[0]);
+			//log("timelineHandles: Stop date :" + lastDate);
+			//log("timelineHandles: Stop date :" + xDomain[xDomain.length - 1]);
 			//###-----------------------------------------------------------------
 			
 			
@@ -241,15 +241,15 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			var yValues = [];
 			data.forEach(function (d) {
 				d = d.data();
-				//log("tiH:d = " + d);
+				//log("timelineHandles: d = " + d);
 				d.map(function(dd) {
-					//log("tiH:dd = " + dd.timestamp);
+					//log("timelineHandles: dd = " + dd.timestamp);
 					//xDomain.push(new Date(dd.timestamp - 0));
 					yValues.push(dd.value - 0);
 				});
 				
 			});
-			//log("tiH:yValues : " + yValues);
+			//log("timelineHandles: yValues : " + yValues);
 			
 			var yMax = d3.max(yValues);
 			
@@ -275,7 +275,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			
 			//var yMax = d3.max(data.map(function(d) { return d[1]; } )); //for array of data
 			
-			//log("tiH:yMax = " + yMax);
+			//log("timelineHandles: yMax = " + yMax);
 
 			xContext.domain(d3.extent(xDomain));
 			yContext.domain([0, yMax + 2]);		
@@ -287,8 +287,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 
 		
 			for(var i = 0; i < noOfData; i++) {
-				//log("tiH:l "  + data[i].data());
-				//log("tiH:dataColor = " + data[i].style.dataColor());
+				//log("timelineHandles: l "  + data[i].data());
+				//log("timelineHandles: dataColor = " + data[i].style.dataColor());
 				
 				if(data[i].dataType() == 0) {
 					//if Nominal data
@@ -296,7 +296,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					var d = data[i].data();		
 					d.map(function(dd) {
 						var startPos = xContext(dd.timestamp);
-						//log("tiH:some nominal data here")
+						//log("timelineHandles: some nominal data here")
 						
 						context.append('circle')
 								.attr("cx", startPos)
@@ -378,8 +378,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 
 			var startDate = new Date(xDomain[0] - 0);
 			var lastDate = new Date(xDomain[xDomain.length - 1] - 0);
-			//log("tiH:th start date :" + startDate);
-			//log("tiH:th Stop date :" + lastDate);
+			//log("timelineHandles: th start date :" + startDate);
+			//log("timelineHandles: th Stop date :" + lastDate);
 
 			theBrush = d3.svg.brush()
 									.x(xContext)
@@ -419,12 +419,12 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			}
 			
 			function calculateTimeRange(data){
-				//log("tiH:calculating time range");
+				//log("timelineHandles: calculating time range");
 				var start, end;
 				if(data.length >= 1) {
 					start = data[0].data();
 					start = start[0].timestamp - 0;
-					//log("tiH:start: " + start);
+					//log("timelineHandles: start: " + start);
 					
 					end = data[0].data();
 					end = end[end.length - 1].timestamp - 0;
@@ -432,7 +432,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					
 					startTimeRange = start;
 					endTimeRange = end;
-					//log("tiH:end: " + end);
+					//log("timelineHandles: end: " + end);
 				}
 				if(data.length > 1) {						
 					for(var i = 1; i < data.length; i++) {
@@ -451,7 +451,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						}
 					}
 				
-					//log("tiH: timelinehandler: Start timestamp: " + start + " and End timestamp: " + end );
+					//log("timelineHandles:  timelinehandler: Start timestamp: " + start + " and End timestamp: " + end );
 				}
 			}
 			
@@ -521,8 +521,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	};
 
 	timelineHandles.brushed = function() {
-		//log("tiH: $$$$$$$$$$$$$$$$$$$$$$$$ brushed $$$$$$$$$$$$$$$$$$$$$$$$")
-		//log("tiH: extent: " + theBrush.extent());
+		//log("timelineHandles:  $$$$$$$$$$$$$$$$$$$$$$$$ brushed $$$$$$$$$$$$$$$$$$$$$$$$")
+		//log("timelineHandles:  extent: " + theBrush.extent());
 		theRange = theBrush.extent();
 		
 		var startD = new Date(theRange[0]).getTime();
@@ -561,7 +561,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	//#######################################################
 	
 	timelineHandles.update = function (range, caller) {
-		//log("tiH:$$$$$$$$$$$$")
+		//log("timelineHandles: $$$$$$$$$$$$")
 		theRange = range;
 		context.select('.brush').call(theBrush.extent(theRange));
 		
@@ -569,18 +569,18 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	
 	timelineHandles.update = function (range, caller, zoomScale) {
 		
-		//log("tiH: caller = " + caller);
-		//log("tiH: theBrush : " + theBrush.extent());
-		//log("tiH: before " + theBrush.extent());
+		//log("timelineHandles:  caller = " + caller);
+		//log("timelineHandles:  theBrush : " + theBrush.extent());
+		//log("timelineHandles:  before " + theBrush.extent());
 		theRange = range;
 		//theBrush.extent(range);
-		//log("tiH: range = " + theRange + " ### Caller : " + caller + "###");
+		//log("timelineHandles:  range = " + theRange + " ### Caller : " + caller + "###");
 		
-		//log("tiH: after  " + theBrush.extent());
+		//log("timelineHandles:  after  " + theBrush.extent());
 		if(theBrush.extent() != null) {
 			//timeline.changeHandles();
 			if(caller == "focusZoomed") {
-				//log("tiH: called by focus")
+				//log("timelineHandles:  called by focus")
 				
 				
 				
@@ -593,8 +593,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					var rangeStart  = new Date(theRange[0] - 0).getTime();
 					var rangeEnd	= new Date(theRange[1] - 0).getTime();
 					//don't let the range go below or above the initial range
-					//log("tiH: theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime() + " diff: " + (theStartValue - new Date(theRange[0] - 0).getTime()));
-					//log("tiH: theEndValue   = " + theEndValue + " : " + new Date(theRange[1] - 0).getTime() + " diff: " + (new Date(theRange[1] - 0).getTime() - theEndValue));
+					//log("timelineHandles:  theStartValue = " + theStartValue + " : " + new Date(theRange[0] - 0).getTime() + " diff: " + (theStartValue - new Date(theRange[0] - 0).getTime()));
+					//log("timelineHandles:  theEndValue   = " + theEndValue + " : " + new Date(theRange[1] - 0).getTime() + " diff: " + (new Date(theRange[1] - 0).getTime() - theEndValue));
 					
 					//if less than 1 second
 					if((rangeEnd - rangeStart) < 1000) {
@@ -615,7 +615,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						if(rangeEnd > theEndValue){
 							theRange[1] = new Date(theEndValue - 0);
 						}
-						//log("tiH: < too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
+						//log("timelineHandles:  < too small: fixed : theRange[1] : " + theRange[1] + " < diff : " + diff);
 					}
 					
 					if(rangeEnd > theEndValue) {
@@ -628,7 +628,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						if(rangeStart < theStartValue){
 							theRange[0] = new Date(theStartValue - 0);
 						}
-						//log("tiH: > too big: fixed");
+						//log("timelineHandles:  > too big: fixed");
 					}
 					
 					

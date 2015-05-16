@@ -5,7 +5,8 @@
 	"valueInfo" : {
 		"High" : 0,
 		"Medium" : 1,
-		"Low" : 2
+		"Low" : 2,
+		"Lowest" : 3
 	},
 	"values" : [{
 			"timestamp" : "1429650071009",
