@@ -623,7 +623,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					
 					theFocus.append('circle')
 							.attr("id", "circleNominal" + i + "-" + index)
-							.attr('class', 'theCircle dataElement')
+							.attr('class', 'theCircle dataElement data' + i )
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
 								if(isNoiseDataAvailable) {
@@ -716,7 +716,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					
 					theFocus.append('circle')							
 							.attr("id", "circleOrdinal" + i + "-" + index)
-							.attr('class', 'theCircle dataElement')
+							.attr('class', 'theCircle dataElement data' + i )
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
 								if(isNoiseDataAvailable) {
@@ -805,7 +805,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 				//log("foc: i = " + i + "  yFocus Arr Index = " + (yFocusArrIndex["" + i] - 0))
 				theFocus.append("g")
 					.attr("id", "line" + (yFocusArrIndex["" + i] - 0) + "cover")
-					.attr('class', 'lineCovers dataElement')
+					.attr('class', 'lineCovers dataElement data' + i )
 				.append('path')
 					.attr("id", "line" + (yFocusArrIndex["" + i] - 0))
 					.attr('class', 'theLine')
@@ -1284,6 +1284,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		}
 	};
 	
+
+	
 	focus.update = function (range, caller, zoomScale) {
 		//log("foc: who called me");
 		
@@ -1366,5 +1368,15 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		
 	};
 
+	focus.hideData = function(index) {
+		log("focus: about to hide data" + index);
+		theFocus.selectAll(".data" + index).attr("visibility", "hidden");
+	};
+	
+	focus.showData = function(index) {
+		log("focus: about to show data" + index);
+		theFocus.selectAll(".data" + index).attr("visibility", "visible");
+	};
+	
 	return focus;
 };

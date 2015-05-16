@@ -229,6 +229,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 							var startPos = xContext(dd.timestamp);
 							//log("some nominal data here")
 							context.append('line')
+									.attr('class', 'nominal dataElement data' + i )
 									.attr("x1", startPos)
 									.attr("y1", yContext(hy))
 									.attr("x2", startPos + 3)
@@ -249,6 +250,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 							var startPos = xContext(dd.timestamp);
 							
 							context.append('line')
+									.attr('class', 'ordinal dataElement data' + i )
 									.attr("x1", startPos)
 									.attr("y1", yContext(hy))
 									.attr("y2", yContext(hy))
@@ -262,6 +264,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 					else if(data[i].dataType() == 2 || data[i].dataType() == 3) {
 						//if sensor data
 						context.append('line')
+								.attr('class', 'dataElement data' + i )
 								.attr("x1", start)
 								.attr("y1", yContext(hy))
 								.attr("x2", end)
@@ -491,6 +494,16 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			timeline.changeHandles();
 		}
 	}
+
+	timeline.hideData = function(index) {
+		log("timeline: about to hide data" + index);
+		context.selectAll(".data" + index).attr("visibility", "hidden");
+	};
+	
+	timeline.showData = function(index) {
+		log("timeline: about to show data" + index);
+		context.selectAll(".data" + index).attr("visibility", "visible");
+	};
 	
 	return timeline;
 };

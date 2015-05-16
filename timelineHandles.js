@@ -299,6 +299,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						//log("timelineHandles: some nominal data here")
 						
 						context.append('circle')
+								.attr('class', 'circle dataElement data' + i )
 								.attr("cx", startPos)
 								.attr("cy", function() {
 									if(isNoiseDataAvailable) {
@@ -324,6 +325,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						var startPos = xContext(dd.timestamp);
 						
 						context.append('circle')
+								.attr('class', 'circle dataElement data' + i )
 								.attr("cx", startPos)
 								.attr("cy", function() {
 									if(isNoiseDataAvailable) {
@@ -344,10 +346,11 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					//sensor data
 					
 					context.append('path')
-							//.data(data[i].data())
-							//.attr('class', 'line')						
+							.attr('class', 'dataElement data' + i )
 							.attr('d', genLine(data[i].data(), (yContextArrIndex["" + i] - 0)))
-							.attr('stroke', data[i].style.dataColor())
+							.attr('stroke', function() {
+								return data[i].style.dataColor();
+							})
 							.attr('stroke-width', data[i].style.lineSize())
 							.attr('fill', 'none');
 				}
@@ -650,6 +653,16 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	};
 	
 	
+
+	timelineHandles.hideData = function(index) {
+		log("timelineHandles: about to hide data" + index);
+		context.selectAll(".data" + index).attr("visibility", "hidden");
+	};
+	
+	timelineHandles.showData = function(index) {
+		log("timelineHandles: about to show data" + index);
+		context.selectAll(".data" + index).attr("visibility", "visible");
+	};
 	
 	
 	

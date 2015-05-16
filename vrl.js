@@ -165,10 +165,11 @@ focus.addObserver(timelineHandles)
 
 
 //### For testing puspose: loading data 	
-setTimeout(loadLastData, 3000);		
+setTimeout(loadLastData, 001);		
 
 function loadLastData() {
 	log("VRL: Fired after some time")
+
 	d3.json("data/gps.json", function (data) {	
 		//2015-04-21-230058_Nominal_data.json
 		//2015-04-21-230058_Ordinal_data.json
@@ -198,8 +199,35 @@ function loadLastData() {
 		setDataColors(data);
 	});
 	
+	/*
+	d3.json("data/Noise_data1.json", function (data) {
+		TheApp.addData(data);
+		setDataColors(data);
+	});
+	d3.json("data/Noise_data2.json", function (data) {
+		TheApp.addData(data);
+		setDataColors(data);
+	});
+	*/
+	
 	setTimeout(reloadEverything, 1000);
+	setTimeout(hideData, 3000);
 		
+}
+
+var ii = 0;
+function hideData() {
+	log("### hiding the data")
+	
+	if(ii != 5)	{	
+		focus.hideData(ii); //.selectAll(".data" + 1).attr("visibility", "hidden");
+		timeline.hideData(ii);
+		timelineHandles.hideData(ii);
+		
+		ii++;
+		setTimeout(hideData, 4000);
+	}
+	
 }
 
 //### Reload the data in every charts and panels			
@@ -241,11 +269,10 @@ function setDataColors(data) {
 		totalSensorData++;
 	}				
 	else if(dataTypeIs == 3) {
-		//### Sensor data
+		//### GPS data
 		var color = mapColors[totalSensorData % 6];
 		TheApp.getDataAt(TheApp.noOfData() - 1).style.dataColor(color);
 		
-		totalSensorData++;
 	}
 	
 	
