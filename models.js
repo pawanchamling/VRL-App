@@ -84,7 +84,8 @@ VRL.TheData = function(data) {
 	var dataSource = data.source;
 	var dataType = data.type;
 	var dataInfo = data.valueInfo;
-	var data = data.values;					
+	var data = data.values;
+	var filePath = "";
 	
 	this.visible = true; //showing the data or not
 	
@@ -115,6 +116,11 @@ VRL.TheData = function(data) {
 		if (!arguments.length)
 			return data;
 		data = _;
+	};
+	this.filePath = function(_) {
+		if (!arguments.length)
+			return filePath;
+		filePath = _;
 	};
 				
 }

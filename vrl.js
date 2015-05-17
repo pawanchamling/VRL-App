@@ -238,6 +238,8 @@ function reloadEverything() {
 	focus.reload(TheApp.getData());
 	map.reload(TheApp.getData());
 	theNotes.reload(TheApp.getData());
+	
+	resetShowHideDataPopup();
 }
 			
 			
@@ -278,9 +280,10 @@ function setDataColors(data) {
 	
 }
 
+//### For the popup modal ####
 
 $('.easy-modal').easyModal({
-	top: 200,
+	top: 100,
 	overlay: 0.2
 });
 
@@ -293,16 +296,54 @@ $('.easy-modal-open').click(function(e) {
 
 
 $('.easy-modal-close').click(function(e) {
-	$('.easy-modal').trigger('closeModal');
+	$('.easy-modal-animated').trigger('closeModal');
 });
 
 $('.easy-modal-animated').easyModal({
-	top: 200,
+	top: 100,
 	overlay: 0.2,
 	transitionIn: 'animated bounceInDown',
 	transitionOut: 'animated bounceOutUp',
 	closeButtonClass: '.animated-close'
 });
+
+
+function resetShowHideDataPopup() {
+
+	$("#listDataDIV").empty();
+	
+	var theData = TheApp.getData();
+	theData.forEach(function (d) {
+		dd = d.data();
+		var startTime, endTime;
+		var timeRangeString = "";
+		if(dd.length > 0) {
+			dd.forEach(function (ddd, index) {
+				if(index == 0) {
+					startTime = ddd.timestamp - 0;
+				}
+				if(index == dd.length - 1) {
+					endTime = ddd.timestamp - 0;
+				}
+			});
+			timeRangeString = "From <span class='timestampString'>" + new Date(startTime).toLocaleString() + 
+								"</span> to  <span class='timestampString'>" + new Date(endTime).toLocaleString() +
+								"</span>";
+		}
+		else {
+			timeRangeString = "No Data";
+		}
+		
+		var str = 	"<div class='listDataItemDIV'>" + 
+						"<div class='listDataItemColorBox' style='background: " + d.style.dataColor() + "'></div>" + 
+						"<div class='listDataItemDataName'>" + d.dataName() + "</div>" +
+						"<div class='listDataItemTimeRange'>" + timeRangeString; + "</div>"
+		log("str = " + str)
+		//$("#listDataDIV").append("")
+	});
+
+}
+
 			
 //### Handle the uploading of data file and loading of the uploaded file
 $('#uploadForm').submit(function() {
