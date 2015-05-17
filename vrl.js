@@ -282,10 +282,6 @@ function setDataColors(data) {
 
 //### For the popup modal ####
 
-$('.easy-modal').easyModal({
-	top: 100,
-	overlay: 0.2
-});
 
 $('.easy-modal-open').click(function(e) {
 	log("VRL: Modal ")
@@ -308,12 +304,14 @@ $('.easy-modal-animated').easyModal({
 });
 
 
+//### the popup for show/hide data 
 function resetShowHideDataPopup() {
 
+	//emptying the previous data
 	$("#listDataDIV").empty();
 	
 	var theData = TheApp.getData();
-	theData.forEach(function (d) {
+	theData.forEach(function (d, i) {
 		dd = d.data();
 		var startTime, endTime;
 		var timeRangeString = "";
@@ -335,11 +333,54 @@ function resetShowHideDataPopup() {
 		}
 		
 		var str = 	"<div class='listDataItemDIV'>" + 
+						"<div class='listDataItemVisibilityStatus'> " +
+							"<form action=''>" + 
+								"Show <input class='showHideDataCheck' id='showHideData" + i + "' type='checkbox' name='visible' value='isVisible' >"  + 
+							"</form>" + 
+						"</div>" + 
 						"<div class='listDataItemColorBox' style='background: " + d.style.dataColor() + "'></div>" + 
-						"<div class='listDataItemDataName'>" + d.dataName() + "</div>" +
-						"<div class='listDataItemTimeRange'>" + timeRangeString; + "</div>"
-		log("str = " + str)
-		//$("#listDataDIV").append("")
+						"<div class='listDataNameAndRangeCover'>" + 
+							"<div class='listDataItemDataName'><b>" + d.dataName() + "</b></div>" +
+							"<div class='listDataItemTimeRange'>" + timeRangeString + "</div>" + 
+						"</div>" + 
+					"</div>";
+		$("#listDataDIV").append(str);
+		
+		
+		if(d.visible) {			
+			$("#showHideData" + i).prop( "checked", true );
+		}
+		
+		
+		//### Defining the event listeners for each of the check boxes for each of the data
+		$(".showHideDataCheck").change(function () {
+			
+			var idIs = $(this).attr("id");
+			var ii = idIs.substring(12, idIs.length);
+			
+			if(this.checked) {
+				log("check " + $(this).attr("id") + " checked");
+				d.visible = true;
+				
+				focus.showData(ii); 
+				timeline.showData(ii);
+				timelineHandles.showData(ii);
+				
+			}
+			else {				
+				log("check " + $(this).attr("id") + " unchecked");
+				
+				d.visible = false;
+				
+				focus.hideData(ii); 
+				timeline.hideData(ii);
+				timelineHandles.hideData(ii);
+				
+			}
+			
+		});
+		
+		
 	});
 
 }

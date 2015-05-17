@@ -20,11 +20,12 @@
 	<div id="mainContainer">
 		<div id="topMenuBarDIV">
 			<form id="uploadForm" method="post" enctype="multipart/form-data" action="">
+				Upload data file
 				<input type="file" name="file">
 				<input type="submit" value="Submit">
 			</form>
-			<div >
-				<button class="easy-modal-open" href="#modal1">Open modal #1</button> 
+			<div id="showHideButton">
+				<button class="easy-modal-open" href="#modal1">Show/hide Data</button> 
 			</div>
 		</div>	
 		<div id="timeRangeDIV">
@@ -69,9 +70,10 @@
 	</div>
 	<div class="easy-modal-animated" id="modal1">
 		<div class="easy-modal-inner">
-			<button class="easy-modal-close" title="Close">&times;</button>			
-			<div id="listDataDIV"></div>
-			
+			<div id="modalClose">
+				<button class="easy-modal-close" title="Close">&times;</button>			
+			</div>
+			<div id="listDataDIV"></div>			
 		</div>
 	</div>
 

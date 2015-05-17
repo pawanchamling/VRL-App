@@ -114,7 +114,7 @@ body {
 
 #NotesDIV {
 	width: 30%;
-	height: 100%;
+	height: 469px;
 	float: left;
 	border: 1px solid #5398ff;
 }
@@ -272,3 +272,54 @@ div.tooltip {
 	.easy-modal-close {
 		float: right;
 	}
+	
+/*####################################*/	
+
+#showHideButton {
+	float: right;
+}
+
+#modalClose {
+	float: right;
+}
+#listDataDIV {
+	margin-top: 0px;
+}
+.listDataItemDIV {
+	width: 100%;
+	height: 40px;
+	margin-bottom: 10px;
+}
+
+	.listDataItemColorBox {
+		width: 10px;
+		height: 30px;
+		margin-left: 10px;
+		margin-right: 10px;
+		float: left;
+	}
+	
+	.listDataNameAndRangeCover, .listDataItemVisibilityStatus {
+		float: left;
+	}
+	
+	.listDataNameAndRangeCover {
+		width: 470px;
+		height: 20px;
+	}
+	
+	.listDataItemDataName {
+		width: 100%;
+	}
+	.listDataItemTimeRange {
+		width: 100%;
+	}
+
+	.listDataItemVisibilityStatus {
+	
+	}
+
+	.timestampString {
+		color: #0000ff;
+	}
+
