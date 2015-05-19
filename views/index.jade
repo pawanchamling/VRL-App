@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    // <link rel="stylesheet" href="style.css">
+    link(rel='stylesheet', href='stylesheets/libs/nanoscroller.css')
+    link(rel='stylesheet', href='stylesheets/libs/tipsy.css')
+    link(rel='stylesheet', href='stylesheets/vrl.css')
+    // for modal popup
+    link(rel='stylesheet', type='text/css', href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css')
+    //
+      <script src="Noise_data.js"></script>
+  body
+    #mainContainer
+      #topMenuBarDIV
+        form#uploadForm(method='post', enctype='multipart/form-data', action='')
+          | Upload data file
+          input(type='file', name='file')
+          input(type='submit', value='Submit')
+        #showHideButtonDIV
+          button#showHideButton.easy-modal-open(href='#modal1') Show/hide Data
+      #timeRangeDIV
+        b
+          | Time between 
+          span#timeRangeFromText.timeRangeText
+          |  and 
+          span#timeRangeToText.timeRangeText
+      #FocusDIVCover
+        .titleBar
+          .barTitle Focused Detailed View
+          .showHide Hide
+        #FocusDIV
+      #TimeLineHandlerDIVCover
+        .titleBar
+          .barTitle Overview
+          .showHide Hide
+        #TimeLineHandlerDIV
+      #TimeLineDIVCover
+        .titleBar
+          .barTitle Timeline
+          .showHide Hide
+        #TimeLineDIV
+      #LocationAndNotesDIV
+        #LocationDIV
+        #NotesDIV
+          #NotesTitleDIV
+            b User-submitted Notes
+          #NotesPanel.nano
+            #NotesPanelContents.nano-content
+    #modal1.easy-modal-animated
+      .easy-modal-inner
+        #modalClose
+          button.easy-modal-close(title='Close') ×
+        #listDataDIV
+  script(src='http://d3js.org/d3.v3.js')
+  script(src='http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js')
+  script(src='javascripts/libs/svg.min.js')
+  script(src='javascripts/libs/jquery-2.1.3.min.js')
+  script(src='javascripts/libs/jquery.svg.js')
+  script(src='javascripts/libs/jquery.tipsy.js')
+  script(src='javascripts/libs/jquery.nanoscroller.min.js')
+  script(src='javascripts/libs/jquery.form.min.js')
+  script(src='javascripts/libs/jquery.easyModal.js')
+  script(src='https://maps.googleapis.com/maps/api/js')
+  script(src='javascripts/models.js')
+  script(src='javascripts/focus.js')
+  script(src='javascripts/timeline.js')
+  script(src='javascripts/theMap.js')
+  script(src='javascripts/theNotes.js')
+  script(src='javascripts/timelineHandles.js')
+  script(src='javascripts/vrl.js')

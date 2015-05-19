@@ -1,0 +1,80 @@
+{
+	"name" : "GPS Data",
+	"Source" : "Android Mobile",
+	"type" : "3",
+	"valueInfo" : {},
+	"values" : [{
+			"timestamp" : "1429650083719",
+			"latitude" : "63.41166764",
+			"longitude" : "10.43057079"
+		}, {
+			"timestamp" : "1429650088717",
+			"latitude" : "63.41167261",
+			"longitude" : "10.43058804"
+		}, {
+			"timestamp" : "1429650093720",
+			"latitude" : "63.41168304",
+			"longitude" : "10.43061124"
+		}, {
+			"timestamp" : "1429650098736",
+			"latitude" : "63.41168217",
+			"longitude" : "10.43060782"
+		}, {
+			"timestamp" : "1429650103726",
+			"latitude" : "63.41165542",
+			"longitude" : "10.43057656"
+		}, {
+			"timestamp" : "1429650108723",
+			"latitude" : "63.4116542",
+			"longitude" : "10.43057342"
+		}, {
+			"timestamp" : "1429650113754",
+			"latitude" : "63.41166349",
+			"longitude" : "10.43061534"
+		}, {
+			"timestamp" : "1429650118719",
+			"latitude" : "63.41167965",
+			"longitude" : "10.43065325"
+		}, {
+			"timestamp" : "1429650123744",
+			"latitude" : "63.41167664",
+			"longitude" : "10.43066078"
+		}, {
+			"timestamp" : "1429650128738",
+			"latitude" : "63.41167579",
+			"longitude" : "10.4306628"
+		}, {
+			"timestamp" : "1429650133719",
+			"latitude" : "63.41169124",
+			"longitude" : "10.43070904"
+		}, {
+			"timestamp" : "1429650138729",
+			"latitude" : "63.41169365",
+			"longitude" : "10.43071779"
+		}, {
+			"timestamp" : "1429650143720",
+			"latitude" : "63.41169449",
+			"longitude" : "10.43072407"
+		}, {
+			"timestamp" : "1429650148719",
+			"latitude" : "63.41169614",
+			"longitude" : "10.43072757"
+		}, {
+			"timestamp" : "1429650153735",
+			"latitude" : "63.41169781",
+			"longitude" : "10.4307325"
+		}, {
+			"timestamp" : "1429650158747",
+			"latitude" : "63.41170016",
+			"longitude" : "10.43073758"
+		}, {
+			"timestamp" : "1429650163727",
+			"latitude" : "63.41169827",
+			"longitude" : "10.43073516"
+		}, {
+			"timestamp" : "1429650168743",
+			"latitude" : "63.41170057",
+			"longitude" : "10.43074298"
+		}
+	]
+}

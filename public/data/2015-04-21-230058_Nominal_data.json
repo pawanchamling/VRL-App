@@ -1,0 +1,17 @@
+{
+	"name" : "User Notes",
+	"Source" : "Android Mobile",
+	"type" : "0",
+	"valueInfo" : {},
+	"values" : [{
+			"timestamp" : "1429650069290",
+			"value" : "studying"
+		}, {
+			"timestamp" : "1429650076268",
+			"value" : "taking a break"
+		}, {
+			"timestamp" : "1429650082773",
+			"value" : "The weather was nice."
+		}
+	]
+}
