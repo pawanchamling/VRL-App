@@ -170,34 +170,43 @@ setTimeout(loadLastData, 001);
 function loadLastData() {
 	log("VRL: Fired after some time")
 
-	d3.json("data/gps.json", function (data) {	
-		//2015-04-21-230058_Nominal_data.json
-		//2015-04-21-230058_Ordinal_data.json
+	d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {	
+		//2015-04-21-230058_Nominal_data
+		//2015-04-21-230058_Ordinal_data
 		//2015-04-29-181948_GPS_data
 		//2015-04-21-230058_GPS_data
+		//2015-04-21-230058_Noise_data
 		//Noise_data
 		//Noise_data3					
+		//gps, ordinal, nominal, noise, temperature
 		
 		TheApp.addData(data);
 		setDataColors(data);					
 		
 	});	
-	d3.json("data/ordinal.json", function (data) {
+	d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
-	d3.json("data/nominal.json", function (data) {
+	d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
-	d3.json("data/noise.json", function (data) {
+	d3.json("data/2015-04-21-230058_Noise_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
-	d3.json("data/temperature.json", function (data) {
+	
+	d3.json("data/Noise_data2.json", function (data) {
+		TheApp.addData(data);
+		setDataColors(data);
+	});	/*
+	d3.json("data/Noise_data3.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
+	*/
+	
 	
 	/*
 	d3.json("data/Noise_data1.json", function (data) {

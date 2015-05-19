@@ -41,7 +41,8 @@ VRL.DataStyle = function() {
 	var dataColor = "#0000ff"; // hex
 	var lineSize = 2; //in pixels
 	var timelineSize = 20; //in pixels
-	var lineNodeRadius = 5;
+	var lineNodeRadius = 4;
+	var lineContextNodeRadius = 2; //radius of node in timehandles chart
 	var userNodeFocusRadius = 9;
 	var userNodeContexRadius = 10;
 	
@@ -64,6 +65,11 @@ VRL.DataStyle = function() {
 		if (!arguments.length)
 			return lineNodeRadius;
 		lineNodeRadius = _;
+	};
+	this.lineContextNodeRadius = function(_) {
+		if (!arguments.length)
+			return lineContextNodeRadius;
+		lineContextNodeRadius = _;
 	};
 	this.userNodeFocusRadius = function(_) {
 		if (!arguments.length)

@@ -593,15 +593,16 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.interpolate("monotone");
 				return theLine(dd)
 	}
-	//##############################################
+	
+//################################################################################################################
+//################################################################################################################
 	
 	focus.drawLines = function(data) {
 		
-		//Displaying the selected time range at the top
+		//### Displaying the selected time range at the top
 		theRange = xFocus.domain();
 		var startTime = new Date(theRange[0] - 0).toLocaleString();
 		var endTime   = new Date(theRange[1] - 0).toLocaleString();
-		log("### startTime = " + theRange);
 		
 		if(theRange[0] == "Invalid Date") {
 			startTime = "unknown";
@@ -612,6 +613,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		$("#timeRangeToText").text(endTime);
 		
 		
+		//### drawing each type of data
 		for (var i = 0; i < noOfData; i++) {
 			
 			if(data[i].dataType() == 0) {
@@ -639,10 +641,12 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value])							
 						.on("mouseover", function () {
+							//### Bringing it to the front
+							this.parentNode.appendChild(this);
+							
 							var index = $(this).attr("id").substring(13,14) - 0;
 							div.transition().duration(100).style("opacity", .9);
-							
-							
+														
 							
 							//### Offset the tooltip based on which side of the screen (left or right) the data node is in
 							var xOffset = 0;
@@ -733,6 +737,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 							.attr('fill', data[i].styles[dd.value])													
 						.on("mouseover", function () {
+							//### Bringing it to the front
+							this.parentNode.appendChild(this);
 							
 							var index = $(this).attr("id").substring(13,14) - 0;
 							
@@ -803,6 +809,11 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 									
 			}
 			else if(data[i].dataType() == 2) {
+				//### 
+				var maxVal = data[i].dataInfo().max;
+				var minVal = data[i].dataInfo().min;
+				
+				
 				//the sensor data
 				//log("foc: i = " + i + "  yFocus Arr Index = " + (yFocusArrIndex["" + i] - 0))
 				theFocus.append("g")
@@ -818,7 +829,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					.attr('fill', 'none');
 					
 				
-				//drawing circles for each datapoints/nodes
+				//### drawing circles for each datapoints/nodes
 				theFocus.select("#line" + (yFocusArrIndex["" + i] - 0) + "cover")
 						.selectAll(".dot")
 						.data(function () {
@@ -843,10 +854,21 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.attr("r", function() {
 								return data[i].style.lineNodeRadius() - 0;
 						})
-						.attr("fill", "white")
+						.attr("fill", function(dd) {
+							//log(dd.value)
+							if(dd.value == maxVal) {
+								return data[i].style.dataColor();
+							}
+							else if (dd.value == minVal) {
+								return data[i].style.dataColor();
+							}
+							else {
+								return "white";
+							}
+						})
 						.attr("fill-opacity", 1)
 						.attr("stroke-width", data[i].style.lineSize())
-				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
+					.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
 						.on("mouseover", function (dd) {
 							var index = $(this.parentNode).attr("id").substring(4,5) - 0;
 							
@@ -918,7 +940,20 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							
 							d3.select(this)
 								.attr('r', theSensorData[index].style.lineNodeRadius())
-								.attr("fill", "white")
+								.attr("fill", function(dd) {
+									var maxVal = theSensorData[index].dataInfo().max;
+									var minVal = theSensorData[index].dataInfo().min;
+									
+									if(dd.value == maxVal) {
+										return theSensorData[index].style.dataColor();
+									}
+									else if (dd.value == minVal) {
+										return theSensorData[index].style.dataColor();
+									}
+									else {
+										return "white";
+									}
+								})
 								.attr("stroke-width", theSensorData[index].style.lineSize())
 								.attr("fill-opacity", 1);
 							
@@ -958,11 +993,16 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		}
 	}
 	
+//######################################################################################################	
+	
 	focus.redrawLines = function(data) {
 		
 		for (var i = 0; i < noOfData; i++) {
+			
+			
+			
 			if(data[i].dataType() == 0) {
-				//Nominal data
+				//### Nominal data
 				var d = data[i].data();				
 				var d2 = data[i];
 				d.map(function(dd, index) {
@@ -972,7 +1012,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 				});
 			}
 			else if(data[i].dataType() == 1) {
-				//Ordinal data
+				//### Ordinal data
 				var d = data[i].data();			
 				var d2 = data[i];
 				d.map(function(dd, index) {
@@ -983,7 +1023,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 				});
 			}
 			else if(data[i].dataType() == 2){
-				//Sensor data
+				//### Sensor data
+				
+				
 				//log("foc: " + (yFocusArrIndex["" + i] - 0))
 				theFocus.select('#' + 'line' + (yFocusArrIndex["" + i] - 0)).attr('d', genLine(data[i].data(), (yFocusArrIndex["" + i] - 0)));
 				var d = data[i].data();
@@ -1070,7 +1112,22 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								
 							d3.select(this)
 								.attr('r', theSensorData[index].style.lineNodeRadius())
-								.attr("fill", "white")
+								.attr("fill", function() {								
+									//### 
+									var maxVal = theSensorData[index].dataInfo().max;
+									var minVal = theSensorData[index].dataInfo().min;
+									
+									if(dd.value == maxVal) {
+										return theSensorData[index].style.dataColor();
+									}
+									else if (dd.value == minVal) {
+										return theSensorData[index].style.dataColor();
+									}
+									else {
+										return "white";
+									}
+								
+								})
 								.attr("stroke-width", theSensorData[index].style.lineSize())
 								.attr("fill-opacity", 1);
 								

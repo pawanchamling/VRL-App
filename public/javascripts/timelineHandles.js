@@ -220,7 +220,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								.attr('id', 'clip')
 								.append('rect')
 								.attr('width', availableWidth)
-								.attr('height', height - areaSpace);
+								.attr('height', availableHeight + margin.bottom + padding.bottom );
 
 			var wrap = svg.append('g')
 				.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -285,7 +285,9 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 				//extra height added so that the max value is can be seen properly in the y-axis
 			}
 
-		
+			
+			//#####################################################################################
+			//### Drawing each of the data (except GPS data)
 			for(var i = 0; i < noOfData; i++) {
 				//log("timelineHandles: l "  + data[i].data());
 				//log("timelineHandles: dataColor = " + data[i].style.dataColor());
@@ -303,7 +305,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								.attr("cx", startPos)
 								.attr("cy", function() {
 									if(isNoiseDataAvailable) {
-										return yContext(2);
+										return yContext(0);
 									}
 									else {
 										return 25;
@@ -329,7 +331,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								.attr("cx", startPos)
 								.attr("cy", function() {
 									if(isNoiseDataAvailable) {
-										return yContext(2);
+										return yContext(0);
 									}
 									else {
 										return 25;
@@ -343,9 +345,15 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 										
 				}
 				else if(data[i].dataType() == 2) {
-					//sensor data
-					
-					context.append('path')
+					//### Sensor data
+					var maxVal = data[i].dataInfo().max;
+					var minVal = data[i].dataInfo().min;
+				
+					context.append("g")
+							.attr("id", "line" + (yContextArrIndex["" + i] - 0) + "cover")
+							.attr('class', 'lineCovers dataElement data' + i )
+						.append('path')
+							.attr('id', "line" + (yContextArrIndex["" + i] - 0))
 							.attr('class', 'dataElement data' + i )
 							.attr('d', genLine(data[i].data(), (yContextArrIndex["" + i] - 0)))
 							.attr('stroke', function() {
@@ -353,9 +361,57 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							})
 							.attr('stroke-width', data[i].style.lineSize())
 							.attr('fill', 'none');
+							
+									
+					context.select("#line" + (yContextArrIndex["" + i] - 0) + "cover")
+							.selectAll(".dot")
+							.data(function () {
+								return data[i].data();
+							})
+						.enter()
+						.append("circle")
+							.attr("id", function(dd) { 
+								return "circlePoint" + i + "" + (dd.timestamp - 0);
+							})
+							.attr('class', 'theCircle')
+							.attr("stroke", function (dd) {
+								return data[i].style.dataColor(); //return color("#00ff00")//this.parentNode.__data__.name)
+							})
+							.attr("cx", function (dd) {
+								return xContext(new Date(dd.timestamp - 0));
+							})
+							.attr("cy", function (dd) {
+								return yContextArr[(yContextArrIndex["" + i] - 0)](dd.value - 0);//yFocus(dd.value - 0);
+							})
+							.attr("r", function(dd) {
+								
+								if(dd.value == maxVal || dd.value == minVal) {
+									log("min or max " + dd.value)
+									return data[i].style.lineContextNodeRadius() - 0 ;
+								}
+								else {
+									return 0;
+								}
+							})
+							.attr("fill", function(dd) {
+								//log(dd.value)
+								if(dd.value == maxVal) {
+									return data[i].style.dataColor();
+								}
+								else if (dd.value == minVal) {
+									return data[i].style.dataColor();
+								}
+								else {
+									return "white";
+								}
+							})
+							.attr("fill-opacity", 1)
+							.attr("stroke-width", data[i].style.lineSize());
+							
 				}
 				
 			}
+			//### generate the line
 			function genLine(dd, index) {
 		
 				//log("d = " + JSON.stringify(dd))
@@ -370,7 +426,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 										return yContextArr[index](d.value - 0);
 									})
 									.interpolate("monotone");
-						return theLine(dd)
+						
+				return theLine(dd)
 			}
 			
 			
