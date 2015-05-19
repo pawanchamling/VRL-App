@@ -661,6 +661,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							
 							//### change the radius of the circle
 							d3.select(this)
+								/*
 								.attr("cy", function() {
 								if(isNoiseDataAvailable) {
 										return yFocus(1);
@@ -668,7 +669,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 									else {
 										return 95;
 									}
-								})
+								})*/
 								.attr('r', (data[index].style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								
@@ -757,6 +758,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								
 							//### increase the radius of the circle to show selection
 							d3.select(this)
+								/*
 								.attr("cy", function() {
 									if(isNoiseDataAvailable) {
 										return yFocus(1);
@@ -764,7 +766,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 									else {
 										return 95;
 									}
-								})
+								})*/
 								.attr('r', (data[index].style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								

@@ -3,9 +3,9 @@
 
 <head>
     <!--<link rel="stylesheet" href="style.css">-->
-	<link rel="stylesheet" href="libs\nanoscroller.css">
-	<link rel="stylesheet" href="libs\tipsy.css">
-	<link rel="stylesheet" href="client\css\vrl.css">
+	<link rel="stylesheet" href="stylesheets/libs/nanoscroller.css">
+	<link rel="stylesheet" href="stylesheets/libs/tipsy.css">
+	<link rel="stylesheet" href="stylesheets/vrl.css">
 
 	<!-- for modal popup -->
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css">
@@ -24,8 +24,8 @@
 				<input type="file" name="file">
 				<input type="submit" value="Submit">
 			</form>
-			<div id="showHideButton">
-				<button class="easy-modal-open" href="#modal1">Show/hide Data</button> 
+			<div id="showHideButtonDIV">
+				<button id="showHideButton" class="easy-modal-open" href="#modal1">Show/hide Data</button> 
 			</div>
 		</div>	
 		<div id="timeRangeDIV">
@@ -34,7 +34,7 @@
 		</div>
 		<div id="FocusDIVCover">
 			<div class="titleBar">
-				<div class="barTitle">Detailed View</div>
+				<div class="barTitle">Focused Detailed View</div>
 				<div class="showHide">Hide</div>
 			</div>
 			<div id="FocusDIV"></div>
@@ -81,24 +81,25 @@
 </body>
 
     <script src="http://d3js.org/d3.v3.js"></script>
-    <script src="libs\svg.min.js"></script>
 	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-    <script src="libs\jquery-2.1.3.min.js"></script>
-    <script src="libs\jquery.svg.js"></script>
-    <script src="libs\jquery.tipsy.js"></script>
-    <script src="libs\jquery.nanoscroller.min.js"></script>
-    <script src="libs\jquery.form.min.js"></script>
-    <script src="javascripts\libs\jquery.easyModal.js"></script>
+	
+    <script src="javascripts/libs/svg.min.js"></script>
+    <script src="javascripts/libs/jquery-2.1.3.min.js"></script>
+    <script src="javascripts/libs/jquery.svg.js"></script>
+    <script src="javascripts/libs/jquery.tipsy.js"></script>
+    <script src="javascripts/libs/jquery.nanoscroller.min.js"></script>
+    <script src="javascripts/libs/jquery.form.min.js"></script>
+    <script src="javascripts/libs/jquery.easyModal.js"></script>
+	
     <script src="https://maps.googleapis.com/maps/api/js"></script>
 	
-	<script src="models.js"></script>
-    <script src="script.js"></script>
-    <script src="focus.js"></script>
-    <script src="timeline.js"></script>
-    <script src="theMap.js"></script>
-    <script src="theNotes.js"></script>
-    <script src="timelineHandles.js"></script>
+	<script src="javascripts/models.js"></script>
+    <script src="javascripts/focus.js"></script>
+    <script src="javascripts/timeline.js"></script>
+    <script src="javascripts/theMap.js"></script>
+    <script src="javascripts/theNotes.js"></script>
+    <script src="javascripts/timelineHandles.js"></script>
 	
-	<script src="vrl.js"></script>
+	<script src="javascripts/vrl.js"></script>
   
 </html>

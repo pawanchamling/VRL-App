@@ -275,10 +275,14 @@ div.tooltip {
 	
 /*####################################*/	
 
-#showHideButton {
+#showHideButtonDIV {
 	float: right;
 }
-
+	#showHideButton {
+		background: #35baf6;
+		color: #fff;
+	}
+	
 #modalClose {
 	float: right;
 }
