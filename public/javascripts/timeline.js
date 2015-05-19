@@ -516,7 +516,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 		//log("before " + theBrush.extent());
 		if(caller == "itemHighlighted") {
 			var str = dataObject.substring(0, 4);
-			log(dataObject)
+			//log(dataObject)
 			if(str == "circ") {
 				context.select("#T" + dataObject)
 									.attr("fill-opacity", 1)

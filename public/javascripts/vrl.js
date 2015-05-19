@@ -162,6 +162,7 @@ timeline.addObserver(theNotes);
 
 focus.addObserver(timelineHandles)
 focus.addObserver(timeline)
+focus.addObserver(theNotes)
 
 //#############################################################
 

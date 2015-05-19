@@ -678,9 +678,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								.attr("fill-opacity", .9);
 								
 							//### notify that the item has been highlighted
-							subject.notify(theRange, "itemHighlighted", $(this).attr("id"), data[index].style.userNodeFocusRadius() );
+							subject.notify(theRange, "itemHighlighted", $(this).attr("id"), dd.timestamp );
 								
-						}).on("mouseout", function (dd) {
+						}).on("mouseout", function () {
 							//### revert back to default
 							var index = $(this).attr("id").substring(13,14) - 0;
 							div.transition().duration(100).style("opacity", 0)
@@ -698,7 +698,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								.attr("fill-opacity", 1);
 								
 							//### notify that there is no more highlight
-							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), index );	
+							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), dd.timestamp );	
 						});		
 					
 					/*
@@ -783,10 +783,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								.attr("fill-opacity", .9);
 								
 							//### notify that the item has been highlighted
-							subject.notify(theRange, "itemHighlighted", $(this).attr("id"), data[index].style.userNodeFocusRadius() );
+							subject.notify(theRange, "itemHighlighted", $(this).attr("id"), dd.timestamp );
 								
 								
-						}).on("mouseout", function (dd) {
+						}).on("mouseout", function () {
 							//revert back to default
 							var index = $(this).attr("id").substring(13,14) - 0;
 							div.transition().duration(100).style("opacity", 0)
@@ -802,9 +802,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								})
 								.attr('r', (data[index].style.userNodeFocusRadius() ))
 								.attr("fill-opacity", 1);
-								
+							
 							//### notify that there is no more highlight
-							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), index );	
+							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), dd.timestamp );	
 							
 						});		
 							
@@ -906,7 +906,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							//### the tooltip
 							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + " " + unit + " </span>"
 										+ "<br /><span class='tooltipOtherValue'>" + theSensorData[index].dataName()  + 
-										"<br />" + new Date(dd.timestamp-0).toLocaleString() + "</span>")
+										"<br />" + new Date(dd.timestamp - 0).toLocaleString() + "</span>")
 								.style("left", (d3.event.pageX + xOffset) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
@@ -984,7 +984,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								
 								
 							//### notify that there is no more highlight
-							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id")  );	
+							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id") );	
 							
 						});						
 						

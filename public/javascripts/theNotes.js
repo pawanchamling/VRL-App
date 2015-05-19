@@ -76,10 +76,12 @@ VRL.TheNotes = function (notesDIV) {
 						//test to see how it looks when the text is very long
 						//aNote.value = "this is one long note that a user may enter. because some of the user are so crazy that they would just do these kind of things just for fun. you know the psychopaths. anyways even the testers are the psychopaths. they would alwasys find some problem. alsways.";
 						
-						var str = "<div id='" + aNote.timestamp + "' class='noteBox'>";
-						str += "<div id='" + aNote.timestamp + "ColorBox' class='noteBoxColor' style='background: " + aNote.color + "'></div>";
-						str += "<div class='noteBoxTimestamp'>" + new Date(aNote.timestamp).toLocaleString() + "</div>";
-						str += "<div id='" + aNote.timestamp + "Notes' class='noteBoxNotes'><b>\"" + aNote.value + "\"</b></div></div>";
+						var str = 	
+							"<div id='" + aNote.timestamp + "' class='noteBox noteBoxBackground1'>" + 
+								"<div id='" + aNote.timestamp + "ColorBox' class='noteBoxColor' style='background: " + aNote.color + "'></div>" +
+								"<div class='noteBoxTimestamp'>" + new Date(aNote.timestamp).toLocaleString() + "</div>" + 
+								"<div id='" + aNote.timestamp + "Notes' class='noteBoxNotes'><b>\"" + aNote.value + "\"</b></div>" + 
+							"</div>";
 						
 						$(notesDIV).append(str);
 						
@@ -108,10 +110,11 @@ VRL.TheNotes = function (notesDIV) {
 				}
 			});
 		
-			//log("theNotes: no. of notes = " + notesData.length)
-			//theMap.loadMap(mapOptions);
-			//theMap.loadData(gpsData);
+			//### now sorting the DIVs based on the timeline
+			var mainDIV = $(notesDIV).attr("id");
+			tinysort("#" + mainDIV + " > div", {attr: "id"});
 			
+			//### Let's show the data (if they are on)
 			theNotes.showData();
 			$(".nano").nanoScroller();
 		}
@@ -173,11 +176,29 @@ VRL.TheNotes = function (notesDIV) {
 		theNotes.initialize(data);
 	};
 	
-	theNotes.update = function (range, caller) {
-		//log("theNotes: caller = " + caller + " : range = " + range);
-		theRange = range;
-		theNotes.showData();
-	
+	theNotes.update = function (range, caller, dataObject, timestamp) {
+		
+		if(caller == "itemHighlighted") {
+			var str = dataObject.substring(0, 4);
+			if(str == "circ") {
+				$("#" + timestamp).removeClass("noteBoxBackground1");
+				$("#" + timestamp).addClass("noteBoxBackground2");
+			}
+		}
+		else if(caller == "itemHighlightedOut") {
+			var str = dataObject.substring(0, 4);
+		
+			if(str == "circ") {
+				$("#" + timestamp).removeClass("noteBoxBackground2");
+				$("#" + timestamp).addClass("noteBoxBackground1");
+			}
+		}
+		else {
+			//### When the time-range is changed
+			
+			theRange = range;
+			theNotes.showData();
+		}
 		
 	};
 	
