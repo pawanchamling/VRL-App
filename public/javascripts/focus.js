@@ -677,6 +677,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								.attr('r', (data[index].style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								
+							//### notify that the item has been highlighted
+							subject.notify(theRange, "itemHighlighted", $(this).attr("id"), data[index].style.userNodeFocusRadius() );
+								
 						}).on("mouseout", function (dd) {
 							//### revert back to default
 							var index = $(this).attr("id").substring(13,14) - 0;
@@ -693,6 +696,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								})
 								.attr('r', data[index].style.userNodeFocusRadius())
 								.attr("fill-opacity", 1);
+								
+							//### notify that there is no more highlight
+							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), index );	
 						});		
 					
 					/*
@@ -719,7 +725,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					//var startPos = xFocus(dd.timestamp);
 					log("foc: ordinal data " + getKey(data[i].dataInfo(), dd.value - 0))
 					
-					theFocus.append('circle')							
+					theFocus.append('circle')
 							.attr("id", "circleOrdinal" + i + "-" + index)
 							.attr('class', 'theCircle dataElement data' + i )
 							.attr("cx", xFocus(dd.timestamp))
@@ -776,6 +782,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								.attr('r', (data[index].style.userNodeFocusRadius() + 4))
 								.attr("fill-opacity", .9);
 								
+							//### notify that the item has been highlighted
+							subject.notify(theRange, "itemHighlighted", $(this).attr("id"), data[index].style.userNodeFocusRadius() );
+								
+								
 						}).on("mouseout", function (dd) {
 							//revert back to default
 							var index = $(this).attr("id").substring(13,14) - 0;
@@ -792,6 +802,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								})
 								.attr('r', (data[index].style.userNodeFocusRadius() ))
 								.attr("fill-opacity", 1);
+								
+							//### notify that there is no more highlight
+							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), index );	
+							
 						});		
 							
 					/*
@@ -927,6 +941,11 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 										.attr("x2", 6)
 										.attr("y2", newY)
 										.attr("visibility", "visible");
+								
+							
+							//### notify that the item has been highlighted
+							subject.notify(theRange, "itemHighlighted", $(this.parentNode).attr("id") );
+								
 							
 						}).on("mouseout", function (dd) {
 							//### bring back everything to their normal state
@@ -962,6 +981,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							
 							theFocus.select("#valueTick" + index)
 								.attr("visibility", "hidden");
+								
+								
+							//### notify that there is no more highlight
+							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id")  );	
 							
 						});						
 						
@@ -1100,6 +1123,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								//move the current line into front
 								this.parentNode.parentNode.appendChild(this.parentNode);
 							}
+								
+							
+							//### notify that the item has been highlighted
+							subject.notify(theRange, "itemHighlighted", $(this.parentNode).attr("id") );
 						})
 						.on("mouseout", function () {
 							//### Bringing back everything to normal
@@ -1137,6 +1164,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							
 							theFocus.select("#valueTick" + index)
 								.attr("visibility", "hidden");
+								
+								
+							//### notify that there is no more highlight
+							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id")  );	
 						});
 				});
 			}

@@ -296,13 +296,12 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					//if Nominal data
 					
 					var d = data[i].data();		
-					d.map(function(dd) {
-						var startPos = xContext(dd.timestamp);
-						//log("timelineHandles: some nominal data here")
+					d.map(function(dd, index) {
 						
 						context.append('circle')
+								.attr("id", "THcircleNominal" + i + "-" + index)
 								.attr('class', 'circle dataElement data' + i )
-								.attr("cx", startPos)
+								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
 									if(isNoiseDataAvailable) {
 										return yContext(0);
@@ -323,12 +322,12 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					
 					var d = data[i].data();
 					//d = d.values;					
-					d.map(function(dd) {
-						var startPos = xContext(dd.timestamp);
+					d.map(function(dd, index) {
 						
 						context.append('circle')
+								.attr("id", "THcircleOrdinal" + i + "-" + index)
 								.attr('class', 'circle dataElement data' + i )
-								.attr("cx", startPos)
+								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
 									if(isNoiseDataAvailable) {
 										return yContext(0);
@@ -350,7 +349,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					var minVal = data[i].dataInfo().min;
 				
 					context.append("g")
-							.attr("id", "line" + (yContextArrIndex["" + i] - 0) + "cover")
+							.attr("id", "THline" + (yContextArrIndex["" + i] - 0) + "cover")
 							.attr('class', 'lineCovers dataElement data' + i )
 						.append('path')
 							.attr('id', "line" + (yContextArrIndex["" + i] - 0))
@@ -363,7 +362,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							.attr('fill', 'none');
 							
 									
-					context.select("#line" + (yContextArrIndex["" + i] - 0) + "cover")
+					context.select("#THline" + (yContextArrIndex["" + i] - 0) + "cover")
 							.selectAll(".dot")
 							.data(function () {
 								return data[i].data();
@@ -371,7 +370,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						.enter()
 						.append("circle")
 							.attr("id", function(dd) { 
-								return "circlePoint" + i + "" + (dd.timestamp - 0);
+								return "THcirclePoint" + i + "" + (dd.timestamp - 0);
 							})
 							.attr('class', 'theCircle')
 							.attr("stroke", function (dd) {
@@ -622,12 +621,63 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	
 	timelineHandles.update = function (range, caller) {
 		//log("timelineHandles: $$$$$$$$$$$$")
-		theRange = range;
-		context.select('.brush').call(theBrush.extent(theRange));
+		
+		
+		
 		
 	};
 	
-	timelineHandles.update = function (range, caller, zoomScale) {
+	timelineHandles.update = function (range, caller, zoomScale, index) {
+		
+		if(caller == "itemHighlighted") {
+			var str = zoomScale.substring(0, 4);
+			log("timeline: str = " + str )
+			
+			//context.select("TH" + zoomScale).parentNode.appendChild(context.select("TH" + zoomScale));
+			//$("#TH" + zoomScale).parentNode.appendChild($("#TH" + zoomScale));
+			log("#TH" + zoomScale)
+			
+			if(str == "circ") {
+				context.select("#TH" + zoomScale)
+									.attr('r', function() {
+										//### bringing it to the front
+										this.parentNode.appendChild(this);
+										
+										return 7;									
+									});
+			}
+			else if(str == "line") {
+				var lineStr = zoomScale.substring(0,5);
+				context.select("#" + lineStr )
+								.attr('stroke-width', function(){
+									//### bringing it to the front
+									this.parentNode.parentNode.appendChild(this.parentNode);
+									
+									return 4;
+								});
+			}
+			
+			//context.select("#TH" + zoomScale).parentNode.appendChild(context.select("#TH" + zoomScale));					
+		}
+		else if(caller == "itemHighlightedOut") {
+			var str = zoomScale.substring(0, 4);
+			
+			if(str == "circ") {
+				context.select("#TH" + zoomScale)
+								.attr('r', 5);
+			}
+			else if(str == "line") {
+				var lineStr = zoomScale.substring(0,5);
+				context.select("#" + lineStr )
+								.attr('stroke-width', 2);
+			}
+			
+			
+		}
+		
+		theRange = range;
+		context.select('.brush').call(theBrush.extent(theRange));
+		
 		
 		//log("timelineHandles:  caller = " + caller);
 		//log("timelineHandles:  theBrush : " + theBrush.extent());

@@ -481,10 +481,11 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 						.call(timeline);
 	};
 
-	//the handle was updated
+	//### the handle was updated
 	timeline.update = function (range, caller) {
 		//log("theBrush : " + theBrush.extent());
 		//log("before " + theBrush.extent());
+		
 		theRange = range;
 		theBrush.extent(range);
 		//log("t: range = " + range);
