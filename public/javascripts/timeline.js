@@ -22,7 +22,12 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	var contextHeightPadding = 5;
 	var areaSpace = 40;
 
-	var noOfData = 1;
+	var theData;
+	var theSensorData = [];	
+	
+	var noOfData = 0;
+	var noOfSensorData = 0;
+	
 	var timelineBarHeight = 20; //timelineHeight / noOfData;
 
 	//The total time range
@@ -35,6 +40,11 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	
 	var xDomain = [];
 	var xContext = 1;
+	
+	var eachDataHeight = 0;
+			
+	var yContextArr = [];
+	var yContextArrIndex = {};
 	
 	var availableWidth;
 		
@@ -65,7 +75,10 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			log("timeL: timeline");
 			//var data = selection;
 			
-			noOfData = data.length;
+			
+			theData = data;
+			
+			noOfData = theData.length;
 			log("timeL: noOfData = " + noOfData);
 			//calculateTimeRange(data);
 			
@@ -78,7 +91,14 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			var availableHeight = height - padding.top - padding.bottom;
 			
 			
-			
+			//### collecting all the sensor data in one place
+			for(var i = 0; i < noOfData; i++) {
+				if(theData[i].dataType() == 2) {
+					theSensorData.push(theData[i]);
+					yContextArrIndex["" + i] = (theSensorData.length - 1) ;
+				}
+			}
+			noOfSensorData = theSensorData.length;
 			
 			xContext = d3.time.scale().range([0, availableWidth]); //for context
 			var yContext = d3.scale.linear().range([contextHeight, 0 + contextHeightPadding]); 
@@ -200,6 +220,13 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 				h = 20;
 			}
 			
+			eachDataHeight = h; //so that it can be used later for highlighting
+			
+			//### to keep all the figures inside this
+			context.append("g")
+					.attr("id", "timelineObjectContainer");
+			
+			
 			for(var i = 0; i < noOfData; i++) {
 				var start, end
 				
@@ -225,14 +252,15 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 						//if Nominal data
 						
 						var d = data[i].data();		
-						d.map(function(dd) {
-							var startPos = xContext(dd.timestamp);
-							//log("some nominal data here")
-							context.append('line')
+						d.map(function(dd, index) {
+							
+							context.select("#timelineObjectContainer")
+								.append('line')
+									.attr("id", "TcircleNominal" + i + "-" + index)
 									.attr('class', 'nominal dataElement data' + i )
-									.attr("x1", startPos)
+									.attr("x1", xContext(dd.timestamp))
 									.attr("y1", yContext(hy))
-									.attr("x2", startPos + 3)
+									.attr("x2", xContext(dd.timestamp) + 3)
 									.attr("y2", yContext(hy))
 									.attr('stroke', data[i].style.dataColor()) //based on the index
 									.attr('stroke-width', h)
@@ -244,17 +272,16 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 					//### Ordinal Data
 						
 						var d = data[i].data();		
-						d.map(function(dd) {
-							log("timeline: some ordinal data here");
-							
-							var startPos = xContext(dd.timestamp);
-							
-							context.append('line')
+						d.map(function(dd, index) {
+														
+							context.select("#timelineObjectContainer")
+								.append('line')
+									.attr("id", "TcircleOrdinal" + i + "-" + index)
 									.attr('class', 'ordinal dataElement data' + i )
-									.attr("x1", startPos)
+									.attr("x1", xContext(dd.timestamp))
 									.attr("y1", yContext(hy))
 									.attr("y2", yContext(hy))
-									.attr("x2", startPos + 3)
+									.attr("x2", xContext(dd.timestamp) + 3)
 									.attr('stroke', data[i].styles[dd.value]) //based on the index
 									.attr('stroke-width', h)
 									.attr('fill', 'none');
@@ -263,7 +290,9 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 					}
 					else if(data[i].dataType() == 2 || data[i].dataType() == 3) {
 						//if sensor data
-						context.append('line')
+						context.select("#timelineObjectContainer")
+							.append('line')
+								.attr("id", "Tline" + (yContextArrIndex["" + i] - 0))
 								.attr('class', 'dataElement data' + i )
 								.attr("x1", start)
 								.attr("y1", yContext(hy))
@@ -482,17 +511,54 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	};
 
 	//### the handle was updated
-	timeline.update = function (range, caller) {
+	timeline.update = function (range, caller, dataObject) {
 		//log("theBrush : " + theBrush.extent());
 		//log("before " + theBrush.extent());
-		
-		theRange = range;
-		theBrush.extent(range);
-		//log("t: range = " + range);
-		
-		//log("after  " + theBrush.extent());
-		if(theBrush.extent() != null) {
-			timeline.changeHandles();
+		if(caller == "itemHighlighted") {
+			var str = dataObject.substring(0, 4);
+			log(dataObject)
+			if(str == "circ") {
+				context.select("#T" + dataObject)
+									.attr("fill-opacity", 1)
+									.attr('stroke-width', function() {	
+										this.parentNode.appendChild(this);									
+										return eachDataHeight + 5;									
+									});
+			}
+			else if(str == "line") {
+				var lineStr = dataObject.substring(0,5);
+				context.select("#T" + lineStr )
+								.attr("fill-opacity", 0.5)
+								.attr('stroke-width', function(){
+									this.parentNode.appendChild(this);
+									return eachDataHeight + 6;
+								});
+			}
+		}		
+		else if(caller == "itemHighlightedOut") {
+			var str = dataObject.substring(0, 4);
+			
+			if(str == "circ") {
+				context.select("#T" + dataObject)
+								.attr("fill-opacity", 1)
+								.attr('stroke-width', eachDataHeight);
+			}
+			else if(str == "line") {
+				var lineStr = dataObject.substring(0,5);
+				context.select("#T" + lineStr )
+								.attr("fill-opacity", 1)
+								.attr('stroke-width', eachDataHeight);
+			}
+		}
+		else {
+			theRange = range;
+			theBrush.extent(range);
+			//log("t: range = " + range);
+			
+			//log("after  " + theBrush.extent());
+			if(theBrush.extent() != null) {
+				timeline.changeHandles();
+			}
 		}
 	}
 

@@ -35,7 +35,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	var yAxisContext = [];
 	
 	
-	var isNoiseDataAvailable = false;
+	var isSensorDataAvailable = false;
 	
 	//The total time range
 	var startTimeRange = 0;
@@ -80,15 +80,15 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			noOfData = theData.length;
 						
 			
-			//### Checking if the noise data is available or not
+			//### Checking if the sensor data is available or not
 			theData.forEach(function (d) {
 				//d = d.data();
 				if(d.dataType() == 2 ) {
-					isNoiseDataAvailable = true;
+					isSensorDataAvailable = true;
 				}
 			});
 			
-			//collecting all the sensor data in one place
+			//### collecting all the sensor data in one place
 			for(var i = 0; i < noOfData; i++) {
 				if(theData[i].dataType() == 2) {
 					theSensorData.push(theData[i]);
@@ -96,7 +96,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 				
 					//log("###" + yContextArrIndex["" + i])
 				}
-			}			
+			}
 			noOfSensorData = theSensorData.length;
 			//log("noOfSensorData = " +noOfSensorData)
 			
@@ -285,7 +285,11 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 				//extra height added so that the max value is can be seen properly in the y-axis
 			}
 
-			
+			//### to keep all the figures inside this
+			context.append("g")
+					.attr("id", "timelineHandlesObjectContainer");
+					
+					
 			//#####################################################################################
 			//### Drawing each of the data (except GPS data)
 			for(var i = 0; i < noOfData; i++) {
@@ -298,12 +302,13 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					var d = data[i].data();		
 					d.map(function(dd, index) {
 						
-						context.append('circle')
+						context.select("#timelineHandlesObjectContainer")
+							.append('circle')
 								.attr("id", "THcircleNominal" + i + "-" + index)
 								.attr('class', 'circle dataElement data' + i )
 								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
-									if(isNoiseDataAvailable) {
+									if(isSensorDataAvailable) {
 										return yContext(0);
 									}
 									else {
@@ -324,12 +329,13 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					//d = d.values;					
 					d.map(function(dd, index) {
 						
-						context.append('circle')
+						context.select("#timelineHandlesObjectContainer")
+							.append('circle')
 								.attr("id", "THcircleOrdinal" + i + "-" + index)
 								.attr('class', 'circle dataElement data' + i )
 								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
-									if(isNoiseDataAvailable) {
+									if(isSensorDataAvailable) {
 										return yContext(0);
 									}
 									else {
@@ -348,7 +354,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 					var maxVal = data[i].dataInfo().max;
 					var minVal = data[i].dataInfo().min;
 				
-					context.append("g")
+					context.select("#timelineHandlesObjectContainer")
+						.append("g")
 							.attr("id", "THline" + (yContextArrIndex["" + i] - 0) + "cover")
 							.attr('class', 'lineCovers dataElement data' + i )
 						.append('path')
@@ -631,11 +638,6 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 		
 		if(caller == "itemHighlighted") {
 			var str = zoomScale.substring(0, 4);
-			log("timeline: str = " + str )
-			
-			//context.select("TH" + zoomScale).parentNode.appendChild(context.select("TH" + zoomScale));
-			//$("#TH" + zoomScale).parentNode.appendChild($("#TH" + zoomScale));
-			log("#TH" + zoomScale)
 			
 			if(str == "circ") {
 				context.select("#TH" + zoomScale)
