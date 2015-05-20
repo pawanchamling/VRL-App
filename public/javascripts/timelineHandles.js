@@ -35,6 +35,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	var yAxisContext = [];
 	
 	
+	var fullTimeRangeDifference = 0;
+	
 	var isSensorDataAvailable = false;
 	
 	//The total time range
@@ -138,7 +140,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			//### Calculating the start and the end timeline among the data ###
 			var startValue = xDomain[0] - 0;
 			var startIndex = 0;
-			var endValue = xDomain[1] - 0;
+			var endValue = xDomain[xDomain.length - 1] - 0;
 			var endIndex = xDomain.length - 1;
 			for(var i = 0; i < xDomain.length; i++) {
 				if(xDomain[i] < startValue) {
@@ -181,7 +183,9 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			//log("timelineHandles: Stop date :" + xDomain[xDomain.length - 1]);
 			//###-----------------------------------------------------------------
 			
-			
+			//startTimeRange = xDomain[0];
+			//endTimeRange = xDomain[xDomain.length - 1];
+			fullTimeRangeDifference = (new Date(endValue).getTime()) - (new Date(startValue).getTime())
 	
 			//for context
 			/*
@@ -587,6 +591,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	};
 
 	timelineHandles.brushed = function() {
+		//### when the time-range handles are moved
+		
 		//log("timelineHandles:  $$$$$$$$$$$$$$$$$$$$$$$$ brushed $$$$$$$$$$$$$$$$$$$$$$$$")
 		//log("timelineHandles:  extent: " + theBrush.extent());
 		theRange = theBrush.extent();
@@ -594,7 +600,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 		var startD = new Date(theRange[0]).getTime();
 		var endD = new Date(theRange[1]).getTime();
 						
-		//don't go smaller than 1 seconds
+		//### don't go smaller than 1 seconds
 		if(endD < (startD + 1000)){
 			
 			endD = startD + 1000;
@@ -603,10 +609,19 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			context.select('.brush').call(theBrush.extent(theRange));
 		}				
 		
+		
+		
 		for(var i = 0; i < noOfData; i++) {
 			//context.select('.line').attr('d', lineGen(data[0].data())); //lineContext //show the context line
 		}
-		subject.notify(theRange, "timelineHandles");//notifying all the observers about the change in range
+		
+		
+		var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
+		var scaleVal = fullTimeRangeDifference / dateRangeDiff;
+		//log("tH: scaleVal = " + scaleVal);		
+			
+		//### notifying the observers
+		subject.notify(theRange, "timelineHandles", scaleVal);//notifying all the observers about the change in range
 	};
 	
 	//#######################################################
@@ -626,14 +641,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 
 	//#######################################################
 	
-	timelineHandles.update = function (range, caller) {
-		//log("timelineHandles: $$$$$$$$$$$$")
 		
-		
-		
-		
-	};
-	
 	timelineHandles.update = function (range, caller, zoomScale, index) {
 		
 		if(caller == "itemHighlighted") {
@@ -659,7 +667,6 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								});
 			}
 			
-			//context.select("#TH" + zoomScale).parentNode.appendChild(context.select("#TH" + zoomScale));					
 		}
 		else if(caller == "itemHighlightedOut") {
 			var str = zoomScale.substring(0, 4);
@@ -743,8 +750,6 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						//log("timelineHandles:  > too big: fixed");
 					}
 					
-					
-				
 				}
 				//theBrush.extent(theRange);
 				context.select('.brush').call(theBrush.extent(theRange));

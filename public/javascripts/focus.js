@@ -195,7 +195,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			
 			initialStartDateTime = startTimeRange;
 			fullTimeRangeDifference = (new Date(endTimeRange).getTime()) - (new Date(startTimeRange).getTime())
-			log("foc: fullTimeRangeDifference : " + fullTimeRangeDifference)
+			//log("foc: fullTimeRangeDifference : " + fullTimeRangeDifference)
 			
 			panExtent = [startTimeRange, endTimeRange];
 			
@@ -1176,58 +1176,6 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		
 	}
 	
-	focus.zoomed = function() {
-		
-		theRange = xFocus.domain();
-		if (theFocus != undefined) {
-			//var startD = new Date(theRange[0]).getTime();
-			//var endD = new Date(theRange[1]).getTime();
-			
-			//log("foc: startD : " + startD + " endD : " + endD);
-			//log("foc: fullTimeRangeDifference : " + fullTimeRangeDifference + " and d = " + (endD - startD) )
-			//log("foc: scale : " + theZoom.scale())
-			
-			
-			/*
-			//don't go smaller than 1 seconds
-			if(endD < (startD + 1000)){
-				log("foc: here " );
-				
-				endD = startD + 1000;
-				theRange[1] = new Date(endD);
-				log("foc: startD : " + startD + " endD : " + endD);
-				//context.select('.brush').call(theBrush.extent(theRange));
-			}
-			*/
-			/*
-			//Doesn't seem like we need it
-			if(endD - startD > fullTimeRangeDifference) { 
-				theRange[0] = startTimeRange;
-				theRange[1] = startTimeRange + fullTimeRangeDifference;
-				log("foc: too large");
-			}
-			*/
-			log("foc: zoomed : ##################################################################");
-			log("foc: scalea : " + theZoom.scale() + "#################################");	
-			log("foc: range= " + theRange);
-			//log("foc: domain= " + xFocus);
-			subject.notify(theRange, "focusZoomed", theZoom.scale() );
-			
-		}
-		
-		
-		//log("foc:theRange = " + theRange);
-		//log("foc:scale : " + theZoom.scale());
-		//var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
-		//log("foc:scale : " + theZoom.scale() + " dateRangeDiff : " + dateRangeDiff);
-		
-		//log("foc:zoom x : " + theZoom.x() + " y : " + theZoom.y());
-		//log(theZoom.translate)
-		//theZoom.x(xFocus);
-		
-		
-	}
-	
 	focus.zoomed2 = function() {
 		//check if domain is okay
 		//log(startTimeRange)
@@ -1352,7 +1300,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	};
 
 	//#######################################################
-	
+	/*
 	focus.update = function (range, caller) {
 		
 		log("foc: ############## here we go ################");
@@ -1373,8 +1321,63 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			
 		}
 	};
-	
+	*/
 
+//#######################################################
+
+	focus.zoomed = function() {
+		
+		theRange = xFocus.domain();
+		if (theFocus != undefined) {
+			//var startD = new Date(theRange[0]).getTime();
+			//var endD = new Date(theRange[1]).getTime();
+			
+			//log("foc: startD : " + startD + " endD : " + endD);
+			//log("foc: fullTimeRangeDifference : " + fullTimeRangeDifference + " and d = " + (endD - startD) )
+			//log("foc: scale : " + theZoom.scale())
+			
+			
+			/*
+			//don't go smaller than 1 seconds
+			if(endD < (startD + 1000)){
+				log("foc: here " );
+				
+				endD = startD + 1000;
+				theRange[1] = new Date(endD);
+				log("foc: startD : " + startD + " endD : " + endD);
+				//context.select('.brush').call(theBrush.extent(theRange));
+			}
+			*/
+			/*
+			//Doesn't seem like we need it
+			if(endD - startD > fullTimeRangeDifference) { 
+				theRange[0] = startTimeRange;
+				theRange[1] = startTimeRange + fullTimeRangeDifference;
+				log("foc: too large");
+			}
+			*/
+			//log("foc: zoomed : ##################################################################");
+			log("foc: scalea : " + theZoom.scale() + "#################################");	
+			//log("foc: range= " + theRange);
+			//log("foc: domain= " + xFocus);
+			subject.notify(theRange, "focusZoomed", theZoom.scale() );
+			
+		}
+		
+		
+		//log("foc:theRange = " + theRange);
+		//log("foc:scale : " + theZoom.scale());
+		//var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
+		//log("foc:scale : " + theZoom.scale() + " dateRangeDiff : " + dateRangeDiff);
+		
+		//log("foc:zoom x : " + theZoom.x() + " y : " + theZoom.y());
+		//log(theZoom.translate)
+		//theZoom.x(xFocus);
+		
+		
+	}
+	
+//#######################################################
 	
 	focus.update = function (range, caller, zoomScale) {
 		//log("foc: who called me");
@@ -1382,9 +1385,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		theRange = range;
 		//log("foc: update: range = " + theRange + " caller : " + caller);
 		if (theFocus != undefined ) {	
-			//log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " #########");		
+			log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " ### caller = " + caller);		
 			
-			//timeRangeText
+			//### Updating the time-range Text at the top 
 			var startTime = new Date(theRange[0] - 0).toLocaleString();
 			var endTime   = new Date(theRange[1] - 0).toLocaleString();
 			$("#timeRangeFromText").text(startTime);
@@ -1413,7 +1416,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
 			theFocus.select('.x.axis').call(xAxisFocus);
 			
-			//update the x-axis ticks with longer height
+			//### update the x-axis ticks with longer height
 			theFocus.selectAll("#xaxis line").attr("y2", 15);
 			theFocus.selectAll("#xaxis text").attr("y", 19);
 			
@@ -1422,19 +1425,21 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			if(caller == "timelineHandlesZoomed") {
 				//theZoom.scale(scaleVal);
 				//theZoom.x(xFocus);
-				lastZoomScale = scaleVal;
+				lastZoomScale = zoomScale;
 				if(previousZoomCaller != "timelineHandlesZoomed") {
-					theZoom.scale(scaleVal);
+					theZoom.scale(zoomScale);
 				}
 			}
 			else {
 				//theZoom.scale(zoomScale);
-				theZoom.scale(scaleVal);
+				//theZoom.scale(scaleVal);
 				var temp = theZoom.scale();
 				//theZoom.scale(lastZoomScale);
 				lastZoomScale = scaleVal;
 				
 			}
+			
+			
 			//log("foc: update: scaleu2: " + theZoom.scale());
 			//log("foc: update: range = " + theRange + " caller : " + caller);
 			
