@@ -43,6 +43,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	var xAxisFocus = d3.svg.axis();
 	var yAxisFocus = [];
 	
+	var originalRange = [];
+	var xFocusOriginal = d3.time.scale();
+	
 	var axisSpace = 40;
 	
 	var lineGen = d3.svg.line();
@@ -243,7 +246,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 				
 			xFocus = d3.time.scale().range([0, availableWidth]); //.nice(d3.time.day) //for theFocus			
 			yFocus = d3.scale.linear().range([availableHeight, 0]);
-
+			xFocusOriginal = d3.time.scale().range([0, availableWidth]);
 			
 			//var formatTime = d3.time.format("%H:%M");
 			//var formatMinutes = function(d) { return formatTime(new Date(2015, 0, 1, 0, d)); };
@@ -274,7 +277,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		   log("foc: yFocusArr length = " + yFocusArr.length);
 		   
 			xFocus.domain(d3.extent(xDomain));			
-			yFocus.domain([0, yMax + 2]);			
+			yFocus.domain([0, yMax + 2]);		
+			xFocusOriginal.domain(d3.extent(xDomain));	
 			for(var i = 0; i < noOfSensorData; i++) {
 				var extraHeight = 0.15 * (yMaxArr[i] - yMinArr[i]);
 					//log("foc: " + i + " = extra space = " + extraHeight);
@@ -307,20 +311,103 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			theFocus.append("g")
 				.attr('id', 'theTemp');
 						
-			
+			//### to keep all the figures inside this
+			theFocus.append("g")
+					.attr("id", "focusObjectContainer");
+					
 			//### the Zoom effect	
 			theZoom = d3.behavior.zoom()
 								.x(xFocus)
 								.scaleExtent([1, 111])
-								.on("zoom", focus.zoomed); //.x(x1).scaleExtent([1,10])		
-		
+								.on("zoom", focus.zoomed); //.x(x1).scaleExtent([1,10])	
+
+								
+			var zoomValue = 1;
 			//### the area where the zooming can be detected.
-			theFocus.append("rect")
+			theFocus.select("#focusObjectContainer")
+				.append("rect")
 					.attr("class", "pane")
 					.attr("width", availableWidth)
 					.attr("height", availableHeight )
 					.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (padding.top) + ')')
-					.call(theZoom);
+					.call(theZoom);					
+					/*
+					.call(d3.behavior.zoom()
+						.on("zoom", function () {
+							
+						
+							//### mouse x and y co-ordinates
+							var mx = d3.mouse(this)[0];
+							var my = d3.mouse(this)[1];							
+							//log("(" + mx + ", " + my + ")");
+							
+							var translatePos = d3.event.translate;
+							//var value = zoomWidgetObj.value.target[1] * 2;
+							//log(translatePos);
+
+							//detect the mousewheel event, then subtract/add a constant to the zoom level and transform it
+							if(d3.event.sourceEvent.type == 'wheel' || d3.event.sourceEvent.type == 'mousewheel') {							
+								
+								if(d3.event.sourceEvent.wheelDelta) {
+									if(d3.event.sourceEvent.wheelDelta > 0) {
+										zoomValue = zoomValue + 0.1;
+									} else {
+										zoomValue = zoomValue - 0.1;
+									}
+								} 
+								else {
+									if(d3.event.sourceEvent.detail > 0) {
+										zoomValue = zoomValue + 0.1;
+									} else {
+										zoomValue = zoomValue - 0.1;
+									}
+								}
+								
+								if(zoomValue < 1) {
+									zoomValue = 1;
+								}
+								if(zoomValue > 111) {
+									zoomValue = 111;
+								}
+								
+								
+							}
+							
+							log("(" + mx + ", " + my + ") = " + zoomValue.toFixed(5) + " translate [" + translatePos + "]");
+							transformVis(d3.event.translate, zoomValue);
+						})
+					); 
+			*/
+function interpolateZoom (translate, scale) {
+    var self = this;
+    return d3.transition().duration(350).tween("zoom", function () {
+        var iTranslate = d3.interpolate(zoom.translate(), translate),
+            iScale = d3.interpolate(zoom.scale(), scale);
+        return function (t) {
+            zoom
+                .scale(iScale(t))
+                .translate(iTranslate(t));
+            zoomed();
+        };
+    });
+}
+			function transformVis(pan,zoom) {
+ 
+				if (d3.event){
+					if (d3.event.sourceEvent.type == "mousewheel" || d3.event.sourceEvent.type=='DOMMouseScroll'){
+					//they scrolled with the mouse wheel, update the slider postion but do not trigger it's transformVis call
+						//zoomWidgetObj.setValue(0,zoom/2,false,false);
+					}else{
+						//they are interacting with the slider
+						//zoomWidgetObj.doZoom = true;
+					}
+				}else{
+					//zoomWidgetObj.doZoom = true;
+				}
+			 
+				//vis.attr("transform", "translate(" +  (pan[0] + ((visWidth - (visWidth * zoomFactor))/2)) + ',' + (pan[1] + ((visHeight - (visHeight * zoomFactor))/2)) + ")scale(" + zoom*zoomFactor + ")"); 	
+			 
+			}
 			
 			//### the tooltip -- not in use right now
 			tooltip = d3.tip()
@@ -336,7 +423,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			
 			
 			
-			//line generator			
+			//### line generator			
 			lineGen = d3.svg.line()
 							.x(function (d) {
 								return xFocus(new Date(d.timestamp - 0));
@@ -364,14 +451,14 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.call(yAxisFocus[i]);
 					
 					
-					//the y-axis label		
+					//### the y-axis label		
 					theFocus.append("text")
 						.attr('class', 'y-axis-label')
 						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
 						.attr("transform", "translate("+ (evenIndex * axisSpace - 20) +","+(availableHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
 						.text(theSensorData[i].dataName() + " (" + unit + ")");
 						
-					//removing the topmost tick that is usually without label
+					//### removing the topmost tick that is usually without label
 					theFocus.select("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H-6H16"); //remove the H16 at the end if the lines don't look good
 								
 					theFocus.select("#"+ "axis" + i )
@@ -393,7 +480,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.attr('transform', 'translate(' + (availableWidth + leftAxisSpace+  (oddIndex * axisSpace))  + ')')
 						.call(yAxisFocus[i]);
 						
-					//the y-axis label		
+					//### the y-axis label		
 					theFocus.append("text")
 						.attr('class', 'y-axis-label')
 						.attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
@@ -401,7 +488,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.text(theSensorData[i].dataName() + " (" + unit + ")");
 						
 						
-					//removing the topmost tick that is usually without label
+					//### removing the topmost tick that is usually without label
 					theFocus.select("#"+ "axis" + i + " path").attr("d", "M0,0H0V170H6H-16"); //remove the H16 at the end if the lines don't look good
 					
 					theFocus.select("#"+ "axis" + i )
@@ -436,6 +523,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			
 			//log("foc: leftAxisSpace  = " + leftAxisSpace + " rightAxisSpace  = " + rightAxisSpace)
 			
+			//### drawing the X-axis
 			theFocus.append('g')
 					.attr('id', 'xaxis')
 					.attr('class', 'x axis')
@@ -445,6 +533,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			theFocus.selectAll("#xaxis line").attr("y2", 15);
 			theFocus.selectAll("#xaxis text").attr("y", 19);
 			
+			//### the Brush 
 			theFocus.append('g')
 					.attr('class', 'x brush')
 					.call(theBrush);
@@ -471,7 +560,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.call(theZoom);
 			*/
 			
-			// Don't allow the brushing from background and single click theFocus switch
+			//### Don't allow the brushing from background and single click theFocus switch
 			theFocus.select(".background")
 					.on("mousedown.brush", nobrush)
 					.on("touchstart.brush", nobrush);
@@ -623,7 +712,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 				//d = d.values;					
 				d.map(function(dd, index) {
 					
-					theFocus.append('circle')
+					theFocus.select("#focusObjectContainer")
+						.append('circle')
 							.attr("id", "circleNominal" + i + "-" + index)
 							.attr('class', 'theCircle dataElement data' + i )
 							.attr("cx", xFocus(dd.timestamp))
@@ -725,7 +815,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					//var startPos = xFocus(dd.timestamp);
 					log("foc: ordinal data " + getKey(data[i].dataInfo(), dd.value - 0))
 					
-					theFocus.append('circle')
+					theFocus.select("#focusObjectContainer")
+						.append('circle')
 							.attr("id", "circleOrdinal" + i + "-" + index)
 							.attr('class', 'theCircle dataElement data' + i )
 							.attr("cx", xFocus(dd.timestamp))
@@ -830,17 +921,18 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 				
 				//the sensor data
 				//log("foc: i = " + i + "  yFocus Arr Index = " + (yFocusArrIndex["" + i] - 0))
-				theFocus.append("g")
-					.attr("id", "line" + (yFocusArrIndex["" + i] - 0) + "cover")
-					.attr('class', 'lineCovers dataElement data' + i )
-				.append('path')
-					.attr("id", "line" + (yFocusArrIndex["" + i] - 0))
-					.attr('class', 'theLine')
-					.attr('d', genLine(data[i].data(), (yFocusArrIndex["" + i] - 0)))
-					.attr('stroke', data[i].style.dataColor())
-					.attr('stroke-width', data[i].style.lineSize())
-				.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
-					.attr('fill', 'none');
+				theFocus.select("#focusObjectContainer")
+					.append("g")
+						.attr("id", "line" + (yFocusArrIndex["" + i] - 0) + "cover")
+						.attr('class', 'lineCovers dataElement data' + i )
+					.append('path')
+						.attr("id", "line" + (yFocusArrIndex["" + i] - 0))
+						.attr('class', 'theLine')
+						.attr('d', genLine(data[i].data(), (yFocusArrIndex["" + i] - 0)))
+						.attr('stroke', data[i].style.dataColor())
+						.attr('stroke-width', data[i].style.lineSize())
+					.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
+						.attr('fill', 'none');
 					
 				
 				//### drawing circles for each datapoints/nodes
@@ -1325,7 +1417,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 
 //#######################################################
 
-	focus.zoomed = function() {
+	focus.zoomed3 = function() {
 		
 		theRange = xFocus.domain();
 		if (theFocus != undefined) {
@@ -1377,73 +1469,204 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		
 	}
 	
+//#######################################################	
+	focus.zoomed = function() {
+		
+		theRange = xFocus.domain();
+		if (theFocus != undefined) {
+			
+			subject.notify(theRange, "focusZoomed", theZoom.scale() );	
+			preScale = theZoom.scale();			
+		}
+		log("translate = " +  d3.event.translate[0])
+		
+	}
+	
+	var theScale = 1;
+	var preScale = 1;
+	
+
+	var lastTranslate = 0;
+	var currentTranslate;
 //#######################################################
 	
 	focus.update = function (range, caller, zoomScale) {
 		//log("foc: who called me");
 		
 		theRange = range;
+		
+		
 		//log("foc: update: range = " + theRange + " caller : " + caller);
-		if (theFocus != undefined ) {	
-			log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " ### caller = " + caller);		
-			
+		if (theFocus != undefined ) {
+			//log("foc: update: scale : " + theZoom.scale() + " ZoomScale = " + zoomScale + " ### caller = " + caller);		
+								
 			//### Updating the time-range Text at the top 
 			var startTime = new Date(theRange[0] - 0).toLocaleString();
 			var endTime   = new Date(theRange[1] - 0).toLocaleString();
 			$("#timeRangeFromText").text(startTime);
 			$("#timeRangeToText").text(endTime);
 			
-			xFocus.domain(theRange);
-			
-			if(caller != "timelineHandlesZoomed") {
-				//theZoom.scale(scaleVal);
-				theZoom.x(xFocus);
-			}				
-			
-			//theZoom.x(xFocus);
-			
-			//log("foc: update: scale : " + theZoom.scale());
-			
-			//log("foc: update: x " + theZoom.x());
-			
-			var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
-			var scaleVal = fullTimeRangeDifference / dateRangeDiff;
-			
-			//log("foc: update: scaleVal : " + scaleVal);
-			
-			focus.redrawLines(theData);
-			
-			//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
-			theFocus.select('.x.axis').call(xAxisFocus);
-			
-			//### update the x-axis ticks with longer height
-			theFocus.selectAll("#xaxis line").attr("y2", 15);
-			theFocus.selectAll("#xaxis text").attr("y", 19);
-			
-			
-			//theZoom.scale(scaleVal);
-			if(caller == "timelineHandlesZoomed") {
-				//theZoom.scale(scaleVal);
-				//theZoom.x(xFocus);
-				lastZoomScale = zoomScale;
-				if(previousZoomCaller != "timelineHandlesZoomed") {
-					theZoom.scale(zoomScale);
+			//log(zoomScale + ", " + preScale)
+			theScale = zoomScale;//preScale
+			var zoomRatio = 1.1; //1.148;
+			if(zoomScale > preScale){
+				//log("zooming in");
+				theScale *= zoomRatio;
+				if(theScale > 111) {
+					theScale = 111;
+				}
+			} else {
+				//log("zooming out");
+				theScale /= zoomRatio;
+				if(theScale < 1) {
+					theScale = 1;
 				}
 			}
-			else {
-				//theZoom.scale(zoomScale);
-				//theZoom.scale(scaleVal);
-				var temp = theZoom.scale();
-				//theZoom.scale(lastZoomScale);
-				lastZoomScale = scaleVal;
+			preScale = theScale;
+			
+			if(caller == "timelineHandlesZoomed") {
+				
+				//log(zoomScale + " : " + theZoom.translate())
+				//log(theScale + "")
+				if(theZoom.translate()[0] < 0) {
+					//theZoom.translate([0,0]) //not working -- stops the panning
+				}
+				
+				xFocus.domain(theRange);
+				
+				focus.redrawLines(theData);
+				
+				theFocus.select('.x.axis').call(xAxisFocus);
+				
+				//### update the x-axis ticks with longer height
+				theFocus.selectAll("#xaxis line").attr("y2", 15);
+				theFocus.selectAll("#xaxis text").attr("y", 19);
+				
+				//log(zoomScale);
+				if(previousZoomCaller == "timelineHandles") {
+					//log("translating " + lastTranslate)
+					//theZoom.translate([lastTranslate,0])
+								//.scale(zoomScale);	
+								//log("+ " )
+								
+					//theFocus.select("#focusObjectContainer")
+					//	.attr("transform", "translate(" + theZoom.translate()[0] + ",0)")  //d3.event.translate[0]
+										//	"scale(" + zoomScale + ", 1)"); //d3.event.scale
+				}
+				else {
+					theZoom.scale(zoomScale);//zoomScale => or else, panning isn't working
+				}
+				
+				currentTranslate = theZoom.translate();
+				
+			}			
+			else if (caller == "timelineHandles" || caller == "timeline") {
+				lastTranslate = xFocusOriginal(theRange[0]);
+				//log("ti: " + lastTranslate ); //- 371.9983925733276)
+				xFocus.domain(theRange);
+
+				//theZoom.x(xFocus);
+				//log(theRange[0])
+				//log(xFocus(theRange[0]))
+				//theZoom.translate(xFocus(theRange[0]), 0)
+				
+				//theZoom.translate([-xFocus(theRange[0]),0]);	
+				
+				
+				
+				var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
+				var scaleVal = fullTimeRangeDifference / dateRangeDiff;
+				
+				focus.redrawLines(theData);
+				
+				theFocus.select('.x.axis').call(xAxisFocus);
+				
+				//### update the x-axis ticks with longer height
+				theFocus.selectAll("#xaxis line").attr("y2", 15);
+				theFocus.selectAll("#xaxis text").attr("y", 19);
+				
+				
+				//theZoom.translate([currentTranslate[0] + lastTranslate[0],0]);	
+				//log(theZoom.translate());
+				//log("+" + lastTranslate)
+				if(currentTranslate != undefined) {
+					log("ti: " + currentTranslate[0] + " : " + lastTranslate)
+					theZoom.translate([currentTranslate[0] - lastTranslate,0]);	
+				}
+				theZoom.scale(scaleVal);
+				preScale = scaleVal;
+				
+				//log("-" + scaleVal + " " + theZoom.scale())
+				
+				/*
+				if(caller == "timelineHandlesZoomed") {
+					lastZoomScale = zoomScale;
+					if(previousZoomCaller != "timelineHandlesZoomed") {
+						theZoom.scale(zoomScale);
+					}
+				}
+				else {
+					var temp = theZoom.scale();
+					lastZoomScale = scaleVal;
+					
+				}
+				*/
 				
 			}
+			else if(caller =="nothing") {
+			
+				xFocus.domain(theRange);
+				
+				if(caller != "timelineHandlesZoomed") {
+					//theZoom.scale(scaleVal);
+					theZoom.x(xFocus);
+				}				
+				
+				//theZoom.x(xFocus);
+				
+				//log("foc: update: scale : " + theZoom.scale());
+				
+				//log("foc: update: x " + theZoom.x());
+				
+				var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
+				var scaleVal = fullTimeRangeDifference / dateRangeDiff;
+				
+				//log("foc: update: scaleVal : " + scaleVal);
+				
+				focus.redrawLines(theData);
+				
+				//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
+				theFocus.select('.x.axis').call(xAxisFocus);
+				
+				//### update the x-axis ticks with longer height
+				theFocus.selectAll("#xaxis line").attr("y2", 15);
+				theFocus.selectAll("#xaxis text").attr("y", 19);
+				
+				
+				//theZoom.scale(scaleVal);
+				if(caller == "timelineHandlesZoomed") {
+					//theZoom.scale(scaleVal);
+					//theZoom.x(xFocus);
+					lastZoomScale = zoomScale;
+					if(previousZoomCaller != "timelineHandlesZoomed") {
+						theZoom.scale(zoomScale);
+					}
+				}
+				else {
+					//theZoom.scale(zoomScale);
+					//theZoom.scale(scaleVal);
+					var temp = theZoom.scale();
+					//theZoom.scale(lastZoomScale);
+					lastZoomScale = scaleVal;
+					
+				}
 			
 			
+			}
 			//log("foc: update: scaleu2: " + theZoom.scale());
 			//log("foc: update: range = " + theRange + " caller : " + caller);
 			
-		}
+		} //##################
 		/*
 		else if(theFocus != undefined) {
 			xFocus.domain(theRange);			
@@ -1456,9 +1679,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			theFocus.select('.x.axis').call(xAxisFocus);
 		}
 		*/
+		
+		
 		previousZoomCaller = caller;
-		
-		
+			
 		
 		
 	};

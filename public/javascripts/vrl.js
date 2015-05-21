@@ -57,8 +57,8 @@ var Subject = (function (window, undefined) {
 
 //#######################################################
 
-//### to show/hide the panels and charts 
-$(".showHide").each( function () {
+//### to show/hide the panels and charts //not in use currently
+$(".showHide1").each( function () {
 	$(this).click( function () {
 			//if()
 			var status = $(this).text();

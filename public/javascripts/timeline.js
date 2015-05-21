@@ -514,6 +514,8 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	timeline.update = function (range, caller, dataObject) {
 		//log("theBrush : " + theBrush.extent());
 		//log("before " + theBrush.extent());
+		
+		//### when the item was highlighted in Focus chart
 		if(caller == "itemHighlighted") {
 			var str = dataObject.substring(0, 4);
 			//log(dataObject)
@@ -522,7 +524,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 									.attr("fill-opacity", 1)
 									.attr('stroke-width', function() {	
 										this.parentNode.appendChild(this);									
-										return eachDataHeight + 5;									
+										return eachDataHeight + 10;									
 									});
 			}
 			else if(str == "line") {
