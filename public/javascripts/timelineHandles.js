@@ -372,7 +372,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							.attr('stroke-width', data[i].style.lineSize())
 							.attr('fill', 'none');
 							
-									
+					//### drawing circle points for each of the datapoints				
 					context.select("#THline" + (yContextArrIndex["" + i] - 0) + "cover")
 							.selectAll(".dot")
 							.data(function () {

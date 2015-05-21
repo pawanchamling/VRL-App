@@ -278,7 +278,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		   
 			xFocus.domain(d3.extent(xDomain));			
 			yFocus.domain([0, yMax + 2]);		
-			xFocusOriginal.domain(d3.extent(xDomain));	
+			xFocusOriginal.domain(d3.extent(xDomain));	//### we will need it for zooming and panning
 			for(var i = 0; i < noOfSensorData; i++) {
 				var extraHeight = 0.15 * (yMaxArr[i] - yMinArr[i]);
 					//log("foc: " + i + " = extra space = " + extraHeight);
@@ -706,7 +706,7 @@ function interpolateZoom (translate, scale) {
 		for (var i = 0; i < noOfData; i++) {
 			
 			if(data[i].dataType() == 0) {
-				//Nominal values
+				//### Nominal values
 				var d = data[i].data();
 				var d2 = data[i];
 				//d = d.values;					
@@ -790,27 +790,15 @@ function interpolateZoom (translate, scale) {
 							//### notify that there is no more highlight
 							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), dd.timestamp );	
 						});		
-					
-					/*
-					//tooltip using jQuery tipsy
-					$("#circleNominal" + i + "-" + index).tipsy({ 
-							gravity: 'sw', 
-							html: true, 
-							title: function() {								 
-								return '<span style="color:#fff">' + dd.value + '</span>'; 
-							}
-					});
-					*/
-					
+			
 						
 				});
 									
 			}
 			else if(data[i].dataType() == 1){
-				//Ordinal values
+				//### Ordinal values
 				var d = data[i].data();
-				
-				//d = d.values;					
+								
 				d.map(function(dd, index) {
 					//var startPos = xFocus(dd.timestamp);
 					log("foc: ordinal data " + getKey(data[i].dataInfo(), dd.value - 0))
@@ -898,29 +886,16 @@ function interpolateZoom (translate, scale) {
 							subject.notify(theRange, "itemHighlightedOut", $(this).attr("id"), dd.timestamp );	
 							
 						});		
-							
-					/*
-					//### Tooltip with jQuery tipsy	
-					$("#circleOrdinal" + i + "-" + index).tipsy({
-								gravity: 'sw', 
-								html: true, 
-								title: function() {									
-									var valIs = getKey(dataInfo, dd.value - 0);								
-									return '<span style="color:#fff">' + valIs + '</span>'; 
-								}
-					});
-					*/		
+					
 				});
 									
 			}
 			else if(data[i].dataType() == 2) {
-				//### 
+				//### Sensor data (except GPS-location data)
 				var maxVal = data[i].dataInfo().max;
 				var minVal = data[i].dataInfo().min;
 				
 				
-				//the sensor data
-				//log("foc: i = " + i + "  yFocus Arr Index = " + (yFocusArrIndex["" + i] - 0))
 				theFocus.select("#focusObjectContainer")
 					.append("g")
 						.attr("id", "line" + (yFocusArrIndex["" + i] - 0) + "cover")
@@ -1080,20 +1055,6 @@ function interpolateZoom (translate, scale) {
 							
 						});						
 						
-						/*
-					d.map(function(d2, index) {	
-						log("foc: #circlePoint" + i + "" + d2);
-						$("#circlePoint" + i + "" + d2.timestamp).tipsy({
-							gravity: 'n', 
-							html: true, 
-							title: function() {		
-								var val = d2.value - 0;
-								return '<span style="color:#fff">' + val.toFixed(3) + '</span>'; 
-							}
-						});
-					});
-						*/
-					//log("foc: " + lineGen(data[i].data()));
 			}
 			
 			
@@ -1147,15 +1108,7 @@ function interpolateZoom (translate, scale) {
 				
 				//log("foc: d = "  + d)
 				d.map(function(dd, index) {
-					//log(dd.timestamp)//drawing circles for each datapoints/nodes
-				/*
-				theFocus.select("#line" + (yFocusArrIndex["" + i] - 0) + "cover")
-						.selectAll(".dot")
-						.data(function () {
-							return data[i].data();
-						})
-					.enter()
-					*/
+				
 					theFocus.select("#" + "circlePoint" + i + "" + dd.timestamp)
 							.attr("cx", xFocus(new Date(dd.timestamp - 0)))
 							.attr("cy", yFocusArr[(yFocusArrIndex["" + i] - 0)](dd.value - 0))
@@ -1268,112 +1221,6 @@ function interpolateZoom (translate, scale) {
 		
 	}
 	
-	focus.zoomed2 = function() {
-		//check if domain is okay
-		//log(startTimeRange)
-	//log(d3.event.translate[0] + " - " + d3.event.translate[1] + " : " + theRange);
-		//theZoom.translate([0,0]);
-		//log(xFocus.domain().length)
-		//log(xFocus.domain()[0] + " : "+ xFocus.domain()[1] + " : "+ startTimeRange )
-		if(theZoom.scale() != 1){
-			//if (xFocus.domain()[0] < x0.domain()[0]) {
-			//	theZoom.translate([0, 0]);
-			//if(xFocus.domain()[0] != startTimeRange){
-				/*
-			if(d3.event.translate[0] >= 0) {
-				theZoom.translate([d3.event.translate[0], 0])
-			}
-			else { 
-				theZoom.translate([0, 0])
-			}
-			*/
-			
-		}
-		else {
-			//theZoom.translate([0,0]);
-		}
-		
-		theRange = xFocus.domain();
-		if (theRange[0] < startTimeRange) {
-			//log("foc:here")
-		//	theRange[0] = startTimeRange;
-		//	xFocus.domain()[0] = startTimeRange;
-			
-			
-			//theZoom.translate([0,0]);
-			//log("foc:not anymore " + theRange[0] + " : " + startTimeRange);
-		}
-		else { 
-			//log("foc:not anymore " + theRange[0] + " : " + startTimeRange);
-		}
-		if (theRange[1] > endTimeRange) {
-			//theZoom.translate([0,0]);
-			//theRange[1] = endTimeRange;
-			//xFocus.domain()[1] = endTimeRange;
-		}
-		else {
-			//log("foc:yes, not anymore");
-		}
-		
-
-		//log(xFocus.domain()[0])
-		if (theFocus != undefined) {
-			//theZoom.translate(theRange);
-			//theZoom.translate(theZoom.translate()[0]);
-			//log(theZoom.scale())
-			
-			var startD = new Date(theRange[0]).getTime();
-			var endD = new Date(theRange[1]).getTime();
-							
-			//don't go smaller than 1 seconds
-			if(endD < (startD + 1000)){
-				log("foc: here " );
-				
-				endD = startD + 1000;
-				theRange[1] = new Date(endD);
-				
-				//context.select('.brush').call(theBrush.extent(theRange));
-			}
-				
-			
-			
-			xFocus.domain(theRange);
-			focus.redrawLines(theData);
-			//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
-			theFocus.select('.x.axis').call(xAxisFocus);
-		}
-		//focus.select("#data1").attr("d", areaFill);
-		//focus.select("#data2").attr("d", areaFill);
-		//focus.select("#mean1").attr("d", meanline(data1));
-		//focus.select("#mean2").attr("d", meanline(data2));
-		//focus.select(".x.axis").call(xAxis1);
-
-			//Find extent of zoomed area, what's currently at edges of graphed region
-		var brushExtent = [xFocus.invert(0), xFocus.invert(width)];
-			//console.log(brush.extent(brushExtent));
-		//context.select(".brush").call(brush.extent(brushExtent));
-	//subject.notify(theRange, "focus");//notifying all the observers about the change in range
-		
-		//log("foc:zoomed : " + brushExtent);
-	}
-
-	focus.panLimit = function() {
-		/*
-		var divisor = { h: height / ((y.domain()[1]-y.domain()[0]) * zoom.scale()), 
-						w: width / ((x.domain()[1]-x.domain()[0]) * zoom.scale())},
-		minX = -(((x.domain()[0]-x.domain()[1])*zoom.scale())+(panExtent.x[1]-(panExtent.x[1]-(width/divisor.w)))),
-		minY = -(((y.domain()[0]-y.domain()[1])*zoom.scale())+(panExtent.y[1]-(panExtent.y[1]-(height*(zoom.scale())/divisor.h))))*divisor.h,
-		maxX = -(((x.domain()[0]-x.domain()[1]))+(panExtent.x[1]-panExtent.x[0]))*divisor.w*zoom.scale(),
-		maxY = (((y.domain()[0]-y.domain()[1])*zoom.scale())+(panExtent.y[1]-panExtent.y[0]))*divisor.h*zoom.scale(), 
-		*/
-		 tx = xFocus.domain()[0] < panExtent.x[0] ? 
-				minX : x.domain()[1] > panExtent.x[1] ? maxX : zoom.translate()[0],
-		 ty = y.domain()[0]  < panExtent.y[0]? 
-				minY : y.domain()[1] > panExtent.y[1] ? maxY : zoom.translate()[1];
-	
-		return [tx,ty];
-	
-	}
 
 	
 	//#######################################################
@@ -1391,109 +1238,31 @@ function interpolateZoom (translate, scale) {
 						.call(focus);
 	};
 
-	//#######################################################
-	/*
-	focus.update = function (range, caller) {
-		
-		log("foc: ############## here we go ################");
-		
-		theRange = range;
-		if (theFocus != undefined) {
-			xFocus.domain(theRange);			
-			theZoom.x(xFocus);
-			log("foc: scalec : " + theZoom.scale());
-			
-			focus.redrawLines(theData);
-			
-			//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
-			theFocus.select('.x.axis').call(xAxisFocus);
-			
-		theFocus.selectAll("#xaxis line").attr("y2", 15);
-		theFocus.selectAll("#xaxis text").attr("y", 19);
-			
-		}
-	};
-	*/
 
-//#######################################################
 
-	focus.zoomed3 = function() {
-		
-		theRange = xFocus.domain();
-		if (theFocus != undefined) {
-			//var startD = new Date(theRange[0]).getTime();
-			//var endD = new Date(theRange[1]).getTime();
-			
-			//log("foc: startD : " + startD + " endD : " + endD);
-			//log("foc: fullTimeRangeDifference : " + fullTimeRangeDifference + " and d = " + (endD - startD) )
-			//log("foc: scale : " + theZoom.scale())
-			
-			
-			/*
-			//don't go smaller than 1 seconds
-			if(endD < (startD + 1000)){
-				log("foc: here " );
-				
-				endD = startD + 1000;
-				theRange[1] = new Date(endD);
-				log("foc: startD : " + startD + " endD : " + endD);
-				//context.select('.brush').call(theBrush.extent(theRange));
-			}
-			*/
-			/*
-			//Doesn't seem like we need it
-			if(endD - startD > fullTimeRangeDifference) { 
-				theRange[0] = startTimeRange;
-				theRange[1] = startTimeRange + fullTimeRangeDifference;
-				log("foc: too large");
-			}
-			*/
-			//log("foc: zoomed : ##################################################################");
-			log("foc: scalea : " + theZoom.scale() + "#################################");	
-			//log("foc: range= " + theRange);
-			//log("foc: domain= " + xFocus);
-			subject.notify(theRange, "focusZoomed", theZoom.scale() );
-			
-		}
-		
-		
-		//log("foc:theRange = " + theRange);
-		//log("foc:scale : " + theZoom.scale());
-		//var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
-		//log("foc:scale : " + theZoom.scale() + " dateRangeDiff : " + dateRangeDiff);
-		
-		//log("foc:zoom x : " + theZoom.x() + " y : " + theZoom.y());
-		//log(theZoom.translate)
-		//theZoom.x(xFocus);
-		
-		
-	}
-	
 //#######################################################	
 	focus.zoomed = function() {
 		
 		theRange = xFocus.domain();
-		if (theFocus != undefined) {
-			
+		if (theFocus != undefined) {			
 			subject.notify(theRange, "focusZoomed", theZoom.scale() );	
-			preScale = theZoom.scale();			
 		}
-		log("translate = " +  d3.event.translate[0] );//+ " : " +   theZoom.translate()
+		//log("translate = " +  d3.event.translate[0] );//+ " : " +   theZoom.translate()
+		
 		if(d3.event.translate[0] > 0) {
-			theZoom.translate([0, 0])
+			//when the panning is done too much even when the left limit is reached, the translate value rises rises
+			//and when the next time the opposite panning is done, they seem unresponsive; well in fact the value is changing
+			//and nothing will be seem until the visible limit is reached.
+				//haven't done for the rightmost side
+			theZoom.translate([0, 0]); 
 		}
 	}
 	
-	var theScale = 1;
-	var preScale = 1;
 	
 
-	var lastTranslate = 0;
-	var currentTranslate;
 //#######################################################
 	
 	focus.update = function (range, caller, zoomScale) {
-		//log("foc: who called me");
 		
 		theRange = range;
 		
@@ -1508,195 +1277,41 @@ function interpolateZoom (translate, scale) {
 			$("#timeRangeFromText").text(startTime);
 			$("#timeRangeToText").text(endTime);
 			
-			//log(zoomScale + ", " + preScale)
-			theScale = zoomScale;//preScale
-			var zoomRatio = 1.1; //1.148;
-			if(zoomScale > preScale){
-				//log("zooming in");
-				theScale *= zoomRatio;
-				if(theScale > 111) {
-					theScale = 111;
-				}
-			} else {
-				//log("zooming out");
-				theScale /= zoomRatio;
-				if(theScale < 1) {
-					theScale = 1;
-				}
-			}
-			preScale = theScale;
+			//### updating the domain and redrawing figures and x-axis
+			xFocus.domain(theRange);
+			focus.redrawLines(theData);			
+			theFocus.select('.x.axis').call(xAxisFocus);
 			
-			if(caller == "timelineHandlesZoomed") {
-				var lastTranslate2 = xFocusOriginal(theRange[0]);
+			//### update the x-axis ticks with longer height
+			theFocus.selectAll("#xaxis line").attr("y2", 15);
+			theFocus.selectAll("#xaxis text").attr("y", 19);
+			
+			if(caller == "timelineHandlesZoomed") {				
+				//### when the focus chart has been zoomed using the mouse wheel
 				
-				var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
-				var scaleVal = fullTimeRangeDifference / dateRangeDiff;
-				var ratio = dateRangeDiff / fullTimeRangeDifference;
-				lastTranslate2 = lastTranslate2 * scaleVal;
-				log(lastTranslate2)
-				
-				
-				//log(zoomScale + " : " + theZoom.translate())
-				//log(theScale + "")
-				if(theZoom.translate()[0] < 0) {
-					//theZoom.translate([0,0]) //not working -- stops the panning
-				}
-				
-				xFocus.domain(theRange);
-				
-				focus.redrawLines(theData);
-				
-				theFocus.select('.x.axis').call(xAxisFocus);
-				
-				//### update the x-axis ticks with longer height
-				theFocus.selectAll("#xaxis line").attr("y2", 15);
-				theFocus.selectAll("#xaxis text").attr("y", 19);
-				
-				//log(zoomScale);
-				if(previousZoomCaller == "timelineHandles") {
-					//log("translating " + lastTranslate)
-					//theZoom.translate([lastTranslate,0])
-								//.scale(zoomScale);	
-								//log("+ " )
-								
-					//theFocus.select("#focusObjectContainer")
-					//	.attr("transform", "translate(" + theZoom.translate()[0] + ",0)")  //d3.event.translate[0]
-										//	"scale(" + zoomScale + ", 1)"); //d3.event.scale
-				}
-				else {
+				if(previousZoomCaller != "timelineHandles") {
 					theZoom.scale(zoomScale);//zoomScale => or else, panning isn't working
 				}
 				
-				currentTranslate = theZoom.translate();
-				
 			}			
 			else if (caller == "timelineHandles" || caller == "timeline") {
-				lastTranslate = xFocusOriginal(theRange[0]);
-				//log("ti: " + lastTranslate ); //- 371.9983925733276)
-				xFocus.domain(theRange);
-
-				//theZoom.x(xFocus);
-				//log(theRange[0])
-				//log(xFocus(theRange[0]))
-				//theZoom.translate(xFocus(theRange[0]), 0)
-				
-				//theZoom.translate([-xFocus(theRange[0]),0]);	
-				
-				
-				
+								
+				//### we used the manual zoom from time-range handles but not the d3's actual zoom method
+				//### so calculating where the translation would have been if the d3 was doing it.
 				var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
 				var scaleVal = fullTimeRangeDifference / dateRangeDiff;
-				var ratio = dateRangeDiff / fullTimeRangeDifference;
+				var lastTranslate = xFocusOriginal(theRange[0]);
 				lastTranslate = lastTranslate * scaleVal;
-				log(lastTranslate)
 				
-				focus.redrawLines(theData);
-				
-				theFocus.select('.x.axis').call(xAxisFocus);
-				
-				//### update the x-axis ticks with longer height
-				theFocus.selectAll("#xaxis line").attr("y2", 15);
-				theFocus.selectAll("#xaxis text").attr("y", 19);
-				
-				
-				//theZoom.translate([currentTranslate[0] + lastTranslate[0],0]);	
-				//log(theZoom.translate());
-				//log("+" + lastTranslate)
-				if(currentTranslate != undefined) {
-					//log("ti: " + currentTranslate[0] + " : " + lastTranslate)
-					theZoom.translate([-lastTranslate, 0]);	
-				}
-				theZoom.scale(scaleVal);
-				preScale = scaleVal;
-				
-				//log("-" + scaleVal + " " + theZoom.scale())
-				
-				/*
-				if(caller == "timelineHandlesZoomed") {
-					lastZoomScale = zoomScale;
-					if(previousZoomCaller != "timelineHandlesZoomed") {
-						theZoom.scale(zoomScale);
-					}
-				}
-				else {
-					var temp = theZoom.scale();
-					lastZoomScale = scaleVal;
-					
-				}
-				*/
+				theZoom.translate([-lastTranslate, 0]);	
+				theZoom.scale(scaleVal);		
 				
 			}
-			else if(caller =="nothing") {
-			
-				xFocus.domain(theRange);
-				
-				if(caller != "timelineHandlesZoomed") {
-					//theZoom.scale(scaleVal);
-					theZoom.x(xFocus);
-				}				
-				
-				//theZoom.x(xFocus);
-				
-				//log("foc: update: scale : " + theZoom.scale());
-				
-				//log("foc: update: x " + theZoom.x());
-				
-				var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
-				var scaleVal = fullTimeRangeDifference / dateRangeDiff;
-				
-				//log("foc: update: scaleVal : " + scaleVal);
-				
-				focus.redrawLines(theData);
-				
-				//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
-				theFocus.select('.x.axis').call(xAxisFocus);
-				
-				//### update the x-axis ticks with longer height
-				theFocus.selectAll("#xaxis line").attr("y2", 15);
-				theFocus.selectAll("#xaxis text").attr("y", 19);
-				
-				
-				//theZoom.scale(scaleVal);
-				if(caller == "timelineHandlesZoomed") {
-					//theZoom.scale(scaleVal);
-					//theZoom.x(xFocus);
-					lastZoomScale = zoomScale;
-					if(previousZoomCaller != "timelineHandlesZoomed") {
-						theZoom.scale(zoomScale);
-					}
-				}
-				else {
-					//theZoom.scale(zoomScale);
-					//theZoom.scale(scaleVal);
-					var temp = theZoom.scale();
-					//theZoom.scale(lastZoomScale);
-					lastZoomScale = scaleVal;
-					
-				}
-			
-			
-			}
-			//log("foc: update: scaleu2: " + theZoom.scale());
-			//log("foc: update: range = " + theRange + " caller : " + caller);
 			
 		} //##################
-		/*
-		else if(theFocus != undefined) {
-			xFocus.domain(theRange);			
-			theZoom.x(xFocus);
-			log("foc: update: scalec : " + theZoom.scale());
-			
-			focus.redrawLines(theData);
-			
-			//theFocus.select('.line').attr('d', lineFocus);	//show the focus line	
-			theFocus.select('.x.axis').call(xAxisFocus);
-		}
-		*/
-		
-		
+
+		//### to know when to update the translate value in theZoom
 		previousZoomCaller = caller;
-			
-		
 		
 	};
 
