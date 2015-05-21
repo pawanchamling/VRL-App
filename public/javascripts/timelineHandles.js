@@ -372,7 +372,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							.attr('stroke-width', data[i].style.lineSize())
 							.attr('fill', 'none');
 							
-					//### drawing circle points for each of the datapoints				
+					//### drawing circles for each datapoints/nodes			
 					context.select("#THline" + (yContextArrIndex["" + i] - 0) + "cover")
 							.selectAll(".dot")
 							.data(function () {
@@ -383,7 +383,18 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							.attr("id", function(dd) { 
 								return "THcirclePoint" + i + "" + (dd.timestamp - 0);
 							})
-							.attr('class', 'theCircle')
+							.attr('class', function(dd) {
+								if(dd.value == maxVal) {
+									return 'theCircle max';
+								}
+								else if(dd.value == minVal) {
+									return 'theCircle min';
+								}
+								else {
+									return 'theCircle';
+								}
+								
+							})
 							.attr("stroke", function (dd) {
 								return data[i].style.dataColor(); //return color("#00ff00")//this.parentNode.__data__.name)
 							})
@@ -405,6 +416,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							})
 							.attr("fill", function(dd) {
 								//log(dd.value)
+								return data[i].style.dataColor();
+								/*
 								if(dd.value == maxVal) {
 									return data[i].style.dataColor();
 								}
@@ -414,6 +427,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								else {
 									return "white";
 								}
+								*/
 							})
 							.attr("fill-opacity", 1)
 							.attr("stroke-width", data[i].style.lineSize());
@@ -643,7 +657,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 	
 		
 	timelineHandles.update = function (range, caller, zoomScale, index) {
-		
+		//log(zoomScale + " : " + index)
 		if(caller == "itemHighlighted") {
 			var str = zoomScale.substring(0, 4);
 			
@@ -658,6 +672,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			}
 			else if(str == "line") {
 				var lineStr = zoomScale.substring(0,5);
+				
 				context.select("#" + lineStr )
 								.attr('stroke-width', function(){
 									//### bringing it to the front
@@ -665,6 +680,9 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 									
 									return 4;
 								});
+							
+				context.select("#TH" + index )
+								.attr('r', 4);
 			}
 			
 		}
@@ -676,9 +694,29 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								.attr('r', 5);
 			}
 			else if(str == "line") {
+			
 				var lineStr = zoomScale.substring(0,5);
 				context.select("#" + lineStr )
 								.attr('stroke-width', 2);
+				
+				//log($("#TH" + index).hasClass("max"))
+				var normalRadius = 0;
+				var classList =$("#TH" + index).attr('class').split(/\s+/);
+				$.each( classList, function(index, item){
+				if (item === 'max' || item === 'min') {
+					   normalRadius = 2;
+					}
+				});
+				
+				if($("#TH" + index).hasClass("max") || $("#TH" + index).hasClass("min")) {
+					log("no min max")
+					context.select("#TH" + index )
+									.attr('r', normalRadius);
+				}
+				else {
+					context.select("#TH" + index )
+									.attr('r', normalRadius);
+				}
 			}
 			
 			

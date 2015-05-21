@@ -54,7 +54,7 @@ var Subject = (function (window, undefined) {
 
 
 //#######################################################
-
+$.fn.classList = function() {return this[0].className.split(/\s+/);};
 //#######################################################
 
 //### to show/hide the panels and charts //not in use currently

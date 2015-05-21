@@ -1009,9 +1009,9 @@ function interpolateZoom (translate, scale) {
 										.attr("y2", newY)
 										.attr("visibility", "visible");
 								
-							
+							//log($(this).attr("id"))
 							//### notify that the item has been highlighted
-							subject.notify(theRange, "itemHighlighted", $(this.parentNode).attr("id") );
+							subject.notify(theRange, "itemHighlighted", $(this.parentNode).attr("id"), $(this).attr("id") );
 								
 							
 						}).on("mouseout", function (dd) {
@@ -1051,7 +1051,7 @@ function interpolateZoom (translate, scale) {
 								
 								
 							//### notify that there is no more highlight
-							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id") );	
+							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id"), $(this).attr("id") );	
 							
 						});						
 						
@@ -1171,7 +1171,7 @@ function interpolateZoom (translate, scale) {
 								
 							
 							//### notify that the item has been highlighted
-							subject.notify(theRange, "itemHighlighted", $(this.parentNode).attr("id") );
+							subject.notify(theRange, "itemHighlighted", $(this.parentNode).attr("id"), $(this).attr("id") );
 						})
 						.on("mouseout", function () {
 							//### Bringing back everything to normal
@@ -1212,7 +1212,7 @@ function interpolateZoom (translate, scale) {
 								
 								
 							//### notify that there is no more highlight
-							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id")  );	
+							subject.notify(theRange, "itemHighlightedOut", $(this.parentNode).attr("id"), $(this).attr("id")  );	
 						});
 				});
 			}
