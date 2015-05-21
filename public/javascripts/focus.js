@@ -274,14 +274,14 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
            // var yAxisFocusLeft 	= d3.svg.axis().scale(yFocus).orient('left');
            // var yAxisFocusRight = d3.svg.axis().scale(yFocus).orient('right');
 
-		   log("foc: yFocusArr length = " + yFocusArr.length);
+		    log("foc: yFocusArr length = " + yFocusArr.length);
 		   
 			xFocus.domain(d3.extent(xDomain));			
 			yFocus.domain([0, yMax + 2]);		
 			xFocusOriginal.domain(d3.extent(xDomain));	//### we will need it for zooming and panning
 			for(var i = 0; i < noOfSensorData; i++) {
 				var extraHeight = 0.15 * (yMaxArr[i] - yMinArr[i]);
-					//log("foc: " + i + " = extra space = " + extraHeight);
+				//log("foc: " + i + " = extra space = " + extraHeight);
 				yFocusArr[i].domain([0, yMaxArr[i] + extraHeight]); 
 				//extra height added so that the max value is can be seen properly in the y-axis
 			}
@@ -330,84 +330,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					.attr("width", availableWidth)
 					.attr("height", availableHeight )
 					.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (padding.top) + ')')
-					.call(theZoom);					
-					/*
-					.call(d3.behavior.zoom()
-						.on("zoom", function () {
-							
-						
-							//### mouse x and y co-ordinates
-							var mx = d3.mouse(this)[0];
-							var my = d3.mouse(this)[1];							
-							//log("(" + mx + ", " + my + ")");
-							
-							var translatePos = d3.event.translate;
-							//var value = zoomWidgetObj.value.target[1] * 2;
-							//log(translatePos);
-
-							//detect the mousewheel event, then subtract/add a constant to the zoom level and transform it
-							if(d3.event.sourceEvent.type == 'wheel' || d3.event.sourceEvent.type == 'mousewheel') {							
-								
-								if(d3.event.sourceEvent.wheelDelta) {
-									if(d3.event.sourceEvent.wheelDelta > 0) {
-										zoomValue = zoomValue + 0.1;
-									} else {
-										zoomValue = zoomValue - 0.1;
-									}
-								} 
-								else {
-									if(d3.event.sourceEvent.detail > 0) {
-										zoomValue = zoomValue + 0.1;
-									} else {
-										zoomValue = zoomValue - 0.1;
-									}
-								}
-								
-								if(zoomValue < 1) {
-									zoomValue = 1;
-								}
-								if(zoomValue > 111) {
-									zoomValue = 111;
-								}
-								
-								
-							}
-							
-							log("(" + mx + ", " + my + ") = " + zoomValue.toFixed(5) + " translate [" + translatePos + "]");
-							transformVis(d3.event.translate, zoomValue);
-						})
-					); 
-			*/
-function interpolateZoom (translate, scale) {
-    var self = this;
-    return d3.transition().duration(350).tween("zoom", function () {
-        var iTranslate = d3.interpolate(zoom.translate(), translate),
-            iScale = d3.interpolate(zoom.scale(), scale);
-        return function (t) {
-            zoom
-                .scale(iScale(t))
-                .translate(iTranslate(t));
-            zoomed();
-        };
-    });
-}
-			function transformVis(pan,zoom) {
- 
-				if (d3.event){
-					if (d3.event.sourceEvent.type == "mousewheel" || d3.event.sourceEvent.type=='DOMMouseScroll'){
-					//they scrolled with the mouse wheel, update the slider postion but do not trigger it's transformVis call
-						//zoomWidgetObj.setValue(0,zoom/2,false,false);
-					}else{
-						//they are interacting with the slider
-						//zoomWidgetObj.doZoom = true;
-					}
-				}else{
-					//zoomWidgetObj.doZoom = true;
-				}
-			 
-				//vis.attr("transform", "translate(" +  (pan[0] + ((visWidth - (visWidth * zoomFactor))/2)) + ',' + (pan[1] + ((visHeight - (visHeight * zoomFactor))/2)) + ")scale(" + zoom*zoomFactor + ")"); 	
-			 
-			}
+					.call(theZoom);	
+					
 			
 			//### the tooltip -- not in use right now
 			tooltip = d3.tip()

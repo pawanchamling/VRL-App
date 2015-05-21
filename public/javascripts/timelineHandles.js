@@ -175,50 +175,13 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 				//put hourly ticks for the x-axis
 				xAxisContext.tickFormat(d3.time.format("%X"));
 			}				
-			//log("timelineHandles: Start : " + startValue + " -- End : " + endValue );
 			
-			//log("timelineHandles: start date :" + startDate);
-			//log("timelineHandles: start date :" + xDomain[0]);
-			//log("timelineHandles: Stop date :" + lastDate);
-			//log("timelineHandles: Stop date :" + xDomain[xDomain.length - 1]);
 			//###-----------------------------------------------------------------
-			
-			//startTimeRange = xDomain[0];
-			//endTimeRange = xDomain[xDomain.length - 1];
+	
 			fullTimeRangeDifference = (new Date(endValue).getTime()) - (new Date(startValue).getTime())
 	
-			//for context
-			/*
-			var lines = [];
-			for(var i = 0; i < noOfData; i++) {
-				lines[i] = d3.svg.line()
-					.interpolate('monotone')
-					.x(function (d) {
-						return xContext(new Date(d.timestamp - 0));
-					})
-					.y(function (d) {
-						return yContext(d.value - 0);
-					});
-			}
-			*/
-			var lineGen = d3.svg.line()
-									.x(function(d) {
-										return xContext(new Date(d.timestamp - 0));
-									})
-									.y(function(d) {
-										return yContext(d.value - 0);
-									})
-									.interpolate("monotone");
-			/*
-			var lineContext = d3.svg.line()
-				.interpolate('monotone')
-				.x(function (d) {
-					return xContext(new Date(d.timestamp - 0));
-				})
-				.y(function (d) {
-					return yContext(d.value - 0);
-				});
-			*/
+		
+		
 
 			svg.append('defs').append('clipPath')
 								.attr('id', 'clip')
@@ -284,7 +247,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			xContext.domain(d3.extent(xDomain));
 			yContext.domain([0, yMax + 2]);		
 			for(var i = 0; i < noOfSensorData; i++) {
-				var extraHeight = 0.15 * (yMaxArr[i] - yMinArr[i]);
+				var extraHeight = 0.3 * (yMaxArr[i] - yMinArr[i]);
 				yContextArr[i].domain([0, yMaxArr[i] + extraHeight]);
 				//extra height added so that the max value is can be seen properly in the y-axis
 			}
