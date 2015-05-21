@@ -1478,8 +1478,10 @@ function interpolateZoom (translate, scale) {
 			subject.notify(theRange, "focusZoomed", theZoom.scale() );	
 			preScale = theZoom.scale();			
 		}
-		log("translate = " +  d3.event.translate[0])
-		
+		log("translate = " +  d3.event.translate[0] );//+ " : " +   theZoom.translate()
+		if(d3.event.translate[0] > 0) {
+			theZoom.translate([0, 0])
+		}
 	}
 	
 	var theScale = 1;
@@ -1525,6 +1527,14 @@ function interpolateZoom (translate, scale) {
 			preScale = theScale;
 			
 			if(caller == "timelineHandlesZoomed") {
+				var lastTranslate2 = xFocusOriginal(theRange[0]);
+				
+				var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
+				var scaleVal = fullTimeRangeDifference / dateRangeDiff;
+				var ratio = dateRangeDiff / fullTimeRangeDifference;
+				lastTranslate2 = lastTranslate2 * scaleVal;
+				log(lastTranslate2)
+				
 				
 				//log(zoomScale + " : " + theZoom.translate())
 				//log(theScale + "")
@@ -1576,6 +1586,9 @@ function interpolateZoom (translate, scale) {
 				
 				var dateRangeDiff = new Date(theRange[1]).getTime() - new Date(theRange[0]).getTime();
 				var scaleVal = fullTimeRangeDifference / dateRangeDiff;
+				var ratio = dateRangeDiff / fullTimeRangeDifference;
+				lastTranslate = lastTranslate * scaleVal;
+				log(lastTranslate)
 				
 				focus.redrawLines(theData);
 				
@@ -1590,8 +1603,8 @@ function interpolateZoom (translate, scale) {
 				//log(theZoom.translate());
 				//log("+" + lastTranslate)
 				if(currentTranslate != undefined) {
-					log("ti: " + currentTranslate[0] + " : " + lastTranslate)
-					theZoom.translate([currentTranslate[0] - lastTranslate,0]);	
+					//log("ti: " + currentTranslate[0] + " : " + lastTranslate)
+					theZoom.translate([-lastTranslate, 0]);	
 				}
 				theZoom.scale(scaleVal);
 				preScale = scaleVal;
