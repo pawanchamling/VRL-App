@@ -15,8 +15,8 @@ VRL.TheMap = function (theMapDIV) {
 	
 	var zoomLevel = 14;
 	
-	var startPathImage = "images/startPathImageSmall.png";
-	var endPathImage   = "images/endPathImageSmall.png";
+	var startPathImage = "images/greenDot.png";
+	var endPathImage   = "images/redDot.png";
 	
 	var isMapInitialized = false;
 	

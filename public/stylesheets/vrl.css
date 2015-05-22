@@ -280,13 +280,66 @@ div.tooltip {
 	
 /*####################################*/	
 
+#uploadForm {
+	float: left;
+}
+
 #showHideButtonDIV {
 	float: right;
+	display: none;
 }
 	#showHideButton {
 		background: #35baf6;
 		color: #fff;
 	}
+	
+	#showHideButtonPanel {
+		width: 500px;
+		background: #fff;
+		top: 53px;
+		right: 21px; 
+		position: absolute;
+		padding: 15px 0px 10px 15px;
+		
+		border: 1px solid #bbb;
+		box-shadow: 0px 5px 17px 0px rgba(0, 0, 0, 0.75);
+		display: none;
+	}
+	
+	#showHideBtn {
+		width: 185px; 
+		float: right; 
+		right: 21px;
+		position: absolute;
+	}
+.drop-menu {
+	border: 1px solid #222;
+	font-size: 11px;
+	display: none;
+	position: absolute;
+	margin-left: 53px;
+	z-index: 10;
+	
+	text-align: left;
+	
+	background: none repeat scroll 0 0 #222;
+    border-radius: 5px 5px 5px 5px;
+		-webkit-border-radius: 5px 5px 5px 5px;
+		-moz-border-radius: 5px 5px 5px 5px;
+		
+    color: #555555;
+    width: 135px;
+    margin-left: 0px;
+    margin-top:1px;
+    box-shadow: 1px 2px 5px 3px #000;
+		-moz-box-shadow: 1px 2px 5px 3px #000;
+		-webkit-box-shadow: 1px 2px 5px 3px #000;
+		filter: progid:DXImageTransform.Microsoft.Shadow(Color=#111111, Strength=1, Direction=0),
+				progid:DXImageTransform.Microsoft.Shadow(Color=#000000, Strength=7, Direction=90),
+				progid:DXImageTransform.Microsoft.Shadow(Color=#000000, Strength=7, Direction=180),
+				progid:DXImageTransform.Microsoft.Shadow(Color=#000000, Strength=7, Direction=270);
+}
+
 	
 #modalClose {
 	float: right;
@@ -313,7 +366,7 @@ div.tooltip {
 	}
 	
 	.listDataNameAndRangeCover {
-		width: 470px;
+		width: 400px;
 		height: 20px;
 	}
 	

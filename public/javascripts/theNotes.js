@@ -59,6 +59,7 @@ VRL.TheNotes = function (notesDIV) {
 					dd.forEach(function (ddd) {
 						var noteStr;
 						if(d.dataType() == 1) {
+							//### if ordinal data
 							noteStr = d.dataInfo();
 							noteStr = getKey(noteStr, ddd.value - 0);
 							noteColor = d.styles[ddd.value];

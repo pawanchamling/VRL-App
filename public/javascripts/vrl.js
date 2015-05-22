@@ -410,7 +410,7 @@ $('#uploadForm').submit(function() {
 
 		success: function(response) {				
 			if(response.error) {
-				log('VRL: Opps, something bad happened');
+				log('VRL: Opps, something bad happened. File Upload failed');
 				return;
 			}
 	 
@@ -436,5 +436,24 @@ $('#uploadForm').submit(function() {
 });
  
 
-		
+$(".drop-menu-btn").each(function() {
+	$(this).hover(function() {
+		var dropMenu = $(this).next();
+		if(dropMenu.is(':hidden')) {
+			dropMenu.show("fast");
+		}
+		else {
+			//dropMenu.hide("fast");
+		}
+	});
+});	
+
+
+$("#showHideButtonPanel").hover(	
+  function() {
+    $( this ).css( "display", "block" );
+  }, function() {
+    $( this ).css( "display", "none" );
+  }
+);
 			

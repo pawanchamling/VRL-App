@@ -19,16 +19,22 @@
 
 	<div id="mainContainer">
 		<div id="topMenuBarDIV">
-			<form id="uploadForm" method="post" enctype="multipart/form-data" action="">
-				Upload data file
-				<input type="file" name="file">
-				<input type="submit" value="Submit">
-			</form>
 			<div id="showHideButtonDIV">
 				<button id="showHideButton" class="easy-modal-open" href="#modal1">Show/hide Data</button> 
 			</div>
+			<div id="showHideButtonCover">
+				<button id="showHideBtn" class="drop-menu-btn drop-btn" style="">Show/Hide Data</button>
+				<div id="showHideButtonPanel" class="dropMenu">					
+					<div id="listDataDIV"></div>		
+				</div>
+			</div>
 		</div>	
 		<div id="timeRangeDIV">
+			<form id="uploadForm" method="post" enctype="multipart/form-data" action="">
+				Add data
+				<input type="file" name="file">
+				<input type="submit" value="Submit">
+			</form>
 			<b>Time between <span id="timeRangeFromText" class="timeRangeText" ></span> and 
 			<span id="timeRangeToText" class="timeRangeText" ></span> </b>
 		</div>
@@ -73,7 +79,7 @@
 			<div id="modalClose">
 				<button class="easy-modal-close" title="Close">&times;</button>			
 			</div>
-			<div id="listDataDIV"></div>			
+			<div id="listDataDIV2"></div>			
 		</div>
 	</div>
 
