@@ -730,7 +730,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					theFocus.select("#focusObjectContainer")
 						.append('circle')
 							.attr("id", "circleOrdinal" + i + "-" + index)
-							.attr('class', 'theCircle dataElement data' + i )
+							.attr('class', 'theCircle dataElement data' + i + " ordinal" + dd.value )
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
 								if(isNoiseDataAvailable) {
@@ -1268,54 +1268,71 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		
 		if(theData[dataToChangeIndex].dataType() == 0) {
 			//### Nominal Notes
-			
+			theData[dataToChangeIndex].style.dataColor(color);
 			theFocus.selectAll(".theCircleNominal")
 							.attr("stroke", color)
 							.attr("fill", color);
 		}
 		else if(theData[dataToChangeIndex].dataType() == 1) {
 			//### Ordinal Values
-			//log(ColorLuminance(color, -0.5));
-			//data[i].styles[dd.value] //based on the index
 			var dataInfo = theData[dataToChangeIndex].dataInfo();
-			//getKey(data[i].dataInfo(), dd.value - 0))
 			var noOfKeys = Object.keys(dataInfo).length;
 			
-				var plus = 0, 
-					minus = 0;
-			for(var i = 0; i < noOfKeys; i++) {
-				var inc;
-				if(noOfKeys % 2 == 0) {
-					if(noOfKeys > 1) {
-						inc = 100 / noOfKeys;
-					}
-					else {
-						inc = 50;
-					}
+			var plus = 0, 
+				minus = 0;
+			var gradientColors = [];
+			var moreLuminance = [];
+			var lessLuminance = [];
+			
+			var inc;
+			if(noOfKeys % 2 == 0) {
+				if(noOfKeys > 1) {
+					inc = 100 / noOfKeys;
 				}
 				else {
-					if(noOfKeys > 1) {
-						inc =  100 / (noOfKeys - 1);
-					}
-					else {
-						inc = 50;
-					}
+					inc = 50;
 				}
+			}
+			else {
+				if(noOfKeys > 1) {
+					inc =  100 / (noOfKeys - 1);
+				}
+				else {
+					inc = 50;
+				}
+			}
+			
+			for(var i = 0; i < noOfKeys - 1; i++) {
 				if(i % 2 == 0) {
 					plus += inc;
-					//log(plus)
-					log("plus " + plus + " " + ColorLuminance(color, (plus/100)));
+					moreLuminance.push(ColorLuminance(color, (plus/100)));
 				}
 				else {
 					minus -= inc;
-					//log(minus)
-					log("minus " + minus + " " + ColorLuminance(color, (minus/100)));
-				}
+					lessLuminance.push(ColorLuminance(color, (minus/100)));
+				}				
 			}
+			
+			for(var j = moreLuminance.length - 1; j >= 0; j-- ) {
+				gradientColors.push(moreLuminance[j]);
+			}
+			gradientColors.push(color);
+			for(var j = 0; j < lessLuminance.length; j++ ) {
+				gradientColors.push(lessLuminance[j]);
+			}
+			
+			theData[dataToChangeIndex].styles = []; //emptying the previous colors first
+			for(var j = 0; j < gradientColors.length; j++ ) {
+				theFocus.selectAll(".ordinal" + j)
+						.attr("stroke", gradientColors[j])
+						.attr("fill", gradientColors[j]);
+				theData[dataToChangeIndex].styles.push(gradientColors[j]);
+			}					
 			
 		}
 		else if(theData[dataToChangeIndex].dataType() == 2) {
 			//### Sensor data
+			theData[dataToChangeIndex].style.dataColor(color);
 			
 			theFocus.select("#line" + (yFocusArrIndex["" + dataToChangeIndex] - 0))
 							.attr("stroke", color);
@@ -1329,6 +1346,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		}
 				
 	};
+	
+	
 	
 	return focus;
 };

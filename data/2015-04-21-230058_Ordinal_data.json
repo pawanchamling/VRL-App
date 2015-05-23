@@ -6,23 +6,24 @@
 		"High" : 0,
 		"Medium" : 1,
 		"Low" : 2,
-		"Lowest" : 3
+		"Lower": 3,
+		"Lowest": 4
 	},
 	"values" : [{
 			"timestamp" : "1429650071009",
-			"value" : "0"
+			"value" : "4"
 		}, {
 			"timestamp" : "1429650073402",
-			"value" : "2"
+			"value" : "3"
 		}, {
 			"timestamp" : "1429650073847",
-			"value" : "1"
+			"value" : "2"
 		}, {
 			"timestamp" : "1429650074261",
-			"value" : "0"
+			"value" : "1"
 		}, {
 			"timestamp" : "1429650106705",
-			"value" : "2"
+			"value" : "0"
 		},{
 			"timestamp" : "1429650139694",
 			"value" : "1"

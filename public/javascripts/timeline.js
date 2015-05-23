@@ -257,7 +257,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 							context.select("#timelineObjectContainer")
 								.append('line')
 									.attr("id", "TcircleNominal" + i + "-" + index)
-									.attr('class', 'nominal dataElement data' + i )
+									.attr('class', 'nominal theNominalTick dataElement data' + i )
 									.attr("x1", xContext(dd.timestamp))
 									.attr("y1", yContext(hy))
 									.attr("x2", xContext(dd.timestamp) + 3)
@@ -277,7 +277,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 							context.select("#timelineObjectContainer")
 								.append('line')
 									.attr("id", "TcircleOrdinal" + i + "-" + index)
-									.attr('class', 'ordinal dataElement data' + i )
+									.attr('class', 'ordinal dataElement data' + i  + " ordinal" + dd.value )
 									.attr("x1", xContext(dd.timestamp))
 									.attr("y1", yContext(hy))
 									.attr("y2", yContext(hy))
@@ -572,6 +572,86 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	timeline.showData = function(index) {
 		log("timeline: about to show data" + index);
 		context.selectAll(".data" + index).attr("visibility", "visible");
+	};
+	
+	timeline.changeColor = function(dataToChangeIndex, color) {
+		//log("data " + dataToChangeIndex + " color " + color);
+		
+		//log(theData[dataToChangeIndex].dataType())
+		
+		if(theData[dataToChangeIndex].dataType() == 0) {
+			//### Nominal Notes
+			
+			context.selectAll(".theNominalTick")
+							.attr("stroke", color)
+							.attr("fill", color);
+		}
+		else if(theData[dataToChangeIndex].dataType() == 1) {
+			//### Ordinal Values
+			var dataInfo = theData[dataToChangeIndex].dataInfo();
+			var noOfKeys = Object.keys(dataInfo).length;
+			
+			var plus = 0, 
+				minus = 0;
+			var gradientColors = [];
+			var moreLuminance = [];
+			var lessLuminance = [];
+			
+			var inc;
+			if(noOfKeys % 2 == 0) {
+				if(noOfKeys > 1) {
+					inc = 100 / noOfKeys;
+				}
+				else {
+					inc = 50;
+				}
+			}
+			else {
+				if(noOfKeys > 1) {
+					inc =  100 / (noOfKeys - 1);
+				}
+				else {
+					inc = 50;
+				}
+			}
+			
+			for(var i = 0; i < noOfKeys - 1; i++) {
+				if(i % 2 == 0) {
+					plus += inc;
+					moreLuminance.push(ColorLuminance(color, (plus/100)));
+				}
+				else {
+					minus -= inc;
+					lessLuminance.push(ColorLuminance(color, (minus/100)));
+				}				
+			}
+			
+			for(var j = moreLuminance.length - 1; j >= 0; j-- ) {
+				gradientColors.push(moreLuminance[j]);
+			}
+			gradientColors.push(color);
+			for(var j = 0; j < lessLuminance.length; j++ ) {
+				gradientColors.push(lessLuminance[j]);
+			}
+			
+			for(var j = 0; j < gradientColors.length; j++ ) {
+				context.selectAll(".ordinal" + j)
+						.attr("stroke", gradientColors[j])
+						.attr("fill", gradientColors[j]);
+			}
+			
+		}
+		else if(theData[dataToChangeIndex].dataType() == 2) {
+			//### Sensor data			
+			context.select("#Tline" + (yContextArrIndex["" + dataToChangeIndex] - 0))
+							.attr("stroke", color);
+		}
+		else if(theData[dataToChangeIndex].dataType() == 3) {
+			//### GPS data			
+			context.select("#Tline" + (yContextArrIndex["" + dataToChangeIndex] - 0))
+							.attr("stroke", color);
+		}
+				
 	};
 	
 	return timeline;

@@ -272,7 +272,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						context.select("#timelineHandlesObjectContainer")
 							.append('circle')
 								.attr("id", "THcircleNominal" + i + "-" + index)
-								.attr('class', 'circle dataElement data' + i )
+								.attr('class', 'circle theCircleNominal dataElement data' + i )
 								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
 									if(isSensorDataAvailable) {
@@ -299,7 +299,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						context.select("#timelineHandlesObjectContainer")
 							.append('circle')
 								.attr("id", "THcircleOrdinal" + i + "-" + index)
-								.attr('class', 'circle dataElement data' + i )
+								.attr('class', 'circle dataElement data' + i + " ordinal" + dd.value )
 								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
 									if(isSensorDataAvailable) {
@@ -348,13 +348,13 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							})
 							.attr('class', function(dd) {
 								if(dd.value == maxVal) {
-									return 'theCircle max';
+									return 'theCircle max dataNodeLineMinMax' + (yContextArrIndex["" + i] - 0);
 								}
 								else if(dd.value == minVal) {
-									return 'theCircle min';
+									return 'theCircle min dataNodeLineMinMax' + (yContextArrIndex["" + i] - 0);
 								}
 								else {
-									return 'theCircle';
+									return 'theCircle dataNodeLine' + (yContextArrIndex["" + i] - 0);
 								}
 								
 							})
@@ -779,6 +779,88 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 		context.selectAll(".data" + index).attr("visibility", "visible");
 	};
 	
+	timelineHandles.changeColor = function(dataToChangeIndex, color) {
+		//log("data " + dataToChangeIndex + " color " + color);
+		
+		//log(theData[dataToChangeIndex].dataType())
+		
+		if(theData[dataToChangeIndex].dataType() == 0) {
+			//### Nominal Notes
+			
+			context.selectAll(".theCircleNominal")
+							.attr("stroke", color)
+							.attr("fill", color);
+		}
+		else if(theData[dataToChangeIndex].dataType() == 1) {
+			//### Ordinal Values
+			var dataInfo = theData[dataToChangeIndex].dataInfo();
+			var noOfKeys = Object.keys(dataInfo).length;
+			
+			var plus = 0, 
+				minus = 0;
+			var gradientColors = [];
+			var moreLuminance = [];
+			var lessLuminance = [];
+			
+			var inc;
+			if(noOfKeys % 2 == 0) {
+				if(noOfKeys > 1) {
+					inc = 100 / noOfKeys;
+				}
+				else {
+					inc = 50;
+				}
+			}
+			else {
+				if(noOfKeys > 1) {
+					inc =  100 / (noOfKeys - 1);
+				}
+				else {
+					inc = 50;
+				}
+			}
+			
+			for(var i = 0; i < noOfKeys - 1; i++) {
+				if(i % 2 == 0) {
+					plus += inc;
+					moreLuminance.push(ColorLuminance(color, (plus/100)));
+				}
+				else {
+					minus -= inc;
+					lessLuminance.push(ColorLuminance(color, (minus/100)));
+				}				
+			}
+			
+			for(var j = moreLuminance.length - 1; j >= 0; j-- ) {
+				gradientColors.push(moreLuminance[j]);
+			}
+			gradientColors.push(color);
+			for(var j = 0; j < lessLuminance.length; j++ ) {
+				gradientColors.push(lessLuminance[j]);
+			}
+			
+			for(var j = 0; j < gradientColors.length; j++ ) {
+				context.selectAll(".ordinal" + j)
+						.attr("stroke", gradientColors[j])
+						.attr("fill", gradientColors[j]);
+			}
+			
+		}
+		else if(theData[dataToChangeIndex].dataType() == 2) {
+			//### Sensor data
+			
+			context.select("#line" + (yContextArrIndex["" + dataToChangeIndex] - 0))
+							.attr("stroke", color);
+							
+			context.selectAll(".dataNodeLine" + (yContextArrIndex["" + dataToChangeIndex] - 0))
+							.attr("stroke", color);
+							
+			context.selectAll(".dataNodeLineMinMax" + (yContextArrIndex["" + dataToChangeIndex] - 0))
+							.attr("stroke", color)
+							.attr("fill", color);
+		}
+				
+	};
 	
 	
 	return timelineHandles;

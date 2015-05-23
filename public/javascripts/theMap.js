@@ -6,6 +6,7 @@ VRL.TheMap = function (theMapDIV) {
 	var theData;
 	var theRange;
 	
+	var gpsArrIndex = [];
 	var gpsData = [];
 	var gpsPoints = [];
 	var markers = [];
@@ -71,10 +72,11 @@ VRL.TheMap = function (theMapDIV) {
 		
 		if(gpsDataAvailable) {
 			
-			theData.forEach(function (d) {
+			theData.forEach(function (d, i) {
 				//d = d.data();
 				if(d.dataType() == 3) {
 					gpsData.push(d);
+					gpsArrIndex["" + i] = (gpsData.length - 1) ;
 					//break;
 				}
 
@@ -290,7 +292,11 @@ VRL.TheMap = function (theMapDIV) {
 		
 	};
 	
-	
+	theMap.changeColor = function(dataToChangeIndex, color) {
+		gpsData[(gpsArrIndex["" + dataToChangeIndex] - 0)].style.dataColor(color);
+		
+		theMap.showPaths(gpsData);
+	};
 
 
 	return theMap;

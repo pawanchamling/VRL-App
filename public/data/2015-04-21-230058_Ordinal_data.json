@@ -6,7 +6,8 @@
 		"High" : 0,
 		"Medium" : 1,
 		"Low" : 2,
-		"Lowest" : 3
+		"Lower" : 3,
+		"Lowest" : 4
 	},
 	"values" : [{
 			"timestamp" : "1429650071009",

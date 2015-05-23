@@ -81,7 +81,7 @@ var totalMapData = 0;
 
 //### different colors for different data types
 var ordinalColors = [
-		["#3e5b00", "#669900", "#83b602", "#99cc00", "#c1ff06", "#d5ff53", "#e7ff9b"],
+		["#c1ff06", "#99cc00", "#83b602", "#669900", "#3e5b00", "#e7ff9b", "#d5ff53"],
 		["#491861", "#75269b", "#a03fcf", "#b163d8", "#b86fdb", "#cd9be6", "#e0c0ef"],
 		["#005977", "#007ba4", "#0099cc", "#00befd", "#48d1ff", "#84e0ff", "#b0ecff"],
 		["#894b01", "#ba6701", "#e47e01", "#fe981b", "#fead4b", "#fec076", "#fed8a9"]
@@ -273,6 +273,8 @@ function setDataColors(data) {
 			TheApp.getDataAt(TheApp.noOfData() - 1).styles.push(color);
 		}
 		
+		TheApp.getDataAt(TheApp.noOfData() - 1).style.dataColor(ordinalColors[totalOrdinalData][2]);
+		
 		totalOrdinalData++;
 	}				
 	else if(dataTypeIs == 2) {
@@ -347,8 +349,8 @@ function resetShowHideDataPopup() {
 					endTime = ddd.timestamp - 0;
 				}
 			});
-			timeRangeString = "From <span class='timestampString'>" + new Date(startTime).toLocaleString() + 
-								"</span> to  <span class='timestampString'>" + new Date(endTime).toLocaleString() +
+			timeRangeString = "From <span class='timestampString'> <b>" + new Date(startTime).toLocaleString() + "</b>" +  
+								"</span> to  <span class='timestampString'> <b>" + new Date(endTime).toLocaleString() + "</b>" +
 								"</span>";
 		}
 		else {
@@ -391,11 +393,25 @@ function resetShowHideDataPopup() {
 				theColorIs = theColorIs.toHexString();
 				
 				focus.changeColor(i, theColorIs);
+				timelineHandles.changeColor(i, theColorIs);
+				timeline.changeColor(i, theColorIs);
+				if(d.dataType() == 3) {
+					map.changeColor(i, theColorIs);
+				}
+				theNotes.reload(TheApp.getData());
+				
 			},
 			hide: function(theColorIs) {				
 				theColorIs = theColorIs.toHexString();
 				
 				focus.changeColor(i, theColorIs);
+				timelineHandles.changeColor(i, theColorIs);
+				timeline.changeColor(i, theColorIs);
+				if(d.dataType() == 3) {
+					map.changeColor(i, theColorIs);	
+				}
+				theNotes.reload(TheApp.getData());
+				
 			}
 		});
 		
@@ -501,7 +517,7 @@ $('#submitFileUploadBtn').click(function() {
 
 
 
-
+//### A function that returns color based on the color send and the luminance value... basically a new gradient of the given color based on the luminance value
 function ColorLuminance(hex, lum) {
 
 	// validate hex string

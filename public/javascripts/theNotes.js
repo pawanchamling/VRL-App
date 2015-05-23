@@ -203,7 +203,10 @@ VRL.TheNotes = function (notesDIV) {
 		
 	};
 	
-	
+	theNotes.changeColor = function(dataToChangeIndex, color) {
+		
+	};
+
 	
 	
 	
