@@ -5,6 +5,7 @@
     <!--<link rel="stylesheet" href="style.css">-->
 	<link rel="stylesheet" href="public/stylesheets/libs/nanoscroller.css">
 	<link rel="stylesheet" href="public/stylesheets/libs/tipsy.css">
+	<link rel="stylesheet" href="public/stylesheets/libs/spectrum.css">
 	<link rel="stylesheet" href="public/stylesheets/vrl.css">
 
 	<!-- for modal popup -->
@@ -20,7 +21,7 @@
 	<div id="mainContainer">
 		<div id="topMenuBarDIV">
 			<div id="showHideButtonDIV">
-				<button id="showHideButton" class="easy-modal-open" href="#modal1">Show/hide Data</button> 
+				<button id="addDataBtn" class="theButton" >Add Data</button> 
 			</div>
 			<div id="showHideButtonCover">
 				<button id="showHideBtn" class="drop-menu-btn drop-btn" style="">Show/Hide Data</button>
@@ -30,11 +31,6 @@
 			</div>
 		</div>	
 		<div id="timeRangeDIV">
-			<form id="uploadForm" method="post" enctype="multipart/form-data" action="">
-				Add data
-				<input type="file" name="file">
-				<input type="submit" value="Submit">
-			</form>
 			<b>Time between <span id="timeRangeFromText" class="timeRangeText" ></span> and 
 			<span id="timeRangeToText" class="timeRangeText" ></span> </b>
 		</div>
@@ -74,13 +70,28 @@
 			</div>
 		</div>
 	</div>
-	<div class="easy-modal-animated" id="modal1">
-		<div class="easy-modal-inner">
-			<div id="modalClose">
-				<button class="easy-modal-close" title="Close">&times;</button>			
-			</div>
-			<div id="listDataDIV2"></div>			
+	<div class="theModalContainer" id="myModal">
+		<div id="modalClose" class="b-close">
+			<button class="easy-modal-close" title="Close">&times;</button>			
 		</div>
+		<div id="fileUploadDIV">
+			<form id="uploadForm" method="post" enctype="multipart/form-data" action="">
+				Add data
+				<input type="file" name="file" class="fileNameHolder theButton">
+				<input type="submit" value="Submit" id="submitFileUploadBtn" class="">
+			</form>			
+		</div>
+		<div id="chooseColorContainer">
+			<div id="innerColorContainer">
+				<div> Choose color for your data</div>
+				<div id="colorHolder">
+				<select class="list1">
+					<option value="1">Option 1</option>
+					<option value="2" class="option2">Option 2</option>
+				</select>
+				</div>
+			</div>
+		</div>	
 	</div>
 
 
@@ -95,8 +106,9 @@
     <script src="public/javascripts/libs/jquery.tipsy.js"></script>
     <script src="public/javascripts/libs/jquery.nanoscroller.min.js"></script>
     <script src="public/javascripts/libs/jquery.form.min.js"></script>
-    <script src="public/javascripts/libs/jquery.easyModal.js"></script>
+    <script src="public/javascripts/libs/jquery.bpopup.min.js"></script>
     <script src="public/javascripts/libs/tinysort.min.js"></script>
+    <script src="public/javascripts/libs/spectrum.js"></script>
 	
     <script src="https://maps.googleapis.com/maps/api/js"></script>
 	

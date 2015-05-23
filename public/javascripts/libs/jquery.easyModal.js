@@ -172,6 +172,7 @@
 
                 // Close when button pressed
                 $modal.on('click', o.closeButtonClass, function (e) {
+						console.log("close button clicked")
                     $modal.trigger('closeModal');
                     e.preventDefault();
                 });

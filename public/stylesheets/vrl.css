@@ -265,6 +265,38 @@ div.tooltip {
 
 /*####################################*/
 
+.theModalContainer {
+	width: 500px;
+	height: 60px;
+	background: #eee;
+	display: none;
+}
+
+.fileNameHolder {
+	width: 300px;
+}
+
+#fileUploadDIV {
+	padding-top: 20px;
+	padding-left: 20px;
+}	
+	#chooseColorContainer {
+		height: 100px;
+		background: #ddd;
+	}
+
+	#innerColorContainer {
+		padding: 10px;
+	}
+	
+#modalClose {
+	position: absolute;
+	right: 0;
+}
+
+#listDataDIV {
+	margin-top: 0px;
+}
 
 	.easy-modal,
 	.easy-modal-animated {
@@ -278,6 +310,12 @@ div.tooltip {
 		float: right;
 	}
 	
+	
+	select.list1 option.option2
+{
+    background-color: #007700;
+}
+	
 /*####################################*/	
 
 #uploadForm {
@@ -285,18 +323,22 @@ div.tooltip {
 }
 
 #showHideButtonDIV {
-	float: right;
-	display: none;
+	float: left;
 }
-	#showHideButton {
+	#addDataBtn {
+		width: 130px;
+	}
+	
+	.theButton {	
 		background: #35baf6;
 		color: #fff;
+		cursor:pointer; 
 	}
 	
 	#showHideButtonPanel {
-		width: 500px;
+		width: 550px;
 		background: #fff;
-		top: 53px;
+		top: 32px;
 		right: 21px; 
 		position: absolute;
 		padding: 15px 0px 10px 15px;
@@ -307,11 +349,16 @@ div.tooltip {
 	}
 	
 	#showHideBtn {
-		width: 185px; 
+		width: 130px; 
 		float: right; 
 		right: 21px;
 		position: absolute;
+		background: #35baf6;
+		color: #fff;
 	}
+	
+
+	
 .drop-menu {
 	border: 1px solid #222;
 	font-size: 11px;
@@ -340,13 +387,8 @@ div.tooltip {
 				progid:DXImageTransform.Microsoft.Shadow(Color=#000000, Strength=7, Direction=270);
 }
 
-	
-#modalClose {
-	float: right;
-}
-#listDataDIV {
-	margin-top: 0px;
-}
+
+
 .listDataItemDIV {
 	width: 100%;
 	height: 40px;
@@ -361,8 +403,9 @@ div.tooltip {
 		float: left;
 	}
 	
-	.listDataNameAndRangeCover, .listDataItemVisibilityStatus {
+	.listDataNameAndRangeCover, .listDataItemVisibilityStatus, .colorPickerCover {
 		float: left;
+		margin-right: 10px;
 	}
 	
 	.listDataNameAndRangeCover {

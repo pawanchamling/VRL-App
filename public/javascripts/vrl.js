@@ -294,7 +294,14 @@ function setDataColors(data) {
 
 //### For the popup modal ####
 
-
+$('#addDataBtn').click(function(e) {
+	
+	$("#chooseColorContainer").css("display", "none");
+	$("#fileUploadDIV").css("display", "block");
+	$('#myModal').bPopup({
+        });
+});
+/*
 $('.easy-modal-open').click(function(e) {
 	log("VRL: Modal ")
 	var target = $(this).attr('href');
@@ -307,6 +314,7 @@ $('.easy-modal-close').click(function(e) {
 	$('.easy-modal-animated').trigger('closeModal');
 });
 
+
 $('.easy-modal-animated').easyModal({
 	top: 100,
 	overlay: 0.2,
@@ -314,6 +322,7 @@ $('.easy-modal-animated').easyModal({
 	transitionOut: 'animated bounceOutUp',
 	closeButtonClass: '.animated-close'
 });
+*/
 
 
 //### the popup for show/hide data 
@@ -327,6 +336,8 @@ function resetShowHideDataPopup() {
 		dd = d.data();
 		var startTime, endTime;
 		var timeRangeString = "";
+		
+		//### updating the time range text shown at the top bar
 		if(dd.length > 0) {
 			dd.forEach(function (ddd, index) {
 				if(index == 0) {
@@ -344,13 +355,17 @@ function resetShowHideDataPopup() {
 			timeRangeString = "No Data";
 		}
 		
-		var str = 	"<div class='listDataItemDIV'>" + 
+		
+		var str = 	"<div class='listDataItemDIV' id='data" + i + "cover'>" + 
 						"<div class='listDataItemVisibilityStatus'> " +
 							"<form action=''>" + 
 								"Show <input class='showHideDataCheck' id='showHideData" + i + "' type='checkbox' name='visible' value='isVisible' >"  + 
 							"</form>" + 
 						"</div>" + 
-						"<div class='listDataItemColorBox' style='background: " + d.style.dataColor() + "'></div>" + 
+						"<div class='colorPickerCover'>" + 
+							"<input id='data" + i + "colorInput' type='text' name='theSceneColorInput' size='10' class='colorPicker'/>" +
+						"</div>" +
+					//	"<div class='listDataItemColorBox' style='background: " + d.style.dataColor() + "'></div>" + 
 						"<div class='listDataNameAndRangeCover'>" + 
 							"<div class='listDataItemDataName'><b>" + d.dataName() + "</b></div>" +
 							"<div class='listDataItemTimeRange'>" + timeRangeString + "</div>" + 
@@ -358,10 +373,31 @@ function resetShowHideDataPopup() {
 					"</div>";
 		$("#listDataDIV").append(str);
 		
-		
+		//### Status of the checkbox based on if the data is set visible or not
 		if(d.visible) {			
 			$("#showHideData" + i).prop( "checked", true );
 		}
+		
+		//### Show the current color 
+		$("#data" + i + "colorInput").val(d.style.dataColor());
+		
+		
+		//### set the listener for color changes
+		$("#data" + i + "colorInput").spectrum({
+			preferredFormat: "hex",
+			showInitial: true,
+			showInput: true,
+			move: function(theColorIs) {
+				theColorIs = theColorIs.toHexString();
+				
+				focus.changeColor(i, theColorIs);
+			},
+			hide: function(theColorIs) {				
+				theColorIs = theColorIs.toHexString();
+				
+				focus.changeColor(i, theColorIs);
+			}
+		});
 		
 		
 		//### Defining the event listeners for each of the check boxes for each of the data
@@ -435,7 +471,7 @@ $('#uploadForm').submit(function() {
 	return false;
 });
  
-
+//### when the show/hide Data button is hovered show the showHideButtonPanel
 $(".drop-menu-btn").each(function() {
 	$(this).hover(function() {
 		var dropMenu = $(this).next();
@@ -450,10 +486,41 @@ $(".drop-menu-btn").each(function() {
 
 
 $("#showHideButtonPanel").hover(	
-  function() {
-    $( this ).css( "display", "block" );
-  }, function() {
-    $( this ).css( "display", "none" );
-  }
+	function() {
+		$( this ).css( "display", "block" );
+	}, function() {
+		//$( this ).css( "display", "none" );
+	}
 );
-			
+
+//### comment it out later -- just for test
+$('#submitFileUploadBtn').click(function() {
+	$("#chooseColorContainer").css("display", "block");
+	$("#fileUploadDIV").css("display", "none");
+});
+
+
+
+
+function ColorLuminance(hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
+}
+
+
+
