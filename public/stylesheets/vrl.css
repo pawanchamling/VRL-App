@@ -336,7 +336,7 @@ div.tooltip {
 	}
 	
 	#showHideButtonPanel {
-		width: 550px;
+		width: 515px;
 		background: #fff;
 		top: 32px;
 		right: 21px; 
@@ -357,6 +357,11 @@ div.tooltip {
 		color: #fff;
 	}
 	
+	#closeSettingButton {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
 
 	
 .drop-menu {
@@ -409,7 +414,7 @@ div.tooltip {
 	}
 	
 	.listDataNameAndRangeCover {
-		width: 400px;
+		width: 360px;
 		height: 20px;
 	}
 	

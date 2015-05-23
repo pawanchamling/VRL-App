@@ -488,19 +488,21 @@ $('#uploadForm').submit(function() {
 });
  
 //### when the show/hide Data button is hovered show the showHideButtonPanel
-$(".drop-menu-btn").each(function() {
-	$(this).hover(function() {
-		var dropMenu = $(this).next();
-		if(dropMenu.is(':hidden')) {
-			dropMenu.show("fast");
-		}
-		else {
-			//dropMenu.hide("fast");
-		}
-	});
-});	
+$("#showHideBtn").click(function() {
+	var dropMenu = $(this).next();
+	if(dropMenu.is(':hidden')) {
+		dropMenu.show("fast");
+	}
+	else {
+		dropMenu.hide("fast");
+	}
+});
 
+$("#closeSettingButton").click(function() {
+	$("#showHideButtonPanel").css( "display", "none" );
+});
 
+/*
 $("#showHideButtonPanel").hover(	
 	function() {
 		$( this ).css( "display", "block" );
@@ -508,6 +510,8 @@ $("#showHideButtonPanel").hover(
 		//$( this ).css( "display", "none" );
 	}
 );
+*/
+
 
 //### comment it out later -- just for test
 $('#submitFileUploadBtn').click(function() {
