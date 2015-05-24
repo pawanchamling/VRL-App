@@ -289,10 +289,21 @@ div.tooltip {
 		padding: 10px;
 	}
 	
-#modalClose {
+.modalClose {
 	position: absolute;
 	right: 0;
 }
+
+#resetDialogModal {
+	width: 405px;
+}
+
+#resetDialogDIV {
+	padding: 20px 10px 10px 30px;
+}
+	#resetText , #resetYesBtn, #resetCancelBtn {
+		margin-right: 10px;
+	}
 
 #listDataDIV {
 	margin-top: 0px;

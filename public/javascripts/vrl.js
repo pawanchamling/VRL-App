@@ -295,39 +295,25 @@ function setDataColors(data) {
 }
 
 
-//### For the popup modal ####
+//### For "Add data" popup modal ####
 $('#addDataBtn').click(function(e) {
-	
-	$("#chooseColorContainer").css("display", "none");
-	$("#fileUploadDIV").css("display", "block");
-	$('#myModal').bPopup({
-    });
+	//$("#fileUploadDIV").css("display", "block");
+	$('#addDataModal').bPopup({});
+});
+
+//### For "Reset" popup modal ####
+$('#resetBtn').click(function(e) {
+	$('#resetDialogModal').bPopup({});
+});
+
+//### When "Yes" for Reset is clicked in Reset popup modal ####
+$('#resetYesBtn').click(function(e) {
+	TheApp.resetData();	
+	reloadEverything()
 });
 
 
 
-/*
-$('.easy-modal-open').click(function(e) {
-	log("VRL: Modal ")
-	var target = $(this).attr('href');
-	$(target).trigger('openModal');
-	e.preventDefault();
-});
-
-
-$('.easy-modal-close').click(function(e) {
-	$('.easy-modal-animated').trigger('closeModal');
-});
-
-
-$('.easy-modal-animated').easyModal({
-	top: 100,
-	overlay: 0.2,
-	transitionIn: 'animated bounceInDown',
-	transitionOut: 'animated bounceOutUp',
-	closeButtonClass: '.animated-close'
-});
-*/
 
 
 //### the popup for show/hide data 
@@ -510,7 +496,7 @@ $('#uploadForm').submit(function() {
 	$("#fileUploadName").replaceWith( fileUploadName = fileUploadName.clone( true ) );
  
 	//### close the popped-up modal
-	parent.$("#myModal").bPopup().close();
+	parent.$("#addDataModal").bPopup().close();
 	// Have to stop the form from submitting and causing                                                                                                       
 	// a page refresh - don't forget this                                                                                                                      
 	return false;
@@ -546,7 +532,7 @@ $("#showHideButtonPanel").hover(
 $('#submitFileUploadBtn').click(function() {
 	//$("#chooseColorContainer").css("display", "block");
 	//$("#fileUploadDIV").css("display", "none");
-	parent.$("#myModal").bPopup().close();
+	parent.$("#addDataModal").bPopup().close();
        return false;
 	
 });

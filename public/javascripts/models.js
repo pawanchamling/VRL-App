@@ -11,6 +11,10 @@ var VRL = function() {
 		return allData;
 	};
 	
+	theApp.resetData = function() {
+		allData = [];
+	}
+	
 	theApp.noOfData = function() {
 		return allData.length;
 	};
