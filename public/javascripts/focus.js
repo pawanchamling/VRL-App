@@ -1351,6 +1351,11 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			theFocus.selectAll(".dataNodeLineMinMax" + (yFocusArrIndex["" + dataToChangeIndex] - 0))
 							.attr("stroke", color)
 							.attr("fill", color);
+							
+			//### color the axis based on the line color ###
+			$("#axis" + (yFocusArrIndex["" + dataToChangeIndex] - 0) + " line").css("stroke", color);
+			$("#axis" + (yFocusArrIndex["" + dataToChangeIndex] - 0) + " path").css("stroke", color);				
+							
 		}
 				
 	};

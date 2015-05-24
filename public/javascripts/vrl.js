@@ -178,7 +178,7 @@ focus.addObserver(theNotes)
 
 
 //### For testing puspose: loading data 	
-//setTimeout(loadLastData, 001);		
+setTimeout(loadLastData, 001);		
 
 function loadLastData() {
 	log("VRL: Fired after some time")

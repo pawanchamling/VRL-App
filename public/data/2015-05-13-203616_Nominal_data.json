@@ -1,0 +1,38 @@
+{
+	"name" : "User Notes",
+	"Source" : "Android Mobile",
+	"type" : "0",
+	"valueInfo" : {},
+	"values" : [{
+			"timestamp" : "1431542324179",
+			"value" : "standing on the hill"
+		}, {
+			"timestamp" : "1431542723294",
+			"value" : "thinking of returning home"
+		}, {
+			"timestamp" : "1431542819605",
+			"value" : "outside activity house"
+		}, {
+			"timestamp" : "1431542866529",
+			"value" : "no one i know is inside activity house"
+		}, {
+			"timestamp" : "1431542999953",
+			"value" : "towards bigyan's"
+		}, {
+			"timestamp" : "1431543398958",
+			"value" : "watching Real Madrid vs. Juventus match with Bigyan"
+		}, {
+			"timestamp" : "1431544653331",
+			"value" : "talking about football and how it connects people"
+		}, {
+			"timestamp" : "1431545535279",
+			"value" : "talking about tomorrow's national holiday"
+		}, {
+			"timestamp" : "1431546933052",
+			"value" : "ate carrots and chicken"
+		}, {
+			"timestamp" : "1431550161013",
+			"value" : "back at my room"
+		}
+	]
+}
