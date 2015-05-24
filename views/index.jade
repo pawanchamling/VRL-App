@@ -4,6 +4,7 @@ html
     // <link rel="stylesheet" href="style.css">
     link(rel='stylesheet', href='stylesheets/libs/nanoscroller.css')
     link(rel='stylesheet', href='stylesheets/libs/tipsy.css')
+    link(rel='stylesheet', href='stylesheets/libs/spectrum.css')
     link(rel='stylesheet', href='stylesheets/vrl.css')
     // for modal popup
     link(rel='stylesheet', type='text/css', href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css')
@@ -12,12 +13,13 @@ html
   body
     #mainContainer
       #topMenuBarDIV
-        form#uploadForm(method='post', enctype='multipart/form-data', action='')
-          | Upload data file
-          input(type='file', name='file')
-          input(type='submit', value='Submit')
         #showHideButtonDIV
-          button#showHideButton.easy-modal-open(href='#modal1') Show/hide Data
+          button#addDataBtn.theButton Add Data
+        #showHideButtonCover
+          button#showHideBtn.drop-menu-btn.drop-btn(style='') Show/Hide Data
+          #showHideButtonPanel.dropMenu
+            button#closeSettingButton(title='Close') ×
+            #listDataDIV
       #timeRangeDIV
         b
           | Time between 
@@ -27,17 +29,17 @@ html
       #FocusDIVCover
         .titleBar
           .barTitle Focused Detailed View
-          .showHide Hide
+          .showHide
         #FocusDIV
       #TimeLineHandlerDIVCover
         .titleBar
           .barTitle Overview
-          .showHide Hide
+          .showHide
         #TimeLineHandlerDIV
       #TimeLineDIVCover
         .titleBar
           .barTitle Timeline
-          .showHide Hide
+          .showHide
         #TimeLineDIV
       #LocationAndNotesDIV
         #LocationDIV
@@ -46,11 +48,14 @@ html
             b User-submitted Notes
           #NotesPanel.nano
             #NotesPanelContents.nano-content
-    #modal1.easy-modal-animated
-      .easy-modal-inner
-        #modalClose
-          button.easy-modal-close(title='Close') ×
-        #listDataDIV
+    #myModal.theModalContainer
+      #modalClose.b-close
+        button.easy-modal-close(title='Close') ×
+      #fileUploadDIV
+        form#uploadForm(method='post', enctype='multipart/form-data', action='')
+          | Add data
+          input#fileUploadName.fileNameHolder.theButton(type='file', name='file')
+          input#submitFileUploadBtn(type='submit', value='Submit')
   script(src='http://d3js.org/d3.v3.js')
   script(src='http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js')
   script(src='javascripts/libs/svg.min.js')
@@ -59,7 +64,9 @@ html
   script(src='javascripts/libs/jquery.tipsy.js')
   script(src='javascripts/libs/jquery.nanoscroller.min.js')
   script(src='javascripts/libs/jquery.form.min.js')
-  script(src='javascripts/libs/jquery.easyModal.js')
+  script(src='javascripts/libs/jquery.bpopup.min.js')
+  script(src='javascripts/libs/tinysort.min.js')
+  script(src='javascripts/libs/spectrum.js')
   script(src='https://maps.googleapis.com/maps/api/js')
   script(src='javascripts/models.js')
   script(src='javascripts/focus.js')

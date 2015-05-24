@@ -285,7 +285,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								.attr("r", 5)
 								.attr('stroke', data[i].style.dataColor()) //based on the index
 								.attr('stroke-width', 1)
-								.attr('fill', data[i].styles[dd.value]);
+								.attr('fill', data[i].style.dataColor());
 					});
 					
 				}				
@@ -348,10 +348,10 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							})
 							.attr('class', function(dd) {
 								if(dd.value == maxVal) {
-									return 'theCircle max dataNodeLineMinMax' + (yContextArrIndex["" + i] - 0);
+									return 'theCircle max dataNodeLine' + (yContextArrIndex["" + i] - 0);
 								}
 								else if(dd.value == minVal) {
-									return 'theCircle min dataNodeLineMinMax' + (yContextArrIndex["" + i] - 0);
+									return 'theCircle min dataNodeLine' + (yContextArrIndex["" + i] - 0);
 								}
 								else {
 									return 'theCircle dataNodeLine' + (yContextArrIndex["" + i] - 0);
@@ -853,9 +853,6 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							.attr("stroke", color);
 							
 			context.selectAll(".dataNodeLine" + (yContextArrIndex["" + dataToChangeIndex] - 0))
-							.attr("stroke", color);
-							
-			context.selectAll(".dataNodeLineMinMax" + (yContextArrIndex["" + dataToChangeIndex] - 0))
 							.attr("stroke", color)
 							.attr("fill", color);
 		}

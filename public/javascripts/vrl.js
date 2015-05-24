@@ -57,7 +57,7 @@ var Subject = (function (window, undefined) {
 $.fn.classList = function() {return this[0].className.split(/\s+/);};
 //#######################################################
 
-//### to show/hide the panels and charts //not in use currently
+//### to show/hide the panels and charts //### not in use currently ###
 $(".showHide1").each( function () {
 	$(this).click( function () {
 			//if()
@@ -294,15 +294,18 @@ function setDataColors(data) {
 	
 }
 
-//### For the popup modal ####
 
+//### For the popup modal ####
 $('#addDataBtn').click(function(e) {
 	
 	$("#chooseColorContainer").css("display", "none");
 	$("#fileUploadDIV").css("display", "block");
 	$('#myModal').bPopup({
-        });
+    });
 });
+
+
+
 /*
 $('.easy-modal-open').click(function(e) {
 	log("VRL: Modal ")
@@ -482,6 +485,12 @@ $('#uploadForm').submit(function() {
 		}
 	});
  
+	//### remove the file-upload selection - so that the user won't click on it again to upload the same data
+	var fileUploadName = $("#fileUploadName");
+	$("#fileUploadName").replaceWith( fileUploadName = fileUploadName.clone( true ) );
+ 
+	//### close the popped-up modal
+	parent.$("#myModal").bPopup().close();
 	// Have to stop the form from submitting and causing                                                                                                       
 	// a page refresh - don't forget this                                                                                                                      
 	return false;
@@ -512,13 +521,16 @@ $("#showHideButtonPanel").hover(
 );
 */
 
-
+/*
 //### comment it out later -- just for test
 $('#submitFileUploadBtn').click(function() {
-	$("#chooseColorContainer").css("display", "block");
-	$("#fileUploadDIV").css("display", "none");
+	//$("#chooseColorContainer").css("display", "block");
+	//$("#fileUploadDIV").css("display", "none");
+	parent.$("#myModal").bPopup().close();
+       return false;
+	
 });
-
+*/
 
 
 //### A function that returns color based on the color send and the luminance value... basically a new gradient of the given color based on the luminance value

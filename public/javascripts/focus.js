@@ -653,7 +653,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr('stroke', data[i].style.dataColor()) //based on the index
 							.attr('stroke-width',  data[i].style.lineSize())
 						.attr('transform', 'translate(' + (leftAxisSpace  ) + ',' + (0) + ')')
-							.attr('fill', data[i].styles[dd.value])							
+							.attr('fill', data[i].style.dataColor())
 						.on("mouseover", function () {
 							//### Bringing it to the front
 							this.parentNode.appendChild(this);
