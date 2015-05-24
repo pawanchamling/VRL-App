@@ -68,7 +68,7 @@ body {
 		color: #0000ff;
 	}
 
-	#timeRangeDIV, #FocusDIVCover, #TimeLineHandlerDIVCover, TimeLineDIVCover { 
+	#topMenuBarDIV, #FocusDIVCover, #TimeLineHandlerDIVCover, TimeLineDIVCover { 
 		border-bottom: 1px solid #bbb;
 	}
 	
@@ -333,6 +333,13 @@ div.tooltip {
 }
 	
 /*####################################*/	
+#topMenuBarDIV {
+	height: 25px;
+}
+
+ #resetDIV , #timeRangeDIV{
+	float: left;
+ }
 
 #uploadForm {
 	float: left;

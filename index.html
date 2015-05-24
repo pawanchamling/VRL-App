@@ -26,6 +26,13 @@
 			<div id="resetDIV">
 				<button id="resetBtn" class="theButton" >Reset</button> 
 			</div>
+			<div id="timeRangeDIV">
+				<b>Time between 
+					<span id="timeRangeFromText" class="timeRangeText" ></span> and 
+					<span id="timeRangeToText" class="timeRangeText" ></span> with Time difference of
+					<span id="timeRangeDifferenceText" class="timeRangeText" ></span>
+				</b> 
+			</div>
 			<div id="showHideButtonCover">
 				<button id="showHideBtn" class="theButton" style="">Data Setting</button>
 				<div id="showHideButtonPanel" class="dropMenu">		
@@ -33,10 +40,6 @@
 					<div id="listDataDIV"></div>		
 				</div>
 			</div>
-		</div>	
-		<div id="timeRangeDIV">
-			<b>Time between <span id="timeRangeFromText" class="timeRangeText" ></span> and 
-			<span id="timeRangeToText" class="timeRangeText" ></span> </b>
 		</div>
 		<div id="FocusDIVCover">
 			<div class="titleBar">
@@ -121,7 +124,9 @@
     <script src="public/javascripts/theMap.js"></script>
     <script src="public/javascripts/theNotes.js"></script>
     <script src="public/javascripts/timelineHandles.js"></script>
+    <script src="public/javascripts/utility.js"></script>
 	
+	<!-- the main script that runs everything -->
 	<script src="public/javascripts/vrl.js"></script>
   
 </html>

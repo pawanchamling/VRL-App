@@ -1,17 +1,17 @@
 //#######################################################	
 //### for browser logs ###
-	function log(msg, color) {
-		
-		if($.browser.msie){
-			console.log(msg);
-		}
-		else {
-			console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
-		}
-	}
-	function log(msg) {
+function log(msg, color) {
+	
+	if($.browser.msie){
 		console.log(msg);
 	}
+	else {
+		console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
+	}
+}
+function log(msg) {
+	console.log(msg);
+}
 
 	
 //#######################################################
@@ -120,11 +120,10 @@ var focus = VRL.TheFocus(docWidth, docHeight, extraSpaces);
 var mapDIV = document.getElementById("LocationDIV");
 
 log("workingWidth = " + workingWidth);
+$("#timeRangeDIV").css("width", workingWidth - 400)
 
 var mapDIVwidth = Math.round(0.7 * workingWidth);
 $(mapDIV).css("width", mapDIVwidth);
-//log(0.7 * workingWidth)
-
 var map = VRL.TheMap(mapDIV);
 
 var notesDIV = document.getElementById("NotesPanelContents");
@@ -215,7 +214,7 @@ function loadLastData() {
 		TheApp.addData(data);
 		setDataColors(data);
 	});	
-	d3.json("data/nominal2.json", function (data) {
+	d3.json("data/ordinal2.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
@@ -349,6 +348,7 @@ function resetShowHideDataPopup() {
 					endTime = ddd.timestamp - 0;
 				}
 			});
+			
 			timeRangeString = "From <span class='timestampString'> <b>" + new Date(startTime).toLocaleString() + "</b>" +  
 								"</span> to  <span class='timestampString'> <b>" + new Date(endTime).toLocaleString() + "</b>" +
 								"</span>";
@@ -462,13 +462,6 @@ function resetShowHideDataPopup() {
 
 }
 
-//### returns the key based on the value from an object
-function getKey(obj, val) {
-	for (var key in obj) {
-		if (val === obj[key])
-			return key;
-	}
-}
 		
 //### Handle the uploading of data file and loading of the uploaded file
 $('#uploadForm').submit(function() {
@@ -549,27 +542,6 @@ $('#submitFileUploadBtn').click(function() {
 });
 */
 
-
-//### A function that returns color based on the color send and the luminance value... basically a new gradient of the given color based on the luminance value
-function ColorLuminance(hex, lum) {
-
-	// validate hex string
-	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
-
-	// convert to decimal and change luminosity
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
-
-	return rgb;
-}
 
 
 

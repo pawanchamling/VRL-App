@@ -616,14 +616,21 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		theRange = xFocus.domain();
 		var startTime = new Date(theRange[0] - 0).toLocaleString();
 		var endTime   = new Date(theRange[1] - 0).toLocaleString();
+		var difference = (theRange[1] - 0) - (theRange[0] - 0);
+		var diffText = "";
 		
 		if(theRange[0] == "Invalid Date") {
 			startTime = "unknown";
 			endTime = "unknown";
+			diffText = "unknown"
+		}
+		else {
+			diffText = secondsToTime(difference/1000);
 		}
 		
 		$("#timeRangeFromText").text(startTime);
 		$("#timeRangeToText").text(endTime);
+		$("#timeRangeDifferenceText").text(diffText);
 		
 		
 		//### drawing each type of data
@@ -730,7 +737,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					theFocus.select("#focusObjectContainer")
 						.append('circle')
 							.attr("id", "circleOrdinal" + i + "-" + index)
-							.attr('class', 'theCircle dataElement data' + i + " ordinal" + dd.value )
+							.attr('class', 'theCircle dataElement data' + i + " ordinal" + i + "-" + dd.value )
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
 								if(isNoiseDataAvailable) {
@@ -1188,7 +1195,6 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	
 
 //#######################################################
-	
 	focus.update = function (range, caller, zoomScale) {
 		
 		theRange = range;
@@ -1201,8 +1207,13 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			//### Updating the time-range Text at the top 
 			var startTime = new Date(theRange[0] - 0).toLocaleString();
 			var endTime   = new Date(theRange[1] - 0).toLocaleString();
+			var difference = (theRange[1] - 0) - (theRange[0] - 0);
+			
 			$("#timeRangeFromText").text(startTime);
 			$("#timeRangeToText").text(endTime);
+			$("#timeRangeDifferenceText").text(secondsToTime(difference/1000));
+			//log("Time Diference = " + secondsToTime(difference/1000));
+			
 			
 			//### updating the domain and redrawing figures and x-axis
 			xFocus.domain(theRange);
@@ -1242,14 +1253,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		
 	};
 
-	
-	//### returns the key based on the value from an object
-	function getKey(obj, val) {
-		for (var key in obj) {
-			if (val === obj[key])
-				return key;
-		}
-	}
+
 	
 	focus.hideData = function(index) {
 		log("focus: about to hide data" + index);
@@ -1323,7 +1327,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			
 			theData[dataToChangeIndex].styles = []; //emptying the previous colors first
 			for(var j = 0; j < gradientColors.length; j++ ) {
-				theFocus.selectAll(".ordinal" + j)
+				theFocus.selectAll(".ordinal" + dataToChangeIndex + "-"  + j)
 						.attr("stroke", gradientColors[j])
 						.attr("fill", gradientColors[j]);
 				theData[dataToChangeIndex].styles.push(gradientColors[j]);
