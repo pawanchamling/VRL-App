@@ -272,7 +272,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						context.select("#timelineHandlesObjectContainer")
 							.append('circle')
 								.attr("id", "THcircleNominal" + i + "-" + index)
-								.attr('class', 'circle theCircleNominal dataElement data' + i )
+								.attr('class', 'circle theCircleNominal' + i +' dataElement data' + i )
 								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
 									if(isSensorDataAvailable) {
@@ -787,7 +787,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 		if(theData[dataToChangeIndex].dataType() == 0) {
 			//### Nominal Notes
 			
-			context.selectAll(".theCircleNominal")
+			context.selectAll(".theCircleNominal" + dataToChangeIndex)
 							.attr("stroke", color)
 							.attr("fill", color);
 		}

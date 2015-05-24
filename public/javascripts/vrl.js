@@ -54,6 +54,7 @@ var Subject = (function (window, undefined) {
 
 
 //#######################################################
+//### for listing all the classes in svg element 
 $.fn.classList = function() {return this[0].className.split(/\s+/);};
 //#######################################################
 
@@ -99,6 +100,8 @@ var docWidth  = $(document).width();
 var docHeight = $(document).height();
 var extraSpaces = 22; //because of margin and borders
 
+var workingWidth = docWidth - extraSpaces;
+
 var notesDIVwidth = $("#NotesDIV").width();
 $("#NotesDIV").css("width", notesDIVwidth - 3 );// so that the nodesDIV fits in
 
@@ -115,9 +118,17 @@ var timeline = VRL.TheTimeline(docWidth, docHeight, extraSpaces);
 var focus = VRL.TheFocus(docWidth, docHeight, extraSpaces);
 
 var mapDIV = document.getElementById("LocationDIV");
+
+log("workingWidth = " + workingWidth);
+
+var mapDIVwidth = Math.round(0.7 * workingWidth);
+$(mapDIV).css("width", mapDIVwidth);
+//log(0.7 * workingWidth)
+
 var map = VRL.TheMap(mapDIV);
 
 var notesDIV = document.getElementById("NotesPanelContents");
+$(notesDIV).css("width", workingWidth - mapDIVwidth - 2);
 var theNotes = VRL.TheNotes(notesDIV);
 //######################################################
 
@@ -203,12 +214,12 @@ function loadLastData() {
 	d3.json("data/Noise_data2.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});	/*
-	d3.json("data/Noise_data3.json", function (data) {
+	});	
+	d3.json("data/nominal2.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
-	*/
+	
 	
 	
 	/*

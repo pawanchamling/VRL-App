@@ -110,11 +110,14 @@ body {
   background-color: #eee;
   height: 100%;
   float: left;
+	border-left: 1px solid #5398ff;
+	border-top: 1px solid #5398ff;
+	border-bottom: 1px solid #5398ff;
 }
 
 #NotesDIV {
 	width: 30%;
-	height: 469px;
+	height: 500px;
 	float: left;
 	border: 1px solid #5398ff;
 }
@@ -198,7 +201,9 @@ body {
 	font-size: 12px;
 }
 
-
+#NotesPanel {	
+	height: 469px;
+}
 
 .dot {
 	stroke: #000;
@@ -349,6 +354,13 @@ div.tooltip {
 		background: #35baf6;
 		color: #fff;
 		cursor:pointer; 
+		text-shadow: 0px 0px 3px #000000;
+	}
+	
+	.theCancelButton {
+		background: #FF8989;
+		color: #fff;
+		cursor:pointer; 	
 	}
 	
 	#showHideButtonPanel {
@@ -362,6 +374,7 @@ div.tooltip {
 		border: 1px solid #bbb;
 		box-shadow: 0px 5px 17px 0px rgba(0, 0, 0, 0.75);
 		display: none;
+		z-index: 10;
 	}
 	
 	#showHideBtn {

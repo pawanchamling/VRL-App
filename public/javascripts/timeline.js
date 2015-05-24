@@ -257,7 +257,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 							context.select("#timelineObjectContainer")
 								.append('line')
 									.attr("id", "TcircleNominal" + i + "-" + index)
-									.attr('class', 'nominal theNominalTick dataElement data' + i )
+									.attr('class', 'nominal theNominalTick' + i + ' dataElement data' + i )
 									.attr("x1", xContext(dd.timestamp))
 									.attr("y1", yContext(hy))
 									.attr("x2", xContext(dd.timestamp) + 3)
@@ -582,7 +582,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 		if(theData[dataToChangeIndex].dataType() == 0) {
 			//### Nominal Notes
 			
-			context.selectAll(".theNominalTick")
+			context.selectAll(".theNominalTick" + dataToChangeIndex)
 							.attr("stroke", color)
 							.attr("fill", color);
 		}

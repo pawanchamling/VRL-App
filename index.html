@@ -27,9 +27,9 @@
 				<button id="resetBtn" class="theButton" >Reset</button> 
 			</div>
 			<div id="showHideButtonCover">
-				<button id="showHideBtn" class="drop-menu-btn drop-btn" style="">Data Setting</button>
+				<button id="showHideBtn" class="theButton" style="">Data Setting</button>
 				<div id="showHideButtonPanel" class="dropMenu">		
-					<button id="closeSettingButton" title="Close">&times;</button>				
+					<button id="closeSettingButton" class="theCancelButton" title="Close">&times;</button>				
 					<div id="listDataDIV"></div>		
 				</div>
 			</div>
@@ -40,21 +40,21 @@
 		</div>
 		<div id="FocusDIVCover">
 			<div class="titleBar">
-				<div class="barTitle">Focused Detailed View</div>
+				<div class="barTitle"><b>Focused Detailed View</b></div>
 				<div class="showHide"></div>
 			</div>
 			<div id="FocusDIV"></div>
 		</div>
 		<div id="TimeLineHandlerDIVCover">
 			<div class="titleBar">
-				<div class="barTitle">Overview</div>
+				<div class="barTitle"><b>Overview</b></div>
 				<div class="showHide"></div>
 			</div>
 			<div id="TimeLineHandlerDIV"></div>
 		</div>
 		<div id="TimeLineDIVCover">
 			<div class="titleBar">
-				<div class="barTitle">Timeline</div>
+				<div class="barTitle"><b>Timeline</b></div>
 				<div class="showHide"></div>
 			</div>
 			<div id="TimeLineDIV"></div>
@@ -76,7 +76,7 @@
 	</div>
 	<div class="theModalContainer" id="addDataModal">
 		<div id="" class="modalClose b-close">
-			<button class="easy-modal-close" title="Close">&times;</button>			
+			<button class="theCancelButton easy-modal-close" title="Close">&times;</button>			
 		</div>
 		<div id="fileUploadDIV">
 			<form id="uploadForm" method="post" enctype="multipart/form-data" action="">
@@ -88,7 +88,7 @@
 	</div>
 	<div class="theModalContainer" id="resetDialogModal">
 		<div id="" class="modalClose b-close">
-			<button class="easy-modal-close" title="Close">&times;</button>			
+			<button class="easy-modal-close theCancelButton" title="Close">&times;</button>			
 		</div>
 		<div id="resetDialogDIV">
 			<span id="resetText"> Are you sure you want to reset?</span>

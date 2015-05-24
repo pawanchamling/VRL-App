@@ -639,7 +639,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 					theFocus.select("#focusObjectContainer")
 						.append('circle')
 							.attr("id", "circleNominal" + i + "-" + index)
-							.attr('class', 'theCircle theCircleNominal dataElement data' + i )
+							.attr('class', 'theCircle theCircleNominal' + i +' dataElement data' + i )
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
 								if(isNoiseDataAvailable) {
@@ -1269,7 +1269,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 		if(theData[dataToChangeIndex].dataType() == 0) {
 			//### Nominal Notes
 			theData[dataToChangeIndex].style.dataColor(color);
-			theFocus.selectAll(".theCircleNominal")
+			theFocus.selectAll(".theCircleNominal" + dataToChangeIndex)
 							.attr("stroke", color)
 							.attr("fill", color);
 		}
