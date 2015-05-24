@@ -15,30 +15,37 @@ html
       #topMenuBarDIV
         #showHideButtonDIV
           button#addDataBtn.theButton Add Data
+        #resetDIV
+          button#resetBtn.theButton Reset
+        #timeRangeDIV
+          b
+            | Time between 
+            span#timeRangeFromText.timeRangeText
+            |  and 
+            span#timeRangeToText.timeRangeText
+            |  with Time difference of 
+            span#timeRangeDifferenceText.timeRangeText
         #showHideButtonCover
-          button#showHideBtn.drop-menu-btn.drop-btn(style='') Show/Hide Data
+          button#showHideBtn.theButton(style='') Data Setting
           #showHideButtonPanel.dropMenu
-            button#closeSettingButton(title='Close') ×
+            button#closeSettingButton.theCancelButton(title='Close') ×
             #listDataDIV
-      #timeRangeDIV
-        b
-          | Time between 
-          span#timeRangeFromText.timeRangeText
-          |  and 
-          span#timeRangeToText.timeRangeText
       #FocusDIVCover
         .titleBar
-          .barTitle Focused Detailed View
+          .barTitle
+            b Focused Detailed View
           .showHide
         #FocusDIV
       #TimeLineHandlerDIVCover
         .titleBar
-          .barTitle Overview
+          .barTitle
+            b Overview
           .showHide
         #TimeLineHandlerDIV
       #TimeLineDIVCover
         .titleBar
-          .barTitle Timeline
+          .barTitle
+            b Timeline
           .showHide
         #TimeLineDIV
       #LocationAndNotesDIV
@@ -48,14 +55,21 @@ html
             b User-submitted Notes
           #NotesPanel.nano
             #NotesPanelContents.nano-content
-    #myModal.theModalContainer
-      #modalClose.b-close
-        button.easy-modal-close(title='Close') ×
+    #addDataModal.theModalContainer
+      .modalClose.b-close(id='')
+        button.theCancelButton.easy-modal-close(title='Close') ×
       #fileUploadDIV
         form#uploadForm(method='post', enctype='multipart/form-data', action='')
           | Add data
           input#fileUploadName.fileNameHolder.theButton(type='file', name='file')
           input#submitFileUploadBtn(type='submit', value='Submit')
+    #resetDialogModal.theModalContainer
+      .modalClose.b-close(id='')
+        button.easy-modal-close.theCancelButton(title='Close') ×
+      #resetDialogDIV
+        span#resetText  Are you sure you want to reset?
+        button#resetYesBtn.theButton.b-close Yes
+        button#resetCancelBtn.theButton.b-close Cancel
   script(src='http://d3js.org/d3.v3.js')
   script(src='http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js')
   script(src='javascripts/libs/svg.min.js')
@@ -74,4 +88,6 @@ html
   script(src='javascripts/theMap.js')
   script(src='javascripts/theNotes.js')
   script(src='javascripts/timelineHandles.js')
+  script(src='javascripts/utility.js')
+  // the main script that runs everything
   script(src='javascripts/vrl.js')
