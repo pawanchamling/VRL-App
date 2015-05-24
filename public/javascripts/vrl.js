@@ -378,6 +378,24 @@ function resetShowHideDataPopup() {
 					"</div>";
 		$("#listDataDIV").append(str);
 		
+		//### for the ordinal value
+		if(d.dataType() == 1) {
+			var divStr = 	"<div class='listOrdinalDataDIV' id='ordinalValues" + i + "cover'>" + 
+								"<div id='ordinalValuesContainer'>";
+			
+			var dataInfo = d.dataInfo();
+			var noOfKeys = Object.keys(dataInfo).length;			
+			for(var j = 0; j < noOfKeys; j++) {
+				divStr += 	"<div class='ordinalItem'>" +
+							"<div class='listDataItemColorBox' id='ordinalValue" + i + "-" + j + "' style='background: " + d.styles[j] + "'>" + "</div>" +
+							"<div class='ordinalValueText' >" + getKey(dataInfo, j) + "</div>" +
+							"</div>";
+			}
+			divStr += "</div>"
+			$("#listDataDIV").append(divStr);
+			
+		}
+		
 		//### Status of the checkbox based on if the data is set visible or not
 		if(d.visible) {			
 			$("#showHideData" + i).prop( "checked", true );
@@ -395,29 +413,24 @@ function resetShowHideDataPopup() {
 			move: function(theColorIs) {
 				theColorIs = theColorIs.toHexString();
 				
-				focus.changeColor(i, theColorIs);
+				changeDataColors(theColorIs)							
+			},
+			hide: function(theColorIs) {
+				theColorIs = theColorIs.toHexString();
+				
+				changeDataColors(theColorIs)
+			}
+		});
+		
+		function changeDataColors(theColorIs) {
+			focus.changeColor(i, theColorIs);
 				timelineHandles.changeColor(i, theColorIs);
 				timeline.changeColor(i, theColorIs);
 				if(d.dataType() == 3) {
 					map.changeColor(i, theColorIs);
 				}
 				theNotes.reload(TheApp.getData());
-				
-			},
-			hide: function(theColorIs) {				
-				theColorIs = theColorIs.toHexString();
-				
-				focus.changeColor(i, theColorIs);
-				timelineHandles.changeColor(i, theColorIs);
-				timeline.changeColor(i, theColorIs);
-				if(d.dataType() == 3) {
-					map.changeColor(i, theColorIs);	
-				}
-				theNotes.reload(TheApp.getData());
-				
-			}
-		});
-		
+		}
 		
 		//### Defining the event listeners for each of the check boxes for each of the data
 		$(".showHideDataCheck").change(function () {
@@ -452,7 +465,14 @@ function resetShowHideDataPopup() {
 
 }
 
-			
+//### returns the key based on the value from an object
+function getKey(obj, val) {
+	for (var key in obj) {
+		if (val === obj[key])
+			return key;
+	}
+}
+		
 //### Handle the uploading of data file and loading of the uploaded file
 $('#uploadForm').submit(function() {
     

@@ -1327,7 +1327,11 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 						.attr("stroke", gradientColors[j])
 						.attr("fill", gradientColors[j]);
 				theData[dataToChangeIndex].styles.push(gradientColors[j]);
-			}					
+				
+				$("#ordinalValue" + dataToChangeIndex + "-" + j).css("background", gradientColors[j]);
+			}	
+
+			
 			
 		}
 		else if(theData[dataToChangeIndex].dataType() == 2) {

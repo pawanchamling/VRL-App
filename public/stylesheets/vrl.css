@@ -329,6 +329,11 @@ div.tooltip {
 		width: 130px;
 	}
 	
+	#resetBtn {
+		float: left;
+		width: 70px;
+	}
+	
 	.theButton {	
 		background: #35baf6;
 		color: #fff;
@@ -400,13 +405,22 @@ div.tooltip {
 	margin-bottom: 10px;
 }
 
+.listOrdinalDataDIV {
+	width: 100%;
+	margin-bottom: 10px;
+}
+	.ordinalItem {
+		height: 20px;
+	}
+	
 	.listDataItemColorBox {
 		width: 10px;
-		height: 30px;
+		height: 17px;
 		margin-left: 10px;
-		margin-right: 10px;
+		margin-right: 5px;
 		float: left;
 	}
+	
 	
 	.listDataNameAndRangeCover, .listDataItemVisibilityStatus, .colorPickerCover {
 		float: left;
@@ -434,3 +448,15 @@ div.tooltip {
 		color: #0000ff;
 	}
 
+
+#ordinalValuesContainer {
+	margin-left: 192px;
+}
+
+.ordinalValueText {
+	margin-left: 10px;
+}
+
+.sp-container {
+	left: 737.453125px!important;
+}
