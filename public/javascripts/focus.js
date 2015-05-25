@@ -680,7 +680,9 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							}
 							
 							//### the tooltip
-							div.html( "<span class='.tooltipMainValue'>" + dd.value + "</span>")
+							div.html( "<span class='.tooltipMainValue'>" + dd.value + "</span>"
+										+ "<br /><span class='tooltipOtherValue'>" + data[index].dataName()  + 
+										"<br />" + new Date(dd.timestamp - 0).toLocaleString() + "</span>")
 								.style("left", (d3.event.pageX + xOffset) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
@@ -773,8 +775,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							else {
 								xOffset = 10;
 							}
-							
-							div.html( "<span class='.tooltipMainValue'>" + valIs + "</span>")
+							 
+							div.html( "<span class='.tooltipMainValue'>[ " + valIs + " ]</span>"
+										+ "<br /><span class='tooltipOtherValue'>" + data[index].dataName()  + 
+										"<br />" + new Date(dd.timestamp - 0).toLocaleString() + "</span>")
 								.style("left", (d3.event.pageX + xOffset) + "px")
 								.style("top", (d3.event.pageY - 28) + "px")
 								.attr('r', 8);
