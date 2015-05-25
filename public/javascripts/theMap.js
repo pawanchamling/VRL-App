@@ -139,6 +139,7 @@ VRL.TheMap = function (theMapDIV) {
 		theMap.showPaths(data);
 	};
 	
+	//### currently not in use ###
 	theMap.showMarkers = function() {
 		//log("theMap : showing gpsPoints");
 		
@@ -173,6 +174,8 @@ VRL.TheMap = function (theMapDIV) {
 		
 	};
 
+	
+	//### Show the paths taken
 	theMap.showPaths = function(data) {
 		var rangeStart  = new Date(theRange[0] - 0).getTime();
 		var rangeEnd	= new Date(theRange[1] - 0).getTime();
@@ -194,60 +197,63 @@ VRL.TheMap = function (theMapDIV) {
 			var coordinates = [];
 			var dataColor = d.style.dataColor();
 			
-			d = d.data();
+			dd = d.data();
 			
-			//d.style().dataColor()
-			
-			d.forEach(function(dd, index) {
-				//log("theMap: " + dd.timestamp)
-				if(dd.timestamp >= rangeStart && dd.timestamp <= rangeEnd) {
-					coordinates.push(new google.maps.LatLng(dd.latitude, dd.longitude));
-				}
-			});			
-			if(coordinates.length > 0) {
-				var pathLine = new google.maps.Polyline({
-								path: coordinates,
-								geodesic: true,
-								strokeColor: dataColor,
-								strokeOpacity: 1.0,
-								strokeWeight: 2
-							});
-			
-				pathLine.setMap(map);
-				paths.push(pathLine);
-				var startCircleImage = new google.maps.MarkerImage(startPathImage,
-										// This marker is 20 pixels wide by 32 pixels tall.
-										null, 
-										// The origin for this image is 0,0.
-										new google.maps.Point(0,0),
-										// The anchor for this image is the base of the flagpole at 0,32.
-										new google.maps.Point(10, 10)
-									);
-				var endCircleImage = new google.maps.MarkerImage(endPathImage,
-										// This marker is 20 pixels wide by 32 pixels tall.
-										null, 
-										// The origin for this image is 0,0.
-										new google.maps.Point(0,0),
-										// The anchor for this image is the base of the flagpole at 0,32.
-										new google.maps.Point(10, 10)
-									);
+			if(d.visible) {
+				dd.forEach(function(ddd, index) {
+					//log("theMap: " + ddd.timestamp)
+					if(ddd.timestamp >= rangeStart && ddd.timestamp <= rangeEnd) {
+						coordinates.push(new google.maps.LatLng(ddd.latitude, ddd.longitude));
+					}
+				});			
+				if(coordinates.length > 0) {
+					var pathLine = new google.maps.Polyline({
+									path: coordinates,
+									geodesic: true,
+									strokeColor: dataColor,
+									strokeOpacity: 1.0,
+									strokeWeight: 2
+								});
 				
-				startCircle[index] = new google.maps.Marker({
-									position: coordinates[0],
-									map: map,
-									icon: startCircleImage
-								});
-						
+					pathLine.setMap(map);
+					paths.push(pathLine);
+					var startCircleImage = new google.maps.MarkerImage(startPathImage,
+											// This marker is 20 pixels wide by 32 pixels tall.
+											null, 
+											// The origin for this image is 0,0.
+											new google.maps.Point(0,0),
+											// The anchor for this image is the base of the flagpole at 0,32.
+											new google.maps.Point(10, 10)
+										);
+					var endCircleImage = new google.maps.MarkerImage(endPathImage,
+											// This marker is 20 pixels wide by 32 pixels tall.
+											null, 
+											// The origin for this image is 0,0.
+											new google.maps.Point(0,0),
+											// The anchor for this image is the base of the flagpole at 0,32.
+											new google.maps.Point(10, 10)
+										);
+					
+					startCircle[index] = new google.maps.Marker({
+										position: coordinates[0],
+										map: map,
+										icon: startCircleImage
+									});
+							
 
-				//log("theMap: coordinates length : " + coordinates.length);	
-				//log("theMap: coordinates  : " + coordinates);	
-				if(coordinates.length > 1) {
-					endCircle[index] = new google.maps.Marker({
-									position: coordinates[coordinates.length - 1],
-									map: map,
-									icon: endCircleImage
-								});
+					//log("theMap: coordinates length : " + coordinates.length);	
+					//log("theMap: coordinates  : " + coordinates);	
+					if(coordinates.length > 1) {
+						endCircle[index] = new google.maps.Marker({
+										position: coordinates[coordinates.length - 1],
+										map: map,
+										icon: endCircleImage
+									});
+					}
 				}
+			}
+			else {
+				log("theMap: not visisble"  )
 			}
 		});
 			
@@ -290,6 +296,11 @@ VRL.TheMap = function (theMapDIV) {
 			theMap.reloadElements();
 		}
 		
+	};
+	
+
+	theMap.showData = function(index) {
+		theMap.showPaths(gpsData);
 	};
 	
 	theMap.changeColor = function(dataToChangeIndex, color) {

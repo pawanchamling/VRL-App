@@ -45,7 +45,7 @@ VRL.TheNotes = function (notesDIV) {
 		
 		if(notesDataAvailable) {
 			
-			theData.forEach(function (d) {
+			theData.forEach(function (d, index) {
 				if(d.dataType() == 0 || d.dataType() == 1) {
 					
 					dd = d.data();
@@ -61,11 +61,11 @@ VRL.TheNotes = function (notesDIV) {
 						if(d.dataType() == 1) {
 							//### if ordinal data
 							noteStr = d.dataInfo();
-							noteStr = getKey(noteStr, ddd.value - 0);
+							noteStr = "[ " + getKey(noteStr, ddd.value - 0) + " ]";
 							noteColor = d.styles[ddd.value];
 						} 
 						else {						
-							noteStr = ddd.value;
+							noteStr = "\"" + ddd.value + "\"";
 						}
 						aNote = {
 							color: noteColor,
@@ -78,10 +78,10 @@ VRL.TheNotes = function (notesDIV) {
 						//aNote.value = "this is one long note that a user may enter. because some of the user are so crazy that they would just do these kind of things just for fun. you know the psychopaths. anyways even the testers are the psychopaths. they would alwasys find some problem. alsways.";
 						
 						var str = 	
-							"<div id='" + aNote.timestamp + "' class='noteBox noteBoxBackground1'>" + 
+							"<div id='" + aNote.timestamp + "' class='noteBox noteBoxBackground1 theNoteBox" + index + "'>" + 
 								"<div id='" + aNote.timestamp + "ColorBox' class='noteBoxColor' style='background: " + aNote.color + "'></div>" +
 								"<div class='noteBoxTimestamp'>" + new Date(aNote.timestamp).toLocaleString() + "</div>" + 
-								"<div id='" + aNote.timestamp + "Notes' class='noteBoxNotes'><b>\"" + aNote.value + "\"</b></div>" + 
+								"<div id='" + aNote.timestamp + "Notes' class='noteBoxNotes'><b>" + aNote.value + "</b></div>" + 
 							"</div>";
 						
 						$(notesDIV).append(str);
@@ -116,7 +116,7 @@ VRL.TheNotes = function (notesDIV) {
 			tinysort("#" + mainDIV + " > div", {attr: "id"});
 			
 			//### Let's show the data (if they are on)
-			theNotes.showData();
+			theNotes.showDataInRange();
 			$(".nano").nanoScroller();
 		}
 		else {
@@ -146,7 +146,7 @@ VRL.TheNotes = function (notesDIV) {
 	}
 	
 	
-	theNotes.showData = function() {
+	theNotes.showDataInRange = function() {
 		//notesData
 		var rangeStart  = new Date(theRange[0] - 0).getTime();
 		var rangeEnd	= new Date(theRange[1] - 0).getTime();
@@ -159,7 +159,12 @@ VRL.TheNotes = function (notesDIV) {
 		notesData.forEach(function (d) {
 			//log(d.timestamp)			
 			if(d.timestamp >= rangeStart && d.timestamp <= rangeEnd){
-				$("#" + d.timestamp).css("display", "block");
+				if($("#" + d.timestamp).hasClass("hiddenNoteBox")) {
+					$("#" + d.timestamp).css("display", "none");
+				}
+				else {
+					$("#" + d.timestamp).css("display", "block");
+				}
 			}
 			else {
 				$("#" + d.timestamp).css("display", "none");
@@ -198,9 +203,23 @@ VRL.TheNotes = function (notesDIV) {
 			//### When the time-range is changed
 			
 			theRange = range;
-			theNotes.showData();
+			theNotes.showDataInRange();
 		}
 		
+	};
+	
+	theNotes.hideData = function(index) {
+		$(".theNoteBox" + index).each(function() {
+			$(this).addClass("hiddenNoteBox");
+		});
+		theNotes.showDataInRange();
+	};
+	
+	theNotes.unhideData = function(index) {
+		$(".theNoteBox" + index).each(function() {
+			$(this).removeClass("hiddenNoteBox");
+		});
+		theNotes.showDataInRange();
 	};
 	
 	theNotes.changeColor = function(dataToChangeIndex, color) {

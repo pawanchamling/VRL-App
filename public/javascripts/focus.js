@@ -650,6 +650,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
 								if(isNoiseDataAvailable) {
+									//log("yFocus(0) = " + yFocus(0))
 									return yFocus(0);
 								}
 								else {
@@ -1256,12 +1257,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 
 	
 	focus.hideData = function(index) {
-		log("focus: about to hide data" + index);
 		theFocus.selectAll(".data" + index).attr("visibility", "hidden");
 	};
 	
 	focus.showData = function(index) {
-		log("focus: about to show data" + index);
 		theFocus.selectAll(".data" + index).attr("visibility", "visible");
 	};
 	

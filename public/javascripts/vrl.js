@@ -210,7 +210,7 @@ function loadLastData() {
 		setDataColors(data);
 	});
 	
-	d3.json("data/Noise_data2.json", function (data) {
+	d3.json("data/Noise_data3.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});	
@@ -430,7 +430,7 @@ function resetShowHideDataPopup() {
 		}
 		
 		//### Defining the event listeners for each of the check boxes for each of the data
-		$(".showHideDataCheck").change(function () {
+		$("#showHideData" + i).change(function () {
 			
 			var idIs = $(this).attr("id");
 			var ii = idIs.substring(12, idIs.length);
@@ -439,9 +439,18 @@ function resetShowHideDataPopup() {
 				log("check " + $(this).attr("id") + " checked");
 				d.visible = true;
 				
-				focus.showData(ii); 
+				if(d.dataType() == 0 || d.dataType() == 1 || d.dataType() == 2) {
+					focus.showData(ii); 
+					timelineHandles.showData(ii);
+				}
+				if(d.dataType() == 3) {
+					map.showData(ii);
+				}
+				if(d.dataType() == 0 || d.dataType() == 1 ) {
+					theNotes.unhideData(ii);
+				}
+				
 				timeline.showData(ii);
-				timelineHandles.showData(ii);
 				
 			}
 			else {				
@@ -449,9 +458,18 @@ function resetShowHideDataPopup() {
 				
 				d.visible = false;
 				
-				focus.hideData(ii); 
+				if(d.dataType() == 0 || d.dataType() == 1 || d.dataType() == 2) {
+					focus.hideData(ii); 
+					timelineHandles.hideData(ii);
+				}
+				if(d.dataType() == 3) {
+					map.showData(ii);
+				}
+				if(d.dataType() == 0 || d.dataType() == 1 ) {
+					theNotes.hideData(ii);
+				}
+					
 				timeline.hideData(ii);
-				timelineHandles.hideData(ii);
 				
 			}
 			
@@ -543,5 +561,11 @@ $('#submitFileUploadBtn').click(function() {
 */
 
 
-
-
+$(".resize").each(function() {
+	$(this).hover(function() {
+		log("hovering");
+	},
+	function() {
+	});
+});
+				

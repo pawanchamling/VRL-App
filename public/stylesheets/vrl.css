@@ -76,6 +76,7 @@ body {
 		height: 20px;
 		text-size: 14px;
 		text-align: center;
+		padding-top: 3px;
 	}
 	
 	.titleBar {
@@ -347,6 +348,7 @@ div.tooltip {
 
 #showHideButtonDIV {
 	float: left;
+	margin-left: 10px;
 }
 	#addDataBtn {
 		width: 130px;
@@ -479,6 +481,10 @@ div.tooltip {
 		color: #0000ff;
 	}
 
+	
+.hiddenNoteBox {
+	display: none;
+}	
 
 #ordinalValuesContainer {
 	margin-left: 192px;

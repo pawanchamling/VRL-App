@@ -441,7 +441,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			//timelineHandles.brushed();
 			//timelineHandles.brushed();
 
-			// Don't allow the brushing from background and single click context switch
+			//### Don't allow the brushing from background and single click context switch
 			context.select(".background")
 							.on("mousedown.brush", nobrush)
 							.on("touchstart.brush", nobrush);
@@ -450,10 +450,11 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 						.attr('y', contextHeightPadding - 2)
 						.attr("height", contextHeight - contextHeightPadding + 1);
 
-			//the handles configuration
+			//### the handles configuration
 			context.selectAll(".resize").append("rect")
+											.attr('class', 'timeRangeHandle')
 											.attr("width", '5px')
-											.attr("height", contextHeight  + 15)
+											.attr("height", contextHeight  + 25)
 											.classed("border");
 
 

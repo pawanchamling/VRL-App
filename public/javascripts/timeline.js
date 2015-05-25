@@ -332,7 +332,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			timeline.brushed();
 			//brushed();
 
-			// Don't allow the brushing from background and single click context switch
+			//### Don't allow the brushing from background and single click context switch
 			context.select(".background")
 							.on("mousedown.brush", timeline.nobrush)
 							.on("touchstart.brush", timeline.nobrush);
@@ -341,10 +341,11 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 						.attr('y', contextHeightPadding - 2)
 						.attr("height", contextHeight - contextHeightPadding + 1);
 
-			//the handles configuration
+			//### the handles configuration
 			context.selectAll(".resize").append("rect")
+											.attr('class', 'timeRangeHandle')
 											.attr("width", '5px')
-											.attr("height", contextHeight + 15)
+											.attr("height", contextHeight + 25)
 											.classed("border");
 
 			
@@ -564,16 +565,18 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 		}
 	}
 
+	
+	//### hide Data
 	timeline.hideData = function(index) {
-		log("timeline: about to hide data" + index);
 		context.selectAll(".data" + index).attr("visibility", "hidden");
 	};
 	
+	//### show Data
 	timeline.showData = function(index) {
-		log("timeline: about to show data" + index);
 		context.selectAll(".data" + index).attr("visibility", "visible");
 	};
 	
+	//### change color of the data
 	timeline.changeColor = function(dataToChangeIndex, color) {
 		//log("data " + dataToChangeIndex + " color " + color);
 		
