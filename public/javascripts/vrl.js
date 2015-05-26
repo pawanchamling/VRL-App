@@ -221,7 +221,6 @@ function loadLastData() {
 	
 	
 	
-	/*
 	d3.json("data/Noise_data1.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
@@ -230,7 +229,7 @@ function loadLastData() {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
-	*/
+
 	
 	setTimeout(reloadEverything, 1000);
 	//setTimeout(hideData, 3000);
@@ -363,6 +362,10 @@ function resetShowHideDataPopup() {
 			timeRangeString = "No Data";
 		}
 		
+		var otherInfo = ""; 
+		if(d.dataType() == 0 || d.dataType() == 1) {
+			otherInfo = "( no of items = " + d.data().length + ")";
+		}
 		
 		var str = 	"<div class='listDataItemDIV' id='data" + i + "cover'>" + 
 						"<div class='listDataItemVisibilityStatus'> " +
@@ -375,7 +378,7 @@ function resetShowHideDataPopup() {
 						"</div>" +
 					//	"<div class='listDataItemColorBox' style='background: " + d.style.dataColor() + "'></div>" + 
 						"<div class='listDataNameAndRangeCover'>" + 
-							"<div class='listDataItemDataName'><b>" + d.dataName() + "</b></div>" +
+							"<div class='listDataItemDataName'><b>" + d.dataName() + "</b> " + otherInfo +"</div>" +
 							"<div class='listDataItemTimeRange'>" + timeRangeString + "</div>" + 
 						"</div>" + 
 					"</div>";
@@ -398,6 +401,16 @@ function resetShowHideDataPopup() {
 			$("#listDataDIV").append(divStr);
 			
 		}
+		else if(d.dataType() == 2) {
+			otherInfo = "( max: " + (d.dataInfo().max - 0).toFixed(3) + " " + d.dataInfo().unit + " and min: " + (d.dataInfo().min - 0).toFixed(3) + " " + d.dataInfo().unit + " )";
+			
+			var divStr = 	"<div class='sensorDataInfoDIV' >" + 
+								"<div class='sensorDataInfo'>" + otherInfo + "</div>";
+					divStr += "</div>"
+			$("#listDataDIV").append(divStr);
+			
+		}
+		
 		
 		//### Status of the checkbox based on if the data is set visible or not
 		if(d.visible) {			

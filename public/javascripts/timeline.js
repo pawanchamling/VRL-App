@@ -67,7 +67,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 	};
 	//##############################################
 			
-	var  context;
+	var context;
 	var container;
 				
 	function timeline(selection) {
@@ -288,11 +288,26 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 						});
 						
 					}
-					else if(data[i].dataType() == 2 || data[i].dataType() == 3) {
+					else if(data[i].dataType() == 2) {
 						//if sensor data
 						context.select("#timelineObjectContainer")
 							.append('line')
 								.attr("id", "Tline" + (yContextArrIndex["" + i] - 0))
+								.attr('class', 'dataElement data' + i )
+								.attr("x1", start)
+								.attr("y1", yContext(hy))
+								.attr("x2", end)
+								.attr("y2", yContext(hy))
+								.attr('stroke', data[i].style.dataColor())
+								.attr('stroke-width', h)
+								.attr('fill', 'none');
+					}
+					else if(data[i].dataType() == 3) {
+						//if GPS data
+						//log("GPS data drawn. index is " + "TlineGPS" +  i )
+						context.select("#timelineObjectContainer")
+							.append('line')
+								.attr("id", "TlineGPS" +  i)
 								.attr('class', 'dataElement data' + i )
 								.attr("x1", start)
 								.attr("y1", yContext(hy))
@@ -502,8 +517,12 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			//#######################################################
 	timeline.reload = function(data) {
 		
-		xDomain = [];
-		
+		xDomain = [];		
+		theSensorData = [];				
+		yContextArr = [];
+		yContextArrIndex = {};
+	
+	
 		container.selectAll("*").remove();
 		d3.select('#TimeLineDIV').html("");
 		d3.select('#TimeLineDIV')
@@ -519,7 +538,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 		//### when the item was highlighted in Focus chart
 		if(caller == "itemHighlighted") {
 			var str = dataObject.substring(0, 4);
-			//log(dataObject)
+			log(dataObject)
 			if(str == "circ") {
 				context.select("#T" + dataObject)
 									.attr("fill-opacity", 1)
@@ -645,13 +664,13 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 			
 		}
 		else if(theData[dataToChangeIndex].dataType() == 2) {
-			//### Sensor data			
+			//### Sensor data
 			context.select("#Tline" + (yContextArrIndex["" + dataToChangeIndex] - 0))
 							.attr("stroke", color);
 		}
 		else if(theData[dataToChangeIndex].dataType() == 3) {
-			//### GPS data			
-			context.select("#Tline" + (yContextArrIndex["" + dataToChangeIndex] - 0))
+			//### GPS data
+			context.select("#TlineGPS" + dataToChangeIndex)
 							.attr("stroke", color);
 		}
 				

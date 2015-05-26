@@ -442,6 +442,17 @@ div.tooltip {
 	width: 100%;
 	margin-bottom: 10px;
 }
+
+.sensorDataInfoDIV {
+	width: 100%;
+	top: -15px;
+	margin-bottom: 10px;
+	position: relative;
+}
+
+	.sensorDataInfo {
+		margin-left: 132px;
+	}
 	.ordinalItem {
 		height: 20px;
 	}

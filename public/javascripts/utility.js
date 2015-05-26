@@ -12,15 +12,15 @@ function secondsToTime(s) {
 	var hrs = (s - mins) / 60;
 
 	secs = Math.round(secs);
-
-	if(hrs != 0 && mins != 0 ) {
-		return hrs + ' hrs ' + mins + ' mins ' + secs + " secs"; // + '.' + ms;
+	
+	if(hrs == 0 && mins == 0){
+		return secs + " secs";
 	}
-	else if(mins != 0) {
+	else if(hrs == 0 && mins != 0) {
 		return mins + ' mins ' + secs + " secs";
 	}
 	else {
-		return secs + " secs";
+		return hrs + ' hrs ' + mins + ' mins ' + secs + " secs"; // + '.' + ms;
 	}
 	
 	//return hrs + ' hrs ' + mins + ' mins ' + secs + " secs"; // + '.' + ms;
