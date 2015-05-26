@@ -441,13 +441,13 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 
 			context.selectAll("rect")
 						.attr('y', contextHeightPadding - 2)
-						.attr("height", contextHeight - contextHeightPadding + 1);
+						.attr("height", contextHeight - contextHeightPadding + 20);
 
 			//### the handles configuration
 			context.selectAll(".resize").append("rect")
 											.attr('class', 'timeRangeHandle')
 											.attr("width", '5px')
-											.attr("height", contextHeight  + 25)
+											.attr("height", contextHeight  + 35)
 											.classed("border");
 
 

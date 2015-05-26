@@ -364,7 +364,7 @@ function resetShowHideDataPopup() {
 		
 		var otherInfo = ""; 
 		if(d.dataType() == 0 || d.dataType() == 1) {
-			otherInfo = "( no of items = " + d.data().length + ")";
+			otherInfo = "( no of items = <b>" + d.data().length + "</b>)";
 		}
 		
 		var str = 	"<div class='listDataItemDIV' id='data" + i + "cover'>" + 
@@ -402,7 +402,7 @@ function resetShowHideDataPopup() {
 			
 		}
 		else if(d.dataType() == 2) {
-			otherInfo = "( max: " + (d.dataInfo().max - 0).toFixed(3) + " " + d.dataInfo().unit + " and min: " + (d.dataInfo().min - 0).toFixed(3) + " " + d.dataInfo().unit + " )";
+			otherInfo = "( max: <b>" + (d.dataInfo().max - 0).toFixed(3) + " " + d.dataInfo().unit + "</b> and min: <b>" + (d.dataInfo().min - 0).toFixed(3) + " " + d.dataInfo().unit + "</b> )";
 			
 			var divStr = 	"<div class='sensorDataInfoDIV' >" + 
 								"<div class='sensorDataInfo'>" + otherInfo + "</div>";

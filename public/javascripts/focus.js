@@ -904,8 +904,17 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							var unit = theSensorData[index].dataInfo().unit;
 							//log("foc: Data unit is " + unit + "######");
 							
+							var ifMaxOrMin = "";
+							if(dd.value == theSensorData[index].dataInfo().max ) {
+								ifMaxOrMin = " (max)";
+							}
+							else if(dd.value == theSensorData[index].dataInfo().min) {
+								ifMaxOrMin = " (min)";
+							}
+							//log(minVal + " "+ dd.value)
+							
 							//### the tooltip
-							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + " " + unit + " </span>"
+							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + " " + unit + ifMaxOrMin + " </span>"
 										+ "<br /><span class='tooltipOtherValue'>" + theSensorData[index].dataName()  + 
 										"<br />" + new Date(dd.timestamp - 0).toLocaleString() + "</span>")
 								.style("left", (d3.event.pageX + xOffset) + "px")
@@ -1029,6 +1038,8 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			}
 			else if(data[i].dataType() == 2){
 				//### Sensor data
+				var maxVal = data[i].dataInfo().max;
+				var minVal = data[i].dataInfo().min;
 				
 				
 				//log("foc: " + (yFocusArrIndex["" + i] - 0))
@@ -1058,8 +1069,16 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								xOffset = 10;
 							}
 							
+							var ifMaxOrMin = "";
+							if(dd.value == theSensorData[index].dataInfo().max ) {
+								ifMaxOrMin = " (max)";
+							}
+							else if(dd.value == theSensorData[index].dataInfo().min) {
+								ifMaxOrMin = " (min)";
+							}
+							
 							var unit = theSensorData[index].dataInfo().unit;
-							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + " " + unit + " </span>"
+							div.html( "<span class='.tooltipMainValue'>" + val.toFixed(3) + " " + unit + ifMaxOrMin + " </span>"
 										+ "<br /><span class='tooltipOtherValue'>" + theSensorData[index].dataName()  + 
 										"<br />" + new Date(dd.timestamp-0).toLocaleString() + "</span>")
 								.style("left", (d3.event.pageX + xOffset) + "px")

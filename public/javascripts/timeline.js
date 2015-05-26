@@ -354,7 +354,7 @@ VRL.TheTimeline = function (docWidth, docHeight, extraSpaces) {
 
 			context.selectAll("rect")
 						.attr('y', contextHeightPadding - 2)
-						.attr("height", contextHeight - contextHeightPadding + 1);
+						.attr("height", contextHeight - contextHeightPadding + 20);
 
 			//### the handles configuration
 			context.selectAll(".resize").append("rect")
