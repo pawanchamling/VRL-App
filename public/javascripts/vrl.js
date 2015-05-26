@@ -204,7 +204,7 @@ function loadLastData() {
 	d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});
+	});/*
 	d3.json("data/2015-04-21-230058_Noise_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
@@ -213,7 +213,7 @@ function loadLastData() {
 	d3.json("data/Noise_data3.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});	
+	});	*/
 	d3.json("data/ordinal2.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
@@ -253,7 +253,8 @@ function hideData() {
 }
 
 //### Reload the data in every charts and panels			
-function reloadEverything() {			
+function reloadEverything() {
+			
 	//### reload everything
 	timeline.reload(TheApp.getData());
 	timelineHandles.reload(TheApp.getData());
@@ -319,6 +320,11 @@ $('#resetBtn').click(function(e) {
 //### When "Yes" for Reset is clicked in Reset popup modal ####
 $('#resetYesBtn').click(function(e) {
 	TheApp.resetData();	
+	
+	totalOrdinalData = 0;
+	totalSensorData = 0;
+	totalMapData = 0;
+	
 	reloadEverything()
 });
 

@@ -2,6 +2,10 @@
 function secondsToTime(s) {
   //var ms = s % 1000; //for milliseconds, if needed
  // s = (s - ms) / 1000;
+	if(isNaN(s)) {
+		return "unknown";
+	}
+	
 	var secs = s % 60;
 	s = (s - secs) / 60;
 	var mins = s % 60;

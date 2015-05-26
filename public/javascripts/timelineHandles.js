@@ -82,20 +82,13 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			noOfData = theData.length;
 						
 			
-			//### Checking if the sensor data is available or not
-			theData.forEach(function (d) {
-				//d = d.data();
-				if(d.dataType() == 2 ) {
-					isSensorDataAvailable = true;
-				}
-			});
-			
+		
 			//### collecting all the sensor data in one place
 			for(var i = 0; i < noOfData; i++) {
 				if(theData[i].dataType() == 2) {
 					theSensorData.push(theData[i]);
 					yContextArrIndex["" + i] = (theSensorData.length - 1) ;
-				
+					isSensorDataAvailable = true;
 					//log("###" + yContextArrIndex["" + i])
 				}
 			}
@@ -610,6 +603,8 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 		yContextArrIndex = {};
 		yAxisContext = [];
 	
+		isSensorDataAvailable = false;
+		
 		container.selectAll("*").remove();
 		d3.select('#TimeLineHandlerDIV').html("");
 		d3.select('#TimeLineHandlerDIV')

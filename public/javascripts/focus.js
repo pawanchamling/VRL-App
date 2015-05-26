@@ -66,7 +66,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	
 	var container; //the container that contains all the SVG
 	
-	var isNoiseDataAvailable = false;
+	var isSensorDataAvailable = false;
 	
 	//for the tooltip
 	var div = d3.select("body")
@@ -101,24 +101,13 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			theData = data;
 			noOfData = data.length;
 			
-			
-			
-			//### Checking if the noise data is available or not
-			theData.forEach(function (d) {
-				//d = d.data();
-				if(d.dataType() == 2 ) {
-					isNoiseDataAvailable = true;
-				}
-			});
-			
-			
-			
+						
 			//collecting all the sensor data in one place
 			for(var i = 0; i < noOfData; i++) {
 				if(theData[i].dataType() == 2) {
 					theSensorData.push(theData[i]);
 					yFocusArrIndex["" + i] = (theSensorData.length - 1) ;
-				
+					isSensorDataAvailable = true;
 					//log("foc: ###" + yFocusArrIndex["" + i])
 				}
 			}			
@@ -649,11 +638,12 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr('class', 'theCircle theCircleNominal' + i +' dataElement data' + i )
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
-								if(isNoiseDataAvailable) {
+								if(isSensorDataAvailable) {
 									//log("yFocus(0) = " + yFocus(0))
 									return yFocus(0);
 								}
 								else {
+									log("focus: sensor data not found")
 									return 100;
 								}
 							})
@@ -691,7 +681,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							d3.select(this)
 								/*
 								.attr("cy", function() {
-								if(isNoiseDataAvailable) {
+								if(isSensorDataAvailable) {
 										return yFocus(1);
 									}
 									else {
@@ -711,7 +701,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							
 							d3.select(this)
 								.attr("cy", function() {
-									if(isNoiseDataAvailable) {
+									if(isSensorDataAvailable) {
 										return yFocus(0);
 									}
 									else {
@@ -743,7 +733,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr('class', 'theCircle dataElement data' + i + " ordinal" + i + "-" + dd.value )
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
-								if(isNoiseDataAvailable) {
+								if(isSensorDataAvailable) {
 									return yFocus(0);
 								}
 								else {
@@ -787,7 +777,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							d3.select(this)
 								/*
 								.attr("cy", function() {
-									if(isNoiseDataAvailable) {
+									if(isSensorDataAvailable) {
 										return yFocus(1);
 									}
 									else {
@@ -808,7 +798,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							
 							d3.select(this)
 								.attr("cy", function() {
-									if(isNoiseDataAvailable) {
+									if(isSensorDataAvailable) {
 										return yFocus(0);
 									}
 									else {
@@ -1165,6 +1155,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 	//#######################################################
 	focus.reload = function(data) {	
 	
+		isSensorDataAvailable = false;
 		theSensorData = [];
 		yFocusArr = [];
 		yFocusArrIndex = {};
@@ -1213,6 +1204,13 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			var startTime = new Date(theRange[0] - 0).toLocaleString();
 			var endTime   = new Date(theRange[1] - 0).toLocaleString();
 			var difference = (theRange[1] - 0) - (theRange[0] - 0);
+			
+			if(startTime == "Invalid Date") {
+				startTime = "unknown";
+			}
+			if(endTime == "Invalid Date") {
+				endTime = "unknown";
+			}			
 			
 			$("#timeRangeFromText").text(startTime);
 			$("#timeRangeToText").text(endTime);
