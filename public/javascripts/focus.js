@@ -269,7 +269,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			yFocus.domain([0, yMax + 2]);		
 			xFocusOriginal.domain(d3.extent(xDomain));	//### we will need it for zooming and panning
 			for(var i = 0; i < noOfSensorData; i++) {
-				var extraHeight = 0.15 * (yMaxArr[i] - yMinArr[i]);
+				var extraHeight = 0.35 * (yMaxArr[i] - yMinArr[i]);
 				//log("foc: " + i + " = extra space = " + extraHeight);
 				yFocusArr[i].domain([0, yMaxArr[i] + extraHeight]); 
 				//extra height added so that the max value is can be seen properly in the y-axis

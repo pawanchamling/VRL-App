@@ -183,7 +183,7 @@ setTimeout(loadLastData, 001);
 function loadLastData() {
 	log("VRL: Fired after some time")
 
-	d3.json("data/2015-04-21-230058_GPS_data.json", function (data) {	
+	d3.json("data/2015-05-27-012055_Temperature_data.json", function (data) {	
 		//2015-04-21-230058_Nominal_data
 		//2015-04-21-230058_Ordinal_data
 		//2015-04-29-181948_GPS_data
@@ -192,16 +192,18 @@ function loadLastData() {
 		//Noise_data
 		//Noise_data3					
 		//gps, ordinal, nominal, noise, temperature
+		//2015-05-26-134442
+		//2015-05-27-012055
 		
 		TheApp.addData(data);
 		setDataColors(data);					
 		
 	});	
-	d3.json("data/2015-04-21-230058_Ordinal_data.json", function (data) {
+	d3.json("data/2015-05-27-012055_Ordinal_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
-	d3.json("data/2015-04-21-230058_Nominal_data.json", function (data) {
+	d3.json("data/2015-05-27-012055_Nominal_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});/*
@@ -214,21 +216,21 @@ function loadLastData() {
 		TheApp.addData(data);
 		setDataColors(data);
 	});	*/
-	d3.json("data/ordinal2.json", function (data) {
+	d3.json("data/2015-05-27-012055_Noise_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
 	
 	
 	
-	d3.json("data/Noise_data1.json", function (data) {
+	d3.json("data/2015-05-27-012055_GPS_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});
+	});/*
 	d3.json("data/Noise_data2.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});
+	});*/
 
 	
 	setTimeout(reloadEverything, 1000);
@@ -390,11 +392,23 @@ function resetShowHideDataPopup() {
 								"<div id='ordinalValuesContainer'>";
 			
 			var dataInfo = d.dataInfo();
-			var noOfKeys = Object.keys(dataInfo).length;			
+			var noOfKeys = Object.keys(dataInfo).length;
+			var noOfEachKeys = [];
+			
+			//### to know how many of each ordinal values are in the data
+			for(j = 0; j < noOfKeys; j++) {
+				noOfEachKeys.push(0);
+			}			
+			dd.forEach(function (ddd, index) {
+				noOfEachKeys[ddd.value]++;
+			});		
+			
+			//### Creating the HTML DOM to be inserted 
 			for(var j = 0; j < noOfKeys; j++) {
 				divStr += 	"<div class='ordinalItem'>" +
-							"<div class='listDataItemColorBox' id='ordinalValue" + i + "-" + j + "' style='background: " + d.styles[j] + "'>" + "</div>" +
-							"<div class='ordinalValueText' >" + getKey(dataInfo, j) + "</div>" +
+								"<div class='noOfOrdinalItem'>" + "" + "</div>" +
+								"<div class='listDataItemColorBox' id='ordinalValue" + i + "-" + j + "' style='background: " + d.styles[j] + "'>" + "</div>" +
+								"<div class='ordinalValueText' >" + getKey(dataInfo, j) + " (" + noOfEachKeys[j] + ") </div>" +
 							"</div>";
 			}
 			divStr += "</div>"
@@ -402,6 +416,8 @@ function resetShowHideDataPopup() {
 			
 		}
 		else if(d.dataType() == 2) {
+			//### including the max and min values 
+			
 			otherInfo = "( max: <b>" + (d.dataInfo().max - 0).toFixed(3) + " " + d.dataInfo().unit + "</b> and min: <b>" + (d.dataInfo().min - 0).toFixed(3) + " " + d.dataInfo().unit + "</b> )";
 			
 			var divStr = 	"<div class='sensorDataInfoDIV' >" + 

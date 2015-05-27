@@ -457,6 +457,11 @@ div.tooltip {
 		height: 20px;
 	}
 	
+	.noOfOrdinalItem {
+		margin-left: 10px;
+		float: left;
+	}
+	
 	.listDataItemColorBox {
 		width: 10px;
 		height: 17px;

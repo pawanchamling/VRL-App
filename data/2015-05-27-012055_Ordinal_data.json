@@ -1,0 +1,40 @@
+{
+	"name" : "Ordinal Values",
+	"Source" : "Android Mobile",
+	"type" : "1",
+	"valueInfo" : {
+		"High Productive" : 0,
+		"Medium Productive" : 1,
+		"Not Productive" : 2
+	},
+	"values" : [
+		{
+			"timestamp" : "1432689655511",
+			"value" : "1"
+		}, {
+			"timestamp" : "1432692655527",
+			"value" : "1"
+		}, {
+			"timestamp" : "1432695055528",
+			"value" : "0"
+		}, {
+			"timestamp" : "1432696855542",
+			"value" : "0"
+		}, {
+			"timestamp" : "1432699855490",
+			"value" : "0"
+		}, {
+			"timestamp" : "1432702855491",
+			"value" : "1"
+		}, {
+			"timestamp" : "1432705855501",
+			"value" : "2"
+		}, {
+			"timestamp" : "1432708855471",
+			"value" : "2"
+		}, {
+			"timestamp" : "1432712763077",
+			"value" : "2"
+		}
+	]
+}

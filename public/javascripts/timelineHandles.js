@@ -178,7 +178,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 
 			svg.append('defs').append('clipPath')
 								.attr('id', 'clip')
-								.append('rect')
+							.append('rect')
 								.attr('width', availableWidth)
 								.attr('height', availableHeight + margin.bottom + padding.bottom );
 
@@ -240,7 +240,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 			xContext.domain(d3.extent(xDomain));
 			yContext.domain([0, yMax + 2]);		
 			for(var i = 0; i < noOfSensorData; i++) {
-				var extraHeight = 0.3 * (yMaxArr[i] - yMinArr[i]);
+				var extraHeight = 0.35 * (yMaxArr[i] - yMinArr[i]);
 				yContextArr[i].domain([0, yMaxArr[i] + extraHeight]);
 				//extra height added so that the max value is can be seen properly in the y-axis
 			}
@@ -440,13 +440,14 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 							.on("touchstart.brush", nobrush);
 
 			context.selectAll("rect")
-						.attr('y', contextHeightPadding - 2)
+						.attr('y', contextHeightPadding - 8)
 						.attr("height", contextHeight - contextHeightPadding + 20);
 
 			//### the handles configuration
 			context.selectAll(".resize").append("rect")
 											.attr('class', 'timeRangeHandle')
 											.attr("width", '5px')
+											.attr('y', contextHeightPadding - 12)
 											.attr("height", contextHeight  + 35)
 											.classed("border");
 
