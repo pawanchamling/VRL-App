@@ -296,10 +296,10 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
 									if(isSensorDataAvailable) {
-										return ((dd.value) * 11) + 20; //yContext((3 - dd.value) * 5);
+										return ((dd.value) * 10) + 20; //yContext((3 - dd.value) * 5);
 									}
 									else {
-										return ((dd.value) * 11) + 20;
+										return ((dd.value) * 10) + 20;
 									}
 								})
 								.attr("r", 5)
@@ -441,7 +441,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 
 			context.selectAll("rect")
 						.attr('y', contextHeightPadding - 8)
-						.attr("height", contextHeight - contextHeightPadding + 20);
+						.attr("height", contextHeight - contextHeightPadding + 30);
 
 			//### the handles configuration
 			context.selectAll(".resize").append("rect")

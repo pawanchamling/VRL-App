@@ -215,14 +215,14 @@ function loadLastData() {
 	d3.json("data/Noise_data3.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});	
+	});	*/
 	d3.json("data/2015-05-27-012055_Noise_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
 	
 	
-	
+	/*
 	d3.json("data/2015-05-27-012055_GPS_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);

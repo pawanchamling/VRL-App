@@ -893,6 +893,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							var val = dd.value - 0;
 							//log("foc: val = " + val)
 							
+							var amp_ref = 1;
+							var power_db = 20 * log10(val / amp_ref);
+							log("power_db = " + power_db);
+							
 							
 							//Offset the tooltip based on which side of the screen (left or right) the data node is in
 							var xOffset = 0;
