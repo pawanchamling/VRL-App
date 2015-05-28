@@ -272,7 +272,7 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 										return yContext(0);
 									}
 									else {
-										return 25;
+										return 50;
 									}
 								})
 								.attr("r", 5)
@@ -296,10 +296,10 @@ VRL.TheTimelineHandles = function (docWidth, docHeight, extraSpaces) {
 								.attr("cx", xContext(dd.timestamp))
 								.attr("cy", function() {
 									if(isSensorDataAvailable) {
-										return yContext(0);
+										return ((dd.value) * 11) + 20; //yContext((3 - dd.value) * 5);
 									}
 									else {
-										return 25;
+										return ((dd.value) * 11) + 20;
 									}
 								})
 								.attr("r", 5)

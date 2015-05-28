@@ -82,7 +82,7 @@ var totalMapData = 0;
 
 //### different colors for different data types
 var ordinalColors = [
-		["#c1ff06", "#99cc00", "#83b602", "#669900", "#3e5b00", "#e7ff9b", "#d5ff53"],
+		["#c1ff06", "#89b700", "#536f00", "#669900", "#3e5b00", "#e7ff9b", "#d5ff53"],
 		["#491861", "#75269b", "#a03fcf", "#b163d8", "#b86fdb", "#cd9be6", "#e0c0ef"],
 		["#005977", "#007ba4", "#0099cc", "#00befd", "#48d1ff", "#84e0ff", "#b0ecff"],
 		["#894b01", "#ba6701", "#e47e01", "#fe981b", "#fead4b", "#fec076", "#fed8a9"]
@@ -198,7 +198,7 @@ function loadLastData() {
 		TheApp.addData(data);
 		setDataColors(data);					
 		
-	});	
+	});
 	d3.json("data/2015-05-27-012055_Ordinal_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
@@ -215,7 +215,7 @@ function loadLastData() {
 	d3.json("data/Noise_data3.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});	*/
+	});	
 	d3.json("data/2015-05-27-012055_Noise_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
@@ -226,7 +226,7 @@ function loadLastData() {
 	d3.json("data/2015-05-27-012055_GPS_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});/*
+	}); */  /*
 	d3.json("data/Noise_data2.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);

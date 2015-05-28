@@ -14,7 +14,7 @@ VRL.TheMap = function (theMapDIV) {
 	var startCircle = [];
 	var endCircle = [];
 	
-	var zoomLevel = 14;
+	var zoomLevel = 18;
 	
 	var startPathImage = "images/greenDot.png";
 	var endPathImage   = "images/redDot.png";

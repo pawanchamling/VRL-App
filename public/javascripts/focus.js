@@ -644,7 +644,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 								}
 								else {
 									log("focus: sensor data not found")
-									return 100;
+									return 170;
 								}
 							})
 							.attr("r", data[i].style.userNodeFocusRadius())
@@ -705,7 +705,7 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 										return yFocus(0);
 									}
 									else {
-										return 100;
+										return 170;
 									}
 								})
 								.attr('r', data[index].style.userNodeFocusRadius())
@@ -734,10 +734,12 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							.attr("cx", xFocus(dd.timestamp))
 							.attr("cy", function() {
 								if(isSensorDataAvailable) {
-									return yFocus(0);
+									log("########### the value is = " + dd.value)
+									return ((dd.value) * 50) + 50; //yFocus((3 - dd.value) * 5);
+									//return yFocus(0);
 								}
 								else {
-									return 100;
+									return ((dd.value) * 50) + 50;
 								}
 							})
 							.attr("r", (data[i].style.userNodeFocusRadius() ))
@@ -799,10 +801,10 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 							d3.select(this)
 								.attr("cy", function() {
 									if(isSensorDataAvailable) {
-										return yFocus(0);
+										return ((dd.value) * 50) + 50//yFocus((3 - dd.value) * 5);
 									}
 									else {
-										return 100;
+										return ((dd.value) * 50) + 50; //100
 									}
 								})
 								.attr('r', (data[index].style.userNodeFocusRadius() ))
