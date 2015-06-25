@@ -1,0 +1,18 @@
+{
+	"name" : "Ordinal Values",
+	"Source" : "Android Mobile",
+	"type" : "1",
+	"valueInfo" : {
+		"High Productive" : 0,
+		"Productive" : 1,
+		"Not Productive" : 2
+	},
+	"values" : [{
+			"timestamp" : "1432759625602",
+			"value" : "0"
+		}, {
+			"timestamp" : "1432759626634",
+			"value" : "2"
+		}
+	]
+}

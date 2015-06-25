@@ -1,0 +1,14 @@
+{
+	"name" : "User Notes",
+	"Source" : "Android Mobile",
+	"type" : "0",
+	"valueInfo" : {},
+	"values" : [{
+			"timestamp" : "1432741346967",
+			"value" : "I am learning to use an app"
+		}, {
+			"timestamp" : "1432741799474",
+			"value" : "I am eating dinner"
+		}
+	]
+}

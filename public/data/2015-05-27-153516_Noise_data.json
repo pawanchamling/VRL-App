@@ -1,0 +1,16 @@
+{
+	"name" : "Noise Data",
+	"Source" : "Android Mobile",
+	"type" : "2",
+	"valueInfo" : {
+		"max" : "6.068148148148148",
+		"min" : "6.068148148148148",
+		"unit" : "Amp",
+		"threshold" : "8"
+	},
+	"values" : [{
+			"timestamp" : "1432741226814",
+			"value" : "6.068148148148148"
+		}
+	]
+}

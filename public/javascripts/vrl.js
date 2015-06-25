@@ -113,7 +113,7 @@ log("VRL: notesDIVwidth = " + notesDIVwidth);
 var TheApp = VRL();
 
 //### The charts and panels
-var timelineHandles = VRL.TheTimelineHandles(docWidth, docHeight, extraSpaces);
+var theContext = VRL.TheContext(docWidth, docHeight, extraSpaces);
 var timeline = VRL.TheTimeline(docWidth, docHeight, extraSpaces);
 var focus = VRL.TheFocus(docWidth, docHeight, extraSpaces);
 
@@ -144,7 +144,7 @@ function loadChart() {
 	
 	d3.select('#TimeLineHandlerDIV')
 			.datum(TheApp.getData())
-			.call(timelineHandles);		
+			.call(theContext);		
 	
 	
 	d3.select('#FocusDIV')
@@ -160,17 +160,17 @@ function loadChart() {
 		
 			
 //###########  adding the Observers   ########################
-timelineHandles.addObserver(timeline);
-timelineHandles.addObserver(focus);
-timelineHandles.addObserver(map);
-timelineHandles.addObserver(theNotes);
+theContext.addObserver(timeline);
+theContext.addObserver(focus);
+theContext.addObserver(map);
+theContext.addObserver(theNotes);
 
-timeline.addObserver(timelineHandles);
+timeline.addObserver(theContext);
 timeline.addObserver(focus);
 timeline.addObserver(map);
 timeline.addObserver(theNotes);
 
-focus.addObserver(timelineHandles)
+focus.addObserver(theContext)
 focus.addObserver(timeline)
 focus.addObserver(theNotes)
 
@@ -206,12 +206,12 @@ function loadLastData() {
 	d3.json("data/2015-05-27-012055_Nominal_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
-	});/*
-	d3.json("data/2015-04-21-230058_Noise_data.json", function (data) {
+	});
+	d3.json("data/2015-05-27-012055_GPS_data.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
 	});
-	
+	/*
 	d3.json("data/Noise_data3.json", function (data) {
 		TheApp.addData(data);
 		setDataColors(data);
@@ -245,7 +245,7 @@ function hideData() {
 	if(ii != 5)	{	
 		focus.hideData(ii); //.selectAll(".data" + 1).attr("visibility", "hidden");
 		timeline.hideData(ii);
-		timelineHandles.hideData(ii);
+		theContext.hideData(ii);
 		
 		ii++;
 		setTimeout(hideData, 4000);
@@ -258,7 +258,7 @@ function reloadEverything() {
 			
 	//### reload everything
 	timeline.reload(TheApp.getData());
-	timelineHandles.reload(TheApp.getData());
+	theContext.reload(TheApp.getData());
 	focus.reload(TheApp.getData());
 	map.reload(TheApp.getData());
 	theNotes.reload(TheApp.getData());
@@ -456,7 +456,7 @@ function resetShowHideDataPopup() {
 		
 		function changeDataColors(theColorIs) {
 			focus.changeColor(i, theColorIs);
-				timelineHandles.changeColor(i, theColorIs);
+				theContext.changeColor(i, theColorIs);
 				timeline.changeColor(i, theColorIs);
 				if(d.dataType() == 3) {
 					map.changeColor(i, theColorIs);
@@ -476,7 +476,7 @@ function resetShowHideDataPopup() {
 				
 				if(d.dataType() == 0 || d.dataType() == 1 || d.dataType() == 2) {
 					focus.showData(ii); 
-					timelineHandles.showData(ii);
+					theContext.showData(ii);
 				}
 				if(d.dataType() == 3) {
 					map.showData(ii);
@@ -495,7 +495,7 @@ function resetShowHideDataPopup() {
 				
 				if(d.dataType() == 0 || d.dataType() == 1 || d.dataType() == 2) {
 					focus.hideData(ii); 
-					timelineHandles.hideData(ii);
+					theContext.hideData(ii);
 				}
 				if(d.dataType() == 3) {
 					map.showData(ii);

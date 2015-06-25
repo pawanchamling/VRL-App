@@ -1252,15 +1252,15 @@ VRL.TheFocus = function (docWidth, docHeight, extraSpaces) {
 			theFocus.selectAll("#xaxis line").attr("y2", 15);
 			theFocus.selectAll("#xaxis text").attr("y", 19);
 			
-			if(caller == "timelineHandlesZoomed") {				
+			if(caller == "theContextZoomed") {				
 				//### when the focus chart has been zoomed using the mouse wheel
 				
-				if(previousZoomCaller != "timelineHandles") {
+				if(previousZoomCaller != "theContext") {
 					theZoom.scale(zoomScale);//zoomScale => or else, panning isn't working
 				}
 				
 			}			
-			else if (caller == "timelineHandles" || caller == "timeline") {
+			else if (caller == "theContext" || caller == "timeline") {
 								
 				//### we used the manual zoom from time-range handles but not the d3's actual zoom method
 				//### so calculating where the translation would have been if the d3 was doing it.
