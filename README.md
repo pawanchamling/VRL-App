@@ -6,9 +6,7 @@ An application to visualize user-related data.
 * D3.js of the visualization
 
 
-Installation
-
-To install the dev-stack just clone the repo to a folder and run following command:
+To install, just clone the repo to a folder and run following command:
 
 npm install
 
