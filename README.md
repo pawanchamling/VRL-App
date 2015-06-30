@@ -11,4 +11,5 @@ Installation
 To install the dev-stack just clone the repo to a folder and run following command:
 
 npm install
+
 This will install all the dependencies that are needed.
