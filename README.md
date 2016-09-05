@@ -1,9 +1,9 @@
 # VRL-App
 
 
-An application to visualize user-related data.
+An application to visualize user-related data (There's "VRL Data Collection" Android app project to make it easier).
 * NodeJS + ExpressJS (For server side)
-* D3.js of the visualization
+* D3.js for the visualization
 
 
 To install, just clone the repo to a folder and run following command:
